@@ -151,82 +151,53 @@ select {
 }
 
 
-
-
-/* =========================================
-   MOBILE: ปรับกล่องสรุปที่นั่ง
-   ไม่กระทบระบบจองหรือคำนวณราคา
-========================================= */
-
-@media screen and (max-width: 640px) {
-
-    /* กล่องหัวเว็บจัดเรียงใหม่ให้มีพื้นที่ */
-    header > div {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    /* กลุ่มโลโก้และชื่องาน */
-    header > div > div:first-child {
-        flex: 1 1 100%;
-        min-width: 0;
-        gap: 10px;
-    }
-
-    header > div > div:first-child h1 {
-        font-size: clamp(14px, 4vw, 18px);
-        line-height: 1.35;
-        overflow-wrap: anywhere;
-    }
-
-    /* พื้นที่กล่องจำนวนที่นั่ง */
-    header > div > div:last-child {
-        flex: 1 1 100%;
-        width: 100%;
-        justify-content: center;
-    }
-
-    /* กล่องจำนวนที่นั่งและราคา */
+/* Mobile Cart - เฉพาะแถบสรุปที่นั่ง */
+@media (max-width: 640px) {
     #cartSummaryBtn {
-        width: 100%;
-        max-width: 360px;
-        min-width: 0;
-        box-sizing: border-box;
+        position: fixed;
+        left: 12px;
+        right: 12px;
+        bottom: calc(12px + env(safe-area-inset-bottom));
+        z-index: 1000;
+
+        width: auto;
+        max-width: none;
+        min-height: 58px;
+        padding: 12px 16px;
+        border-radius: 16px;
+
+        display: flex;
         justify-content: space-between;
-        gap: 8px;
-        padding: 10px 14px;
-        border-radius: 12px;
-        font-size: 14px;
-        white-space: nowrap;
+        align-items: center;
+        gap: 12px;
+
+        font-size: 15px;
+        box-shadow: 0 6px 24px rgba(0,0,0,.25);
+    }
+
+    #cartSummaryBtn.hidden {
+        display: none !important;
     }
 
     #headerSeatCount {
-        flex: 1;
-        min-width: 0;
-        text-align: left;
         white-space: nowrap;
-    }
-
-    #headerTotalPrice {
-        flex-shrink: 0;
         font-size: 14px;
-        padding: 5px 9px;
-    }
-}
-
-/* มือถือจอเล็กมาก */
-@media screen and (max-width: 360px) {
-    #cartSummaryBtn {
-        padding: 8px 10px;
-        gap: 5px;
-        font-size: 12px;
+        font-weight: 700;
     }
 
     #headerTotalPrice {
-        font-size: 12px;
-        padding: 4px 7px;
+        white-space: nowrap;
+        font-size: 16px;
+        padding: 7px 12px;
+        border-radius: 10px;
+    }
+
+    /* เผื่อพื้นที่ด้านล่าง ไม่ให้แถบลอยทับปุ่ม */
+    body {
+        padding-bottom: 90px;
     }
 }
+
 
         
         
@@ -668,11 +639,7 @@ select {
                     </div>
                 </div>
 
-                <!-- Google Sheets Status -->
-                <div class="bg-amber-50/80 border-b border-amber-200 p-3 text-xs text-amber-900 flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-cloud-arrow-up text-amber-700 animate-bounce"></i>
-                    <span id="cloudStatusText">บันทึกข้อมูลลง Google Sheets และอัปโหลดสลิปเข้า Google Drive เรียบร้อยแล้ว</span>
-                </div>
+
 
                 <!-- Digital Ticket Card View -->
                 <div class="p-6 sm:p-8 space-y-6 text-left">
@@ -1278,62 +1245,62 @@ if (hero) {
         }
 
         async function submitBooking() {
-            // Prevent double-clicks / concurrent submissions from the same browser.
-            if (window.bookingSubmitInProgress) return;
-
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
             const note = document.getElementById('custNote').value.trim();
-            const btnSubmit = document.getElementById('btnSubmitBooking');
-            const originalButtonHtml = btnSubmit.innerHTML;
 
             if (!name || !phone || !email) {
                 alert('กรุณากรอกข้อมูล ชื่อ เบอร์โทรศัพท์ และอีเมลให้ครบถ้วน');
                 return;
             }
+
             if (!uploadedSlipData || !uploadedSlipFile) {
                 alert('กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง');
                 return;
             }
+
             if (!webAppUrl || !webAppUrl.includes('/exec')) {
                 alert('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL ที่ลงท้ายด้วย /exec กรุณาตั้งค่าก่อน');
                 return;
             }
+
             if (selectedSeats.size === 0) {
-                alert('กรุณาเลือกที่นั่ง');
+                alert('กรุณาเลือกที่นั่ง อื่น');
                 goToStep(1);
                 return;
             }
 
-            // Lock the button immediately, including during the live-seat check.
-            window.bookingSubmitInProgress = true;
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบและบันทึก...';
-            btnSubmit.classList.add('opacity-70', 'cursor-not-allowed');
-
+            // Keep a snapshot of the seats the customer chose before refreshing the server state.
             const seatsChosenBeforeRefresh = Array.from(selectedSeats);
+            // Re-check against the live Google Sheet immediately before sending the booking.
+            const statusLoaded = await refreshSeatStatus(false);
+            if (!statusLoaded) {
+                alert('ตรวจสอบสถานะที่นั่งจากระบบกลางไม่ได้ กรุณาลองใหม่อีกครั้ง');
+                return;
+            }
+            const newlyTaken = seatsChosenBeforeRefresh.filter(id => !seatMapData[id] || seatMapData[id].isSold);
+            if (newlyTaken.length) {
+                alert('ที่นั่ง ' + newlyTaken.join(', ') + ' มีผู้จองไปแล้ว กรุณาเลือกที่นั่งใหม่');
+                goToStep(1);
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmitBooking');
+            const originalButtonHtml = btnSubmit.innerHTML;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังส่งข้อมูลและสลิป...';
+
+            const seatArray = Array.from(selectedSeats).sort();
+            let totalAmt = 0;
+            seatArray.forEach(id => totalAmt += seatMapData[id].price);
+
+            // Make the order reference less likely to collide than a 4-digit random number.
+            const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
+                Math.random().toString(36).slice(2, 6).toUpperCase();
+
             try {
-                // Keep the live Google Sheets validation; it prevents stale seat selection.
-                const statusLoaded = await refreshSeatStatus(false);
-                if (!statusLoaded) {
-                    alert('ตรวจสอบสถานะที่นั่งจากระบบกลางไม่ได้ กรุณาลองใหม่อีกครั้ง');
-                    return;
-                }
-                const newlyTaken = seatsChosenBeforeRefresh.filter(id => !seatMapData[id] || seatMapData[id].isSold);
-                if (newlyTaken.length) {
-                    alert('ที่นั่ง ' + newlyTaken.join(', ') + ' มีผู้จองไปแล้ว กรุณาเลือกที่นั่งใหม่');
-                    goToStep(1);
-                    return;
-                }
-
-                const seatArray = seatsChosenBeforeRefresh.slice().sort();
-                let totalAmt = 0;
-                seatArray.forEach(id => totalAmt += seatMapData[id].price);
-
-                const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
-                    Math.random().toString(36).slice(2, 6).toUpperCase();
-
+                // Apps Script expects slipBase64 and removes the data:image/...;base64, prefix itself.
                 const payload = {
                     orderRef: orderRef,
                     custName: name,
@@ -1347,8 +1314,8 @@ if (hero) {
                     slipFileName: uploadedSlipFile.name || (orderRef + '-slip.jpg')
                 };
 
-                // Send once only. no-cors makes the POST response unreadable, so verify
-                // the resulting order with rapid JSONP checks (no fixed 2.5s initial wait).
+                // Send booking to Apps Script. The no-cors response is opaque, so verify
+                // the order by polling the server before showing the confirmation screen.
                 await fetch(webAppUrl, {
                     method: 'POST',
                     mode: 'no-cors',
@@ -1358,12 +1325,10 @@ if (hero) {
 
                 let bookingVerified = false;
                 let lastStatusError = null;
-                const maxChecks = 30;
-                for (let attempt = 0; attempt < maxChecks; attempt++) {
+                for (let attempt = 0; attempt < 24; attempt++) {
+                    await new Promise(resolve => setTimeout(resolve, 2500));
                     try {
-                        const check = await callAppsScriptJSONP(
-                            { action: 'orderStatus', orderRef: orderRef }, 8000
-                        );
+                        const check = await callAppsScriptJSONP({ action: 'orderStatus', orderRef: orderRef }, 12000);
                         if (check && check.success && check.found === true) {
                             bookingVerified = true;
                             break;
@@ -1374,17 +1339,12 @@ if (hero) {
                     } catch (verifyErr) {
                         lastStatusError = verifyErr;
                     }
-                    // Short retry delay; total verification window is about 24 seconds,
-                    // rather than the previous 60-second wait. Start checking immediately.
-                    if (attempt < maxChecks - 1) {
-                        await new Promise(resolve => setTimeout(resolve, 800));
-                    }
                 }
                 if (!bookingVerified) {
-                    throw new Error(lastStatusError ? lastStatusError.message :
-                        'ยังไม่พบรายการจองใน Google Sheets ภายในเวลาที่กำหนด');
+                    throw new Error(lastStatusError ? lastStatusError.message : 'ยังไม่พบรายการจองใน Google Sheets ภายในเวลาที่กำหนด');
                 }
 
+                // Show the ticket-pending screen only after Apps Script confirms the row exists.
                 document.getElementById('ticketOrderRef').textContent = orderRef;
                 document.getElementById('ticketCustName').textContent = name;
                 document.getElementById('ticketCustPhone').textContent = phone;
@@ -1401,25 +1361,36 @@ if (hero) {
                     ticketBadgesContainer.appendChild(badge);
                 });
 
-                document.getElementById('ticketQrImage').src =
-                    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(orderRef)}`;
+// QR Code สำหรับตรวจสอบบัตรเข้างาน
+const ticketQRData = [
+    'MAHAMIT CONCERT #2',
+    'Order Ref: ' + orderRef,
+    'Name: ' + name,
+    'Phone: ' + phone,
+    'Number of Seats: ' + seatArray.length,
+    'Seats: ' + seatArray.join(', ')
+].join('\n');
 
+document.getElementById('ticketQrImage').src =
+    'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data='
+    + encodeURIComponent(ticketQRData);
+
+                // The booking row has been verified on the server; refresh authoritative seats.
                 seatArray.forEach(id => {
                     if (seatMapData[id]) seatMapData[id].isSold = true;
                 });
+
                 if (holdTimerInterval) clearInterval(holdTimerInterval);
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalButtonHtml;
                 goToStep(3);
-                // Refresh in background; don't hold up the confirmation screen.
                 refreshSeatStatus(false);
 
             } catch (err) {
                 console.error('Booking submission error:', err);
-                alert('ระบบยังยืนยันรายการจองไม่ได้ในขณะนี้ กรุณารอสักครู่แล้วตรวจสอบสถานะก่อนส่งซ้ำ เพื่อป้องกันการจองซ้ำ');
-            } finally {
-                window.bookingSubmitInProgress = false;
                 btnSubmit.disabled = false;
                 btnSubmit.innerHTML = originalButtonHtml;
-                btnSubmit.classList.remove('opacity-70', 'cursor-not-allowed');
+                alert('ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตและ URL ของ Apps Script แล้วลองอีกครั้ง');
             }
         }
 
