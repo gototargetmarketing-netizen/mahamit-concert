@@ -264,6 +264,34 @@ select {
 
         <!-- STEP 1: SEAT SELECTION & MAP -->
         <div id="step1Container" class="space-y-6">
+
+            
+<!-- สถานะการเชื่อมต่อ Google Sheets -->
+<div id="seatLoadNotice"
+     class="hidden rounded-xl border p-4 mb-4 text-sm"
+     role="status"
+     aria-live="polite">
+    <div class="flex items-start gap-3">
+        <i id="seatLoadIcon"
+           class="fa-solid fa-circle-info mt-1"></i>
+        <div class="flex-1">
+            <p id="seatLoadTitle" class="font-bold mb-1">
+                กำลังโหลดสถานะที่นั่ง
+            </p>
+            <p id="seatLoadMessage">
+                กรุณารอสักครู่
+            </p>
+            <button type="button"
+                    onclick="retrySeatStatus()"
+                    id="retrySeatBtn"
+                    class="hidden mt-3 px-4 py-2 rounded-lg
+                           bg-posterGreen text-white font-semibold">
+                <i class="fa-solid fa-rotate-right mr-1"></i>
+                ลองโหลดอีกครั้ง
+            </button>
+        </div>
+    </div>
+</div>
             
             <!-- Controls & Legend Bar -->
             <div class="bg-posterCard p-4 rounded-xl shadow-vintage border border-posterPaper flex flex-wrap items-center justify-between gap-4">
@@ -652,6 +680,88 @@ select {
             { row: 'T', zone: 'B', price: 1900 }
         ];
 
+
+
+function setSeatLoadNotice(type, title, message) {
+    const box = document.getElementById('seatLoadNotice');
+    const icon = document.getElementById('seatLoadIcon');
+    const titleEl = document.getElementById('seatLoadTitle');
+    const messageEl = document.getElementById('seatLoadMessage');
+    const retryBtn = document.getElementById('retrySeatBtn');
+
+    if (!box) return;
+
+    box.classList.remove(
+        'hidden',
+        'bg-red-50',
+        'border-red-200',
+        'text-red-800',
+        'bg-amber-50',
+        'border-amber-200',
+        'text-amber-800',
+        'bg-green-50',
+        'border-green-200',
+        'text-green-800'
+    );
+
+    if (type === 'error') {
+        box.classList.add(
+            'bg-red-50',
+            'border-red-200',
+            'text-red-800'
+        );
+        icon.className = 'fa-solid fa-circle-exclamation mt-1';
+        retryBtn.classList.remove('hidden');
+    } else if (type === 'loading') {
+        box.classList.add(
+            'bg-amber-50',
+            'border-amber-200',
+            'text-amber-800'
+        );
+        icon.className = 'fa-solid fa-spinner fa-spin mt-1';
+        retryBtn.classList.add('hidden');
+    } else {
+        box.classList.add(
+            'bg-green-50',
+            'border-green-200',
+            'text-green-800'
+        );
+        icon.className = 'fa-solid fa-circle-check mt-1';
+        retryBtn.classList.add('hidden');
+    }
+
+    titleEl.textContent = title;
+    messageEl.textContent = message;
+}
+
+async function retrySeatStatus() {
+    const btn = document.getElementById('retrySeatBtn');
+
+    if (btn) btn.disabled = true;
+
+    setSeatLoadNotice(
+        'loading',
+        'กำลังโหลดสถานะที่นั่ง',
+        'กำลังเชื่อมต่อระบบจอง กรุณารอสักครู่'
+    );
+
+    const success = await refreshSeatStatus(false);
+
+    if (!success) {
+        setSeatLoadNotice(
+            'error',
+            'โหลดสถานะที่นั่งไม่สำเร็จ',
+            'กรุณาตรวจสอบอินเทอร์เน็ต หรือกดลองโหลดอีกครั้ง'
+        );
+    }
+
+    if (btn) btn.disabled = false;
+}
+
+
+
+
+        
         // Global State Variables
         const seatMapData = {};
         const selectedSeats = new Set();
@@ -672,7 +782,13 @@ select {
                 if (input) input.value = webAppUrl;
             }
 
-            await refreshSeatStatus(true);
+            setSeatLoadNotice(
+    'loading',
+    'กำลังโหลดผังที่นั่ง',
+    'กำลังตรวจสอบสถานะที่นั่งจากระบบกลาง'
+);
+
+await refreshSeatStatus(true);
             // Refresh periodically so customers see bookings made by other visitors.
             setInterval(() => refreshSeatStatus(false), 30000);
         };
@@ -747,12 +863,24 @@ select {
                     const soldCount = occupied.size;
                     stats.textContent = `จองแล้ว ${soldCount} / ${Object.keys(seatMapData).length} ที่นั่ง | อัปเดตจาก Google Sheets`;
                 }
+
+const notice = document.getElementById('seatLoadNotice');
+if (notice) {
+    notice.classList.add('hidden');
+}
+
+                
                 return true;
             } catch (err) {
                 console.error('Seat status refresh failed:', err);
-                if (showMessage) {
-                    alert('โหลดสถานะที่นั่งจาก Google Sheets ไม่สำเร็จ กรุณาตรวจสอบว่า Deploy Apps Script เป็น Web App และอนุญาตให้เข้าถึงได้');
-                }
+                
+if (showMessage) {
+    setSeatLoadNotice(
+        'error',
+        'ยังโหลดสถานะที่นั่งไม่ได้',
+        'ระบบกำลังมีปัญหาในการเชื่อมต่อ กรุณาตรวจสอบอินเทอร์เน็ต แล้วกดลองโหลดอีกครั้ง'
+    );
+}
                 return false;
             }
         }
