@@ -1057,7 +1057,20 @@ select {
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                         <i class="fa-solid fa-phone text-xs"></i>
                                     </span>
-                                    <input type="tel" id="custPhone" required placeholder="0812345678" class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                                    <input
+    type="tel"
+    id="custPhone"
+    name="custPhone"
+    required
+    inputmode="numeric"
+    pattern="[0-9]{10}"
+    minlength="10"
+    maxlength="10"
+    placeholder="0812345678"
+    oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
+    title="กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข 10 หลัก"
+    class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none"
+>
                                 </div>
                             </div>
                             <div>
@@ -1066,7 +1079,16 @@ select {
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                         <i class="fa-solid fa-envelope text-xs"></i>
                                     </span>
-                                    <input type="email" id="custEmail" required placeholder="yourname@email.com" class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                                    <input
+    type="email"
+    id="custEmail"
+    name="custEmail"
+    required
+    pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
+    title="กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com"
+    placeholder="yourname@email.com"
+    class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none"
+>
                                 </div>
                             </div>
                         </div>
