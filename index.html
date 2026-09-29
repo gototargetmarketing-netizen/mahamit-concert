@@ -238,6 +238,167 @@ select {
     }
 }
         
+
+
+/* =========================================
+   CUSTOM ALERT POPUP - MAHAMIT CONCERT
+   หน้าต่างแจ้งเตือนธีมคอนเสิร์ต
+========================================= */
+
+#customAlertModal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    background: rgba(20, 25, 18, 0.70);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.25s ease,
+                visibility 0.25s ease;
+}
+
+#customAlertModal.show {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+#customAlertModal .alert-card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
+
+    background: #F8F5EE;
+    color: #23201D;
+
+    border: 2px solid #C8A051;
+    border-radius: 24px;
+
+    padding: 30px 26px 26px;
+
+    box-shadow: 0 25px 80px rgba(0,0,0,0.35);
+
+    text-align: center;
+
+    transform: translateY(20px) scale(0.95);
+    transition: transform 0.25s ease;
+}
+
+#customAlertModal.show .alert-card {
+    transform: translateY(0) scale(1);
+}
+
+#customAlertModal .alert-icon {
+    width: 76px;
+    height: 76px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #E8F1DF;
+    color: #425E22;
+
+    font-size: 34px;
+
+    border: 1px solid #C8A051;
+}
+
+#customAlertModal .alert-title {
+    font-family: 'Kanit', sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    line-height: 1.4;
+
+    color: #425E22;
+
+    margin-bottom: 12px;
+}
+
+#customAlertModal .alert-message {
+    font-family: 'Prompt', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+
+    color: #6E6A5F;
+
+    white-space: pre-line;
+    overflow-wrap: anywhere;
+
+    margin-bottom: 26px;
+}
+
+#customAlertModal .alert-ok-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 100%;
+    min-height: 52px;
+
+    background: #425E22;
+    color: #FFFFFF;
+
+    border: none;
+    border-radius: 14px;
+
+    font-family: 'Kanit', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow: 0 5px 0 #2E4316;
+
+    transition: all 0.2s ease;
+}
+
+#customAlertModal .alert-ok-btn:hover {
+    background: #2E4316;
+    transform: translateY(-1px);
+}
+
+#customAlertModal .alert-ok-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #2E4316;
+}
+
+@media (max-width: 480px) {
+    #customAlertModal {
+        padding: 18px;
+    }
+
+    #customAlertModal .alert-card {
+        padding: 26px 20px 22px;
+        border-radius: 20px;
+    }
+
+    #customAlertModal .alert-title {
+        font-size: 22px;
+    }
+
+    #customAlertModal .alert-message {
+        font-size: 14px;
+    }
+}
+
+
         
     </style>
 </head>
@@ -1756,6 +1917,192 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 </script>
+
+
+
+<!-- =========================================
+     CUSTOM ALERT POPUP
+     หน้าต่างแจ้งเตือนหลักของเว็บไซต์
+========================================= -->
+
+<div id="customAlertModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="customAlertTitle"
+     aria-describedby="customAlertMessage">
+
+    <div class="alert-card">
+
+        <!-- ไอคอนแจ้งเตือน -->
+        <div id="customAlertIcon" class="alert-icon">
+            <i class="fa-solid fa-circle-info"></i>
+        </div>
+
+        <!-- หัวข้อ Popup -->
+        <h2 id="customAlertTitle" class="alert-title">
+            แจ้งเตือน
+        </h2>
+
+        <!-- ข้อความแจ้งเตือน -->
+        <p id="customAlertMessage" class="alert-message">
+            กรุณาตรวจสอบข้อมูลอีกครั้ง
+        </p>
+
+        <!-- ปุ่มตกลง -->
+        <button type="button"
+                id="customAlertOkBtn"
+                class="alert-ok-btn"
+                onclick="closeCustomAlert()">
+
+            <i class="fa-solid fa-check"></i>
+            <span>ตกลง</span>
+
+        </button>
+
+    </div>
+</div>
+
+
+
+<script>
+/* =========================================
+   CUSTOM ALERT SYSTEM
+   เปลี่ยน alert เดิมให้เป็น Popup สวยงาม
+========================================= */
+
+(function () {
+
+    const modal = document.getElementById('customAlertModal');
+    const title = document.getElementById('customAlertTitle');
+    const message = document.getElementById('customAlertMessage');
+    const icon = document.getElementById('customAlertIcon');
+    const okBtn = document.getElementById('customAlertOkBtn');
+
+    if (!modal || !title || !message || !icon || !okBtn) {
+        console.error('ไม่พบ HTML ของ Custom Alert Popup');
+        return;
+    }
+
+    let previousFocus = null;
+    let alertOpen = false;
+
+    // ฟังก์ชันแสดง Popup
+    window.showCustomAlert = function (text) {
+
+        previousFocus = document.activeElement;
+
+        const alertText = String(text || 'กรุณาตรวจสอบข้อมูลอีกครั้ง');
+
+        // ตั้งค่าเริ่มต้น
+        let heading = 'แจ้งเตือน';
+        let iconClass = 'fa-solid fa-circle-info';
+        let iconColor = '#425E22';
+        let iconBg = '#E8F1DF';
+
+        // เปลี่ยนหัวข้อและไอคอนตามข้อความ
+        if (
+            alertText.includes('เรียบร้อย') ||
+            alertText.includes('สำเร็จ')
+        ) {
+            heading = 'ดำเนินการสำเร็จ';
+            iconClass = 'fa-solid fa-circle-check';
+            iconColor = '#425E22';
+            iconBg = '#E8F1DF';
+
+        } else if (
+            alertText.includes('ไม่สำเร็จ') ||
+            alertText.includes('ไม่ได้') ||
+            alertText.includes('ผิดพลาด') ||
+            alertText.includes('เกิน 5MB') ||
+            alertText.includes('หมดเวลา') ||
+            alertText.includes('มีผู้จองไปแล้ว')
+        ) {
+            heading = 'ไม่สามารถดำเนินการได้';
+            iconClass = 'fa-solid fa-circle-exclamation';
+            iconColor = '#8B2626';
+            iconBg = '#FCE8E6';
+
+        } else if (
+            alertText.includes('กรุณา') ||
+            alertText.includes('ยังไม่ได้') ||
+            alertText.includes('สูงสุด')
+        ) {
+            heading = 'กรุณาตรวจสอบข้อมูล';
+            iconClass = 'fa-solid fa-circle-info';
+            iconColor = '#425E22';
+            iconBg = '#E8F1DF';
+        }
+
+        // ใส่ข้อความลงใน Popup
+        title.textContent = heading;
+        message.textContent = alertText;
+
+        // ตั้งค่าไอคอน
+        icon.innerHTML = '';
+
+        const iconElement = document.createElement('i');
+        iconElement.className = iconClass;
+
+        icon.appendChild(iconElement);
+        icon.style.color = iconColor;
+        icon.style.background = iconBg;
+
+        // เปิด Popup
+        modal.classList.add('show');
+        document.body.style.overflow = 'hidden';
+
+        alertOpen = true;
+
+        // ให้โฟกัสที่ปุ่มตกลง
+        setTimeout(function () {
+            okBtn.focus();
+        }, 100);
+    };
+
+    // ฟังก์ชันปิด Popup
+    window.closeCustomAlert = function () {
+
+        if (!alertOpen) return;
+
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+
+        alertOpen = false;
+
+        // คืนโฟกัสให้ปุ่มหรือช่องเดิม
+        if (previousFocus && typeof previousFocus.focus === 'function') {
+            previousFocus.focus();
+        }
+    };
+
+    // คลิกพื้นที่ด้านนอกเพื่อปิด Popup
+    modal.addEventListener('click', function (event) {
+
+        if (event.target === modal) {
+            closeCustomAlert();
+        }
+
+    });
+
+    // กด ESC เพื่อปิด Popup
+    document.addEventListener('keydown', function (event) {
+
+        if (event.key === 'Escape' && alertOpen) {
+            closeCustomAlert();
+        }
+
+    });
+
+    // เปลี่ยน alert เดิมทั้งเว็บไซต์ให้ใช้ Popup ใหม่
+    window.alert = function (text) {
+        window.showCustomAlert(text);
+    };
+
+})();
+
+</script>
+  
+
     
 </body>
 </html>
