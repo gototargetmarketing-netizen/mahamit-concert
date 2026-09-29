@@ -1844,6 +1844,35 @@ if (hero) {
             const email = document.getElementById('custEmail').value.trim();
             const note = '';
 
+
+            // ตรวจสอบเบอร์โทรศัพท์: ต้องเป็นตัวเลข 10 หลักเท่านั้น
+if (!/^[0-9]{10}$/.test(phone)) {
+    showCustomAlert(
+        'กรุณาตรวจสอบข้อมูล',
+        'กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข 10 หลักให้ถูกต้อง',
+        'fa-solid fa-circle-info',
+        '#DC2626',
+        '#FEE2E2'
+    );
+
+    document.getElementById('custPhone').focus();
+    return;
+}
+
+// ตรวจสอบอีเมล: ต้องมีรูปแบบถูกต้องและมี @
+if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {
+    showCustomAlert(
+        'กรุณาตรวจสอบข้อมูล',
+        'กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com',
+        'fa-solid fa-circle-info',
+        '#DC2626',
+        '#FEE2E2'
+    );
+
+    document.getElementById('custEmail').focus();
+    return;
+}
+
             if (!name || !phone || !email) {
                 alert('กรุณากรอกข้อมูล ชื่อ เบอร์โทรศัพท์ และอีเมลให้ครบถ้วน');
                 return;
