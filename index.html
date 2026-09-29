@@ -628,11 +628,30 @@ select {
 
                         <!-- Real-time Dynamic PromptPay QR Code Generator -->
                         <div class="bg-white p-4 rounded-xl border border-posterPaper inline-block shadow-inner">
-                            <img id="qrCodeImg" src="/payment-qr.png" alt="Thai QR Payment ของผู้จัดงาน" class="w-48 h-48 mx-auto rounded shadow-sm border border-gray-100">
+                           <img
+    id="qrCodeImg"
+    src="./promptpay-qr.png"
+    alt="PromptPay QR Code"
+    onclick="openQRModal()"
+    class="w-48 h-48 mx-auto rounded shadow-sm border border-gray-100 cursor-zoom-in hover:scale-105 transition duration-200"
+    title="คลิกเพื่อขยาย QR Code"
+>
                             <p class="text-[11px] text-posterMuted mt-2 font-medium">
                                 <i class="fa-solid fa-qrcode mr-1 text-posterGreen"></i> PromptPay / ทุกแอปธนาคาร
                             </p>
                         </div>
+
+                        <button
+    type="button"
+    onclick="openQRModal()"
+    class="mx-auto inline-flex items-center justify-center gap-2
+           bg-posterGreen hover:bg-posterGreenDark
+           text-white font-bold text-sm
+           px-5 py-3 rounded-xl shadow transition"
+>
+    <i class="fa-solid fa-expand"></i>
+    ขยาย QR Code / ดูเต็มหน้าจอ
+</button>
 
                         <div class="bg-posterCream border border-posterPaper p-3 rounded-xl text-center">
                             <span class="text-xs text-posterMuted block">ยอดเงินที่ต้องชำระสุทธิ</span>
@@ -1205,12 +1224,12 @@ if (seatNumbersEl) {
                 }
             }
 
-            // Update Dynamic PromptPay QR Code
-            if (totalPrice > 0) {
-                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=PROMPTPAY_KKMARKET_AMOUNT_${totalPrice}`;
-                const qrImg = document.getElementById('qrCodeImg');
-                if (qrImg) qrImg.src = qrUrl;
-            }
+// ใช้ QR Code รูปจริงที่อัปโหลดไว้
+const qrImg = document.getElementById('qrCodeImg');
+
+if (qrImg) {
+    qrImg.src = './promptpay-qr.png';
+}
         }
 
         function goToStep(step) {
@@ -1513,7 +1532,126 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+<!-- QR Code Fullscreen Modal -->
+<div
+    id="qrModal"
+    class="hidden fixed inset-0 z-[9999]
+           bg-black/90 backdrop-blur-sm
+           items-center justify-center
+           p-4"
+    onclick="closeQRModal()"
+>
+    <div
+        class="relative bg-posterCard
+               w-full max-w-lg
+               max-h-[95dvh] overflow-y-auto
+               rounded-2xl border-2 border-posterGold
+               shadow-2xl p-5 sm:p-8"
+        onclick="event.stopPropagation()"
+    >
 
+        <!-- ปุ่มปิด -->
+        <button
+            type="button"
+            onclick="closeQRModal()"
+            class="absolute top-3 right-3
+                   w-11 h-11 rounded-full
+                   bg-posterBurgundy text-white
+                   text-2xl font-bold
+                   flex items-center justify-center
+                   shadow hover:bg-posterBurgundyDark"
+            aria-label="ปิดหน้าต่าง QR Code"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="text-center pt-3">
+
+            <h2 class="font-kanit font-bold
+                       text-xl sm:text-2xl
+                       text-posterGreen mb-2">
+                สแกน QR CODE ชำระเงิน
+            </h2>
+
+            <p class="text-sm text-posterMuted mb-5">
+                บริษัท เกรียงไกร มาหามิตร จำกัด
+                <br>
+                ธนาคารกสิกรไทย (KBank)
+            </p>
+
+            <!-- QR Code รูปจริง -->
+            <div class="bg-white p-3 sm:p-5
+                        rounded-2xl border border-posterPaper
+                        shadow-inner inline-block w-full">
+
+                <img
+                    src="./promptpay-qr.png"
+                    alt="PromptPay QR Code สำหรับชำระเงิน"
+                    class="block w-full max-w-[420px]
+                           h-auto mx-auto object-contain"
+                >
+
+            </div>
+
+            <div class="mt-5 bg-posterCream
+                        border border-posterPaper
+                        rounded-xl p-4">
+
+                <p class="text-sm text-posterMuted">
+                    ยอดเงินที่ต้องชำระ
+                </p>
+
+                <p
+                    id="qrModalAmount"
+                    class="font-kanit font-black
+                           text-3xl text-posterGreen"
+                >
+                    0 ฿
+                </p>
+
+            </div>
+
+            <p class="text-xs text-posterMuted mt-4">
+                สแกนด้วยแอปธนาคารเพื่อชำระเงิน
+                กดปุ่ม X หรือแตะพื้นที่ด้านนอกเพื่อปิด
+            </p>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    function openQRModal() {
+        const modal = document.getElementById('qrModal');
+        const amount = document.getElementById('paymentTotalAmount');
+        const modalAmount = document.getElementById('qrModalAmount');
+
+        if (amount && modalAmount) {
+            modalAmount.textContent = amount.textContent;
+        }
+
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeQRModal() {
+        const modal = document.getElementById('qrModal');
+
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+
+        document.body.style.overflow = '';
+    }
+
+    // กด ESC เพื่อปิดหน้าต่าง
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeQRModal();
+        }
+    });
+</script>
     
 </body>
 </html>
