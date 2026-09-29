@@ -519,6 +519,130 @@ select {
     max-width: calc(100% - 36px);
 }
 
+
+
+
+/* ===== MAHAMIT FIRST VISIT POPUP ===== */
+
+#mahamitWelcomePopup {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    background: rgba(15, 22, 12, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+#mahamitWelcomePopup.show {
+    display: flex;
+    animation: popupFadeIn 0.35s ease;
+}
+
+.mahamit-popup-container {
+    position: relative;
+    width: min(100%, 620px);
+    max-height: 92vh;
+    overflow: visible;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    animation: popupZoomIn 0.4s ease;
+}
+
+.mahamit-popup-image {
+    display: block;
+    width: 100%;
+    max-height: 92vh;
+    object-fit: contain;
+
+    border-radius: 12px;
+    box-shadow: 0 20px 70px rgba(0, 0, 0, 0.45);
+}
+
+/* ปุ่มกากบาท */
+.mahamit-popup-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    z-index: 2;
+
+    width: 46px;
+    height: 46px;
+    border: 2px solid #f5e9c9;
+    border-radius: 50%;
+
+    background: #31521f;
+    color: #fff7df;
+
+    font-size: 30px;
+    line-height: 1;
+    font-weight: 400;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.35);
+
+    transition: transform 0.2s ease,
+                background 0.2s ease;
+}
+
+.mahamit-popup-close:hover {
+    background: #8e2424;
+    transform: scale(1.08);
+}
+
+@keyframes popupFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popupZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* มือถือ */
+@media (max-width: 600px) {
+    #mahamitWelcomePopup {
+        padding: 18px;
+    }
+
+    .mahamit-popup-container {
+        width: 100%;
+        max-height: 88vh;
+    }
+
+    .mahamit-popup-image {
+        max-height: 88vh;
+        border-radius: 10px;
+    }
+
+    .mahamit-popup-close {
+        width: 42px;
+        height: 42px;
+        font-size: 27px;
+        top: -12px;
+        right: -8px;
+    }
+}
+
         
         
     </style>
@@ -2242,6 +2366,75 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
   
 
+
+<!-- ===== MAHAMIT WELCOME POPUP ===== -->
+
+<div id="mahamitWelcomePopup">
+
+    <div class="mahamit-popup-container">
+
+        <!-- ปุ่มปิด -->
+        <button
+            type="button"
+            class="mahamit-popup-close"
+            id="mahamitPopupClose"
+            aria-label="ปิดโปสเตอร์"
+        >
+            &times;
+        </button>
+
+        <!-- โปสเตอร์ -->
+        <img
+            src="/free.png"
+            alt="MAHAMIT CONCERT #2"
+            class="mahamit-popup-image"
+        >
+
+    </div>
+
+</div>
+
+
+
+ <script>
+(function () {
+    const popup = document.getElementById(
+        'mahamitWelcomePopup'
+    );
+
+    const closeBtn = document.getElementById(
+        'mahamitPopupClose'
+    );
+
+    if (!popup || !closeBtn) return;
+
+    // แสดง Popup ทุกครั้งที่เปิดหรือรีเฟรชหน้า
+    popup.classList.add('show');
+
+    // ปิด Popup
+    function closePopup() {
+        popup.classList.remove('show');
+    }
+
+    closeBtn.addEventListener('click', closePopup);
+
+    // คลิกพื้นที่ด้านนอกเพื่อปิด
+    popup.addEventListener('click', function (e) {
+        if (e.target === popup) {
+            closePopup();
+        }
+    });
+
+    // กด ESC เพื่อปิด
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            closePopup();
+        }
+    });
+})();
+</script>
+
+    
     
 </body>
 </html>
