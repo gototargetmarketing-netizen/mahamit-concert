@@ -1323,123 +1323,53 @@ if (hero) {
         }
 
         async function submitBooking() {
-
-            
-function focusBookingField(elementId, message) {
-    const el = document.getElementById(elementId);
-
-    if (!el) {
-        alert(message);
-        return false;
-    }
-
-    // เลื่อนไปยังช่องที่ต้องแก้ไข
-    el.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center'
-    });
-
-    // ทำกรอบสีแดงชั่วคราว
-    el.classList.add('ring-2', 'ring-red-500', 'border-red-500');
-
-    // เอากรอบแดงออกเมื่อผู้ใช้เริ่มแก้ไข
-    const clearError = () => {
-        el.classList.remove(
-            'ring-2',
-            'ring-red-500',
-            'border-red-500'
-        );
-        el.removeEventListener('input', clearError);
-        el.removeEventListener('change', clearError);
-    };
-
-    el.addEventListener('input', clearError);
-    el.addEventListener('change', clearError);
-
-    // ช่องไฟล์อัปโหลดเป็น hidden จึงไม่ focus โดยตรง
-    if (elementId !== 'dropzone' && !el.disabled) {
-        setTimeout(() => el.focus({ preventScroll: true }), 350);
-    }
-
-    alert(message);
-    return false;
-}
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
             const note = document.getElementById('custNote').value.trim();
 
+            // ตรวจสอบข้อมูลที่จำเป็น และเลื่อนไปยังช่องที่ยังไม่ได้กรอก
+            const missingField = !name
+                ? document.getElementById('custName')
+                : !phone
+                    ? document.getElementById('custPhone')
+                    : !email
+                        ? document.getElementById('custEmail')
+                        : null;
 
-            // ตรวจสอบข้อมูลและเลื่อนไปยังช่องที่ยังกรอกไม่ครบ
-            function scrollToMissingField(element) {
-                if (!element) return;
-
-                element.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'center'
-                });
-
-                // เน้นกรอบสีแดงชั่วคราวให้เห็นชัด
-                const oldBorder = element.style.border;
-                const oldShadow = element.style.boxShadow;
-
-                element.style.border = '2px solid #dc2626';
-                element.style.boxShadow = '0 0 0 4px rgba(220,38,38,0.15)';
-
-                setTimeout(() => {
-                    element.style.border = oldBorder;
-                    element.style.boxShadow = oldShadow;
-                }, 3000);
-            }
-
-            // ตรวจสอบชื่อ
-            if (!name) {
-                alert('กรุณากรอกชื่อ - นามสกุลผู้เข้างาน');
-                const field = document.getElementById('custName');
-                scrollToMissingField(field);
-                field.focus({ preventScroll: true });
+            if (missingField) {
+                alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
+                missingField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                missingField.classList.add('ring-2', 'ring-red-500', 'border-red-500');
+                const clearFieldError = () => {
+                    missingField.classList.remove('ring-2', 'ring-red-500', 'border-red-500');
+                    missingField.removeEventListener('input', clearFieldError);
+                    missingField.removeEventListener('change', clearFieldError);
+                };
+                missingField.addEventListener('input', clearFieldError);
+                missingField.addEventListener('change', clearFieldError);
+                setTimeout(() => missingField.focus({ preventScroll: true }), 450);
                 return;
             }
 
-            // ตรวจสอบเบอร์โทรศัพท์
-            if (!phone) {
-                alert('กรุณากรอกเบอร์โทรศัพท์ติดต่อ');
-                const field = document.getElementById('custPhone');
-                scrollToMissingField(field);
-                field.focus({ preventScroll: true });
-                return;
-            }
-
-            // ตรวจสอบอีเมล
-            if (!email) {
-                alert('กรุณากรอกอีเมลสำหรับรับ E-Ticket');
-                const field = document.getElementById('custEmail');
-                scrollToMissingField(field);
-                field.focus({ preventScroll: true });
-                return;
-            }
-
-            // ตรวจสอบสลิป
+            // ตรวจสอบสลิป และเลื่อนไปยังพื้นที่อัปโหลดที่ถูกต้อง (dropzone)
             if (!uploadedSlipData || !uploadedSlipFile) {
                 alert('กรุณาแนบสลิปการโอนเงินก่อนยืนยันการจอง');
-
-                const dropzone = document.getElementById('dropzone');
-                scrollToMissingField(dropzone);
-
-                // เน้นพื้นที่แนบสลิป
-                if (dropzone) {
-                    dropzone.style.backgroundColor = '#fff1f2';
-
-                    setTimeout(() => {
-                        dropzone.style.backgroundColor = '';
-                    }, 3000);
+                const slipZone = document.getElementById('dropzone');
+                if (slipZone) {
+                    slipZone.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    slipZone.classList.add('ring-2', 'ring-red-500', 'border-red-500');
+                    const clearSlipError = () => {
+                        slipZone.classList.remove('ring-2', 'ring-red-500', 'border-red-500');
+                        slipZone.removeEventListener('click', clearSlipError);
+                    };
+                    slipZone.addEventListener('click', clearSlipError);
                 }
-
                 return;
             }
 
             if (!webAppUrl || !webAppUrl.includes('/exec')) {
-                alert('ยังไม่ได้ตั้งค่า');
+                alert('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL ที่ลงท้ายด้วย /exec กรุณาตั้งค่าก่อน');
                 return;
             }
 
