@@ -1650,19 +1650,24 @@ if (hero) {
                     slipFileName: uploadedSlipFile.name || (orderRef + '-slip.jpg')
                 };
 
-                // ส่งรายการจองไปยัง Apps Script
-                await fetch(webAppUrl, {
+                // เริ่มส่งข้อมูลไป Apps Script แบบไม่บล็อกหน้าเว็บ
+                // no-cors อ่านผลตอบกลับไม่ได้ และการรอ fetch จะทำให้รอขั้นตอนอีเมลฝั่งเซิร์ฟเวอร์ด้วย
+                // จึงเริ่ม POST ทิ้งไว้ แล้วตรวจ orderStatus ควบคู่กัน
+                const postRequest = fetch(webAppUrl, {
                     method: 'POST',
                     mode: 'no-cors',
                     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
+                }).catch(postErr => {
+                    console.warn('Booking POST transport error; will still verify order status:', postErr);
+                    return null;
                 });
 
-                // ตรวจสอบว่ารายการถูกบันทึกจริง โดยเริ่มเช็กเร็วขึ้นและลดเวลารอ
+                // ตรวจสอบว่ารายการถูกบันทึกจริง โดยเริ่มตรวจทันทีและรอไม่เกิน 30 รอบ
                 let bookingVerified = false;
                 let lastStatusError = null;
-                for (let attempt = 0; attempt < 20; attempt++) {
-                    await new Promise(resolve => setTimeout(resolve, attempt === 0 ? 500 : 700));
+                for (let attempt = 0; attempt < 30; attempt++) {
+                    await new Promise(resolve => setTimeout(resolve, attempt === 0 ? 350 : 650));
                     try {
                         const check = await callAppsScriptJSONP(
                             { action: 'orderStatus', orderRef: orderRef }, 7000
@@ -1720,6 +1725,8 @@ if (hero) {
                 if (holdTimerInterval) clearInterval(holdTimerInterval);
                 goToStep(3);
                 refreshSeatStatus(false);
+                // ไม่ต้องรอการส่งอีเมลของ Apps Script ก่อนแสดงหน้าบัตร
+                postRequest.catch(() => {});
 
             } catch (err) {
                 console.error('Booking submission error:', err);
