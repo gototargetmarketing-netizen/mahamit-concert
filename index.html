@@ -1313,6 +1313,8 @@ if (hero) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 uploadedSlipData = e.target.result;
+                document.getElementById('dropzone')
+    .classList.remove('ring-2', 'ring-red-500', 'border-red-500');
                 document.getElementById('uploadPlaceholder').classList.add('hidden');
                 document.getElementById('uploadPreview').classList.remove('hidden');
                 document.getElementById('slipPreviewImg').src = uploadedSlipData;
@@ -1321,20 +1323,96 @@ if (hero) {
         }
 
         async function submitBooking() {
+
+            
+function focusBookingField(elementId, message) {
+    const el = document.getElementById(elementId);
+
+    if (!el) {
+        alert(message);
+        return false;
+    }
+
+    // เลื่อนไปยังช่องที่ต้องแก้ไข
+    el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+    });
+
+    // ทำกรอบสีแดงชั่วคราว
+    el.classList.add('ring-2', 'ring-red-500', 'border-red-500');
+
+    // เอากรอบแดงออกเมื่อผู้ใช้เริ่มแก้ไข
+    const clearError = () => {
+        el.classList.remove(
+            'ring-2',
+            'ring-red-500',
+            'border-red-500'
+        );
+        el.removeEventListener('input', clearError);
+        el.removeEventListener('change', clearError);
+    };
+
+    el.addEventListener('input', clearError);
+    el.addEventListener('change', clearError);
+
+    // ช่องไฟล์อัปโหลดเป็น hidden จึงไม่ focus โดยตรง
+    if (elementId !== 'dropzone' && !el.disabled) {
+        setTimeout(() => el.focus({ preventScroll: true }), 350);
+    }
+
+    alert(message);
+    return false;
+}
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
             const note = document.getElementById('custNote').value.trim();
 
-            if (!name || !phone || !email) {
-                alert('กรุณากรอกข้อมูล ชื่อ เบอร์โทรศัพท์ และอีเมลให้ครบถ้วน');
-                return;
-            }
+           // ตรวจสอบชื่อ เบอร์โทร และอีเมล
+if (!name || !phone || !email) {
 
-            if (!uploadedSlipData || !uploadedSlipFile) {
-                alert('กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง');
-                return;
-            }
+    alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
+
+    const missingField = !name
+        ? document.getElementById('custName')
+        : !phone
+            ? document.getElementById('custPhone')
+            : document.getElementById('custEmail');
+
+    if (missingField) {
+        missingField.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+
+        setTimeout(() => {
+            missingField.focus();
+        }, 500);
+    }
+
+    return;
+}
+
+// ตรวจสอบไฟล์สลิป
+if (!uploadedSlipData || !uploadedSlipFile) {
+
+    alert('กรุณาแนบสลิปการโอนเงินก่อนยืนยันการจอง');
+
+    const slipSection =
+        document.getElementById('uploadSlip') ||
+        document.getElementById('slipUpload') ||
+        document.querySelector('input[type="file"]');
+
+    if (slipSection) {
+        slipSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+
+    return;
+}
 
             if (!webAppUrl || !webAppUrl.includes('/exec')) {
                 alert('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL ที่ลงท้ายด้วย /exec กรุณาตั้งค่าก่อน');
