@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2</title>
+    <!-- Load FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Load Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Load Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        posterGreen: '#425E22',
+                        posterGreenDark: '#2E4316',
+                        posterBurgundy: '#8B2626',
+                        posterBurgundyDark: '#671919',
+                        posterCream: '#EFE9DC',
+                        posterPaper: '#E5DEC9',
+                        posterCard: '#F8F5EE',
+                        posterGold: '#C8A051',
+                        posterDark: '#23201D',
+                        posterMuted: '#6E6A5F'
+                    },
+                    fontFamily: {
+                        kanit: ['Kanit', 'sans-serif'],
+                        prompt: ['Prompt', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #EFE9DC;
+            color: #23201D;
+            background-image: radial-gradient(#D8CEB9 0.75px, transparent 0.75px);
+            background-size: 20px 20px;
+        }
+        .heading-font {
+            font-family: 'Kanit', sans-serif;
+        }
+        .seat-scroll::-webkit-scrollbar {
+            height: 8px;
+            width: 8px;
+        }
+        .seat-scroll::-webkit-scrollbar-track {
+            background: #E5DEC9;
+            border-radius: 4px;
+        }
+        .seat-scroll::-webkit-scrollbar-thumb {
+            background: #425E22;
+            border-radius: 4px;
+        }
+        .shadow-vintage {
+            box-shadow: 4px 6px 0px 0px rgba(35, 32, 29, 0.15);
+        }
+        .shadow-vintage-lg {
+            box-shadow: 6px 10px 0px 0px rgba(35, 32, 29, 0.2);
+        }
+    </style>
+</head>
+<body class="min-h-full flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
+
+    <!-- Navigation Header -->
+    <header class="bg-posterGreen text-white shadow-md sticky top-0 z-40 border-b-2 border-posterGold/40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetToHome()">
+                <!-- Logo Badge -->
+                <div class="bg-posterBurgundy px-3 py-1 rounded border border-posterGold/30 shadow-sm text-center">
+                    <span class="block text-[9px] text-amber-200 tracking-wider font-kanit uppercase">Presented by</span>
+                    <span class="block text-xs sm:text-sm font-bold text-white font-kanit leading-tight">เกรียงไกร มาหามิตร</span>
+                </div>
+                <div>
+                    <h1 class="font-kanit font-bold text-base sm:text-xl text-amber-100 leading-tight tracking-wide">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</h1>
+                    <p class="text-[11px] text-emerald-200/90 hidden sm:block">A Celebration of Friendship Concert</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <button onclick="toggleAdminModal()" class="px-3 py-1.5 bg-posterPaper hover:bg-posterPaper/80 text-posterDark text-xs sm:text-sm font-medium rounded border border-posterGold/40 shadow-sm transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-database text-posterGreen"></i>
+                    <span class="hidden md:inline">ผู้จัดงาน (Google Sheets)</span>
+                </button>
+                <div id="cartSummaryBtn" class="hidden bg-posterBurgundy text-white px-3 py-1.5 rounded text-xs sm:text-sm font-medium items-center gap-2 shadow cursor-pointer hover:bg-posterBurgundyDark transition" onclick="scrollToForm()">
+                    <i class="fa-solid fa-chair text-amber-200"></i>
+                    <span id="headerSeatCount">0 ที่นั่ง</span>
+                    <span class="bg-amber-300 text-posterDark text-xs px-1.5 py-0.5 rounded font-bold" id="headerTotalPrice">0฿</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Concert Banner Hero with Poster Image -->
+    <section class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            
+            <!-- Left Details Column -->
+            <div class="text-center md:text-left space-y-4 max-w-xl">
+                <div class="inline-flex items-center gap-2 bg-posterCream border border-posterGreen/30 text-posterGreen px-3.5 py-1 rounded-full text-xs font-semibold shadow-xs">
+                    <i class="fa-solid fa-compact-disc text-posterGreen"></i>
+                    กว่า 40 ปี ของบทเพลง มิตรภาพ และความทรงจำ
+                </div>
+                
+                <div>
+                    <span class="block text-posterBurgundy font-kanit font-semibold text-sm sm:text-base tracking-widest uppercase">มาหามิตร คอนเสิร์ต #2</span>
+                    <h2 class="text-3xl sm:text-5xl font-black font-kanit text-posterGreen tracking-tight leading-tight my-1">
+                        มิตรภาพไม่มีวันดึกดำบรรพ์
+                    </h2>
+                    <p class="text-xs sm:text-sm text-posterMuted font-medium tracking-wide uppercase">A CELEBRATION OF FRIENDSHIP</p>
+                </div>
+
+                <div class="bg-posterCream/90 p-4 rounded-xl border border-posterPaper shadow-vintage space-y-2 text-xs sm:text-sm">
+                    <div class="flex items-center gap-2 text-posterDark">
+                        <i class="fa-regular fa-calendar-check text-posterBurgundy text-base"></i>
+                        <span class="font-bold">วันเสาร์ที่ 16 มกราคม 2570</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-posterMuted">
+                        <i class="fa-solid fa-location-dot text-posterBurgundy text-base"></i>
+                        <span>เกรียงไกรมาหามิตร (KK Market) แม่ริม, เชียงใหม่</span>
+                    </div>
+                </div>
+
+                <div class="pt-1 flex flex-wrap justify-center md:justify-start gap-3 text-xs">
+                    <span class="bg-posterBurgundy text-white px-3.5 py-2 rounded-lg font-medium flex items-center gap-2 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-300"></span> Zone A (VIP): 2,500 บาท
+                    </span>
+                    <span class="bg-posterGreen text-white px-3.5 py-2 rounded-lg font-medium flex items-center gap-2 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-300"></span> Zone B (Regular): 1,900 บาท
+                    </span>
+                </div>
+            </div>
+
+            <!-- Right Poster Display Container -->
+            <div class="relative group">
+                <div class="w-64 sm:w-80 bg-white p-3 rounded-xl shadow-vintage-lg border border-posterPaper transform rotate-1 group-hover:rotate-0 transition duration-300">
+                    <div class="relative overflow-hidden rounded-lg border border-gray-200">
+                        <img id="mainPosterImg" src="image_3be778.jpg" onerror="this.onerror=null; this.src='https://placehold.co/600x850/EFE9DC/23201D?text=Concert+Poster';" alt="โปสเตอร์คอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2" class="w-full h-auto object-cover rounded">
+                    </div>
+                    <div class="mt-2.5 text-center flex justify-between items-center px-1">
+                        <span class="text-[11px] font-kanit font-bold text-posterGreen">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</span>
+                        <span class="text-[10px] text-posterBurgundy font-mono bg-posterCream px-2 py-0.5 rounded border border-posterPaper">16 ม.ค. 2570</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Main Content App Body -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Step Progress Bar -->
+        <div class="mb-8 max-w-2xl mx-auto">
+            <div class="flex items-center justify-between relative">
+                <div class="absolute left-0 top-1/2 transform -translate-y-1/2 w-full h-0.5 bg-posterPaper -z-0"></div>
+                <div id="progressBar" class="absolute left-0 top-1/2 transform -translate-y-1/2 w-0 h-0.5 bg-posterGreen transition-all duration-500 -z-0"></div>
+
+                <div class="relative z-10 flex flex-col items-center">
+                    <div id="stepCircle1" class="w-9 h-9 rounded-full bg-posterGreen text-white font-bold flex items-center justify-center text-sm shadow-sm transition-all">1</div>
+                    <span class="text-xs font-semibold mt-1.5 text-posterGreen">เลือกที่นั่ง</span>
+                </div>
+                <div class="relative z-10 flex flex-col items-center">
+                    <div id="stepCircle2" class="w-9 h-9 rounded-full bg-posterPaper text-posterMuted font-bold flex items-center justify-center text-sm shadow-sm transition-all">2</div>
+                    <span class="text-xs font-semibold mt-1.5 text-posterMuted" id="stepText2">กรอกข้อมูล & ชำระเงิน</span>
+                </div>
+                <div class="relative z-10 flex flex-col items-center">
+                    <div id="stepCircle3" class="w-9 h-9 rounded-full bg-posterPaper text-posterMuted font-bold flex items-center justify-center text-sm shadow-sm transition-all">3</div>
+                    <span class="text-xs font-semibold mt-1.5 text-posterMuted" id="stepText3">ยืนยัน & รับบัตร</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1: SEAT SELECTION & MAP -->
+        <div id="step1Container" class="space-y-6">
+            
+            <!-- Controls & Legend Bar -->
+            <div class="bg-posterCard p-4 rounded-xl shadow-vintage border border-posterPaper flex flex-wrap items-center justify-between gap-4">
+                <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm font-medium">
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-4 h-4 rounded-sm bg-posterBurgundy border border-posterBurgundyDark shadow-xs inline-block"></span>
+                        <span>Zone A (2,500฿)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-4 h-4 rounded-sm bg-posterGreen border border-posterGreenDark shadow-xs inline-block"></span>
+                        <span>Zone B (1,900฿)</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-4 h-4 rounded-sm bg-amber-400 border border-amber-600 shadow-xs inline-block"></span>
+                        <span class="font-bold text-posterDark">กำลังเลือก</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-4 h-4 rounded-sm bg-gray-300 border border-gray-400 opacity-60 inline-block"></span>
+                        <span class="text-posterMuted">SOLD OUT</span>
+                    </div>
+                </div>
+
+                <!-- Quick Selection Controls -->
+                <div class="flex items-center gap-2">
+                    <span class="text-xs text-posterMuted hidden sm:inline">เลือกเร็ว:</span>
+                    <button onclick="autoSelectSeats(1)" class="px-2.5 py-1 bg-posterCream hover:bg-posterPaper text-posterDark text-xs font-semibold rounded border border-posterPaper transition">1 ที่</button>
+                    <button onclick="autoSelectSeats(2)" class="px-2.5 py-1 bg-posterCream hover:bg-posterPaper text-posterDark text-xs font-semibold rounded border border-posterPaper transition">2 ที่ติดกัน</button>
+                    <button onclick="autoSelectSeats(4)" class="px-2.5 py-1 bg-posterCream hover:bg-posterPaper text-posterDark text-xs font-semibold rounded border border-posterPaper transition">4 ที่ติดกัน</button>
+                    <button onclick="clearSelectedSeats()" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-posterBurgundy text-xs font-semibold rounded border border-red-200 transition">
+                        <i class="fa-solid fa-rotate-left mr-1"></i>ล้างที่นั่ง
+                    </button>
+                </div>
+            </div>
+
+            <!-- Seat Map Viewport Card -->
+            <div class="bg-posterCard rounded-2xl shadow-vintage-lg border border-posterPaper p-4 sm:p-6 overflow-hidden">
+                
+                <!-- Stage Display Area -->
+                <div class="max-w-2xl mx-auto mb-8">
+                    <div class="relative bg-posterDark text-amber-100 py-3 rounded-b-2xl shadow-md text-center font-kanit font-bold tracking-widest text-sm sm:text-base border-b-2 border-posterGold/50">
+                        <i class="fa-solid fa-microphone-lines text-posterGold mr-2"></i>
+                        เวทีการแสดงหลัก (STAGE)
+                    </div>
+                    <p class="text-[11px] text-center text-posterMuted mt-1.5">หน้าเวที / VIP Zone อยู่ด้านหน้า</p>
+                </div>
+
+                <!-- Scrollable Seat Grid Container -->
+                <div class="overflow-x-auto seat-scroll pb-4">
+                    <div class="min-w-[760px] mx-auto space-y-2 select-none">
+                        
+                        <!-- Zone A Label -->
+                        <div class="flex items-center justify-center my-3">
+                            <span class="bg-posterBurgundy text-white px-4 py-1 rounded-full text-xs font-bold font-kanit shadow-xs">
+                                ZONE A - VIP (2,500 THB) - แถว A ถึง G
+                            </span>
+                        </div>
+
+                        <!-- Rows Grid Rendered by JS -->
+                        <div id="seatGridContainer" class="space-y-1.5">
+                            <!-- JS seat grid output -->
+                        </div>
+
+                        <!-- Sound Control / Aisle Divider -->
+                        <div class="py-4 my-2 flex items-center justify-center">
+                            <div class="border-t border-dashed border-posterPaper w-full"></div>
+                            <span class="px-3 bg-posterPaper text-posterDark text-[11px] font-semibold rounded-md whitespace-nowrap mx-2">
+                                <i class="fa-solid fa-sliders mr-1 text-posterGreen"></i> ทางเดิน / โต๊ะควบคุมเสียง (Console)
+                            </span>
+                            <div class="border-t border-dashed border-posterPaper w-full"></div>
+                        </div>
+
+                        <!-- Zone B Label -->
+                        <div class="flex items-center justify-center my-3">
+                            <span class="bg-posterGreen text-white px-4 py-1 rounded-full text-xs font-bold font-kanit shadow-xs">
+                                ZONE B - REGULAR (1,900 THB) - แถว H ถึง T
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- Venue Info Bar -->
+                <div class="mt-4 pt-4 border-t border-posterPaper flex flex-wrap items-center justify-between text-xs text-posterMuted gap-2">
+                    <div>
+                        <i class="fa-solid fa-circle-info text-posterGreen mr-1"></i>
+                        คลิกที่กล่องเพื่อเลือกหรือยกเลิกที่นั่ง (เลือกได้สูงสุด 10 ที่นั่งต่อการจอง)
+                    </div>
+                    <div id="seatStatsText">
+                        ความจุทั้งหมด: 500 ที่นั่ง
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Seats Summary Drawer / Bottom Bar -->
+            <div id="selectionSummaryBar" class="bg-posterCard rounded-xl shadow-vintage-lg border-2 border-posterGreen p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="w-full md:w-auto">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="font-kanit font-bold text-base text-posterDark">รายการที่นั่งที่เลือก</span>
+                        <span id="selectedCountBadge" class="bg-posterBurgundy text-white text-xs font-bold px-2.5 py-0.5 rounded-full">0 ที่นั่ง</span>
+                    </div>
+                    <div id="selectedSeatBadges" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pt-1">
+                        <span class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง กรุณาคลิกเลือกที่นั่งบนผังด้านบน</span>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-auto flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-3 md:pt-0 border-posterPaper">
+                    <div class="text-right">
+                        <span class="text-xs text-posterMuted block">ราคารวมทั้งหมด</span>
+                        <span id="totalPriceDisplay" class="text-2xl font-black font-kanit text-posterBurgundy">0 ฿</span>
+                    </div>
+                    <button id="btnGoToStep2" onclick="goToStep(2)" disabled class="px-6 py-3 bg-gray-300 text-gray-500 font-bold font-kanit text-base rounded-xl cursor-not-allowed shadow transition flex items-center gap-2">
+                        <span>ดำเนินการต่อ</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: USER DETAILS & PAYMENT -->
+        <div id="step2Container" class="hidden space-y-6">
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Left Column: User Contact Form -->
+                <div class="lg:col-span-7 bg-posterCard p-6 rounded-2xl shadow-vintage border border-posterPaper space-y-5">
+                    
+                    <div class="flex items-center justify-between border-b border-posterPaper pb-3">
+                        <h3 class="font-kanit font-bold text-xl text-posterGreen flex items-center gap-2">
+                            <i class="fa-solid fa-user-pen text-posterBurgundy"></i>
+                            ข้อมูลผู้จองบัตร
+                        </h3>
+                        <span class="text-xs text-posterBurgundy font-medium">* จำเป็นต้องกรอก</span>
+                    </div>
+
+                    <!-- Countdown Lock Notification -->
+                    <div class="bg-amber-50/80 border border-amber-300 rounded-lg p-3 text-xs text-amber-900 flex items-center justify-between">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-amber-700 animate-pulse text-sm"></i>
+                            <span>ระบบกำลังล็อกที่นั่งให้คุณชั่วคราว</span>
+                        </span>
+                        <span id="holdTimer" class="font-bold font-mono bg-amber-200 text-amber-900 px-2 py-0.5 rounded">15:00</span>
+                    </div>
+
+                    <form id="bookingForm" onsubmit="event.preventDefault();" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-posterDark mb-1">ชื่อ - นามสกุล ผู้เข้างาน *</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
+                                    <i class="fa-solid fa-user text-xs"></i>
+                                </span>
+                                <input type="text" id="custName" required placeholder="นายมิตรภาพ ดีงาม" class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-posterDark mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
+                                        <i class="fa-solid fa-phone text-xs"></i>
+                                    </span>
+                                    <input type="tel" id="custPhone" required placeholder="0812345678" class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-posterDark mb-1">อีเมล (รับบัตร E-Ticket) *</label>
+                                <div class="relative">
+                                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
+                                        <i class="fa-solid fa-envelope text-xs"></i>
+                                    </span>
+                                    <input type="email" id="custEmail" required placeholder="yourname@email.com" class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-posterDark mb-1">ข้อความเพิ่มเติม / หมายเหตุ (ถ้ามี)</label>
+                            <textarea id="custNote" rows="2" placeholder="ระบุความต้องการเพิ่มเติม หรือรายละเอียดที่ต้องการแจ้งทีมงาน" class="w-full p-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen outline-none"></textarea>
+                        </div>
+                    </form>
+
+                    <!-- Payment Slip Attachment -->
+                    <div class="border-t border-posterPaper pt-4 space-y-3">
+                        <label class="block text-xs font-bold text-posterDark uppercase tracking-wider">
+                            <i class="fa-solid fa-file-invoice-dollar text-posterGreen mr-1"></i>
+                            แนบหลักฐานการโอนเงิน (สลิป) *
+                        </label>
+                        
+                        <div id="dropzone" onclick="document.getElementById('slipInput').click();" class="border-2 border-dashed border-posterGreen/40 hover:border-posterGreen bg-posterCream p-5 rounded-xl text-center cursor-pointer transition">
+                            <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="handleSlipUpload(event)">
+                            
+                            <div id="uploadPlaceholder" class="space-y-2">
+                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-posterGreen"></i>
+                                <p class="text-xs sm:text-sm font-semibold text-posterDark">คลิกเพื่ออัปโหลด หรือลากไฟล์สลิปมาวางที่นี่</p>
+                                <p class="text-[11px] text-posterMuted">รองรับไฟล์ JPG, PNG, WEBP (ไม่เกิน 5MB)</p>
+                            </div>
+
+                            <div id="uploadPreview" class="hidden flex flex-col items-center space-y-2">
+                                <img id="slipPreviewImg" src="" alt="Slip Preview" class="max-h-48 rounded-lg shadow border border-posterPaper object-contain">
+                                <span class="text-xs text-posterGreen font-semibold flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-check"></i> แนบสลิปเรียบร้อยแล้ว
+                                </span>
+                                <span class="text-[11px] text-posterMuted underline">คลิกเพื่อเปลี่ยนรูปสลิป</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: QR Code & Payment Summary Card -->
+                <div class="lg:col-span-5 space-y-6">
+                    
+                    <div class="bg-posterCard p-6 rounded-2xl shadow-vintage border-2 border-posterGold text-center space-y-4 relative overflow-hidden">
+                        <div class="bg-posterBurgundy text-white py-1.5 px-4 rounded-t-xl -mx-6 -mt-6 mb-2 font-kanit font-bold text-sm tracking-wide">
+                            สแกน QR CODE ชำระเงิน
+                        </div>
+
+                        <div class="space-y-1">
+                            <p class="text-xs text-posterMuted">บริษัท เกรียงไกร มาหามิตร จำกัด</p>
+                            <p class="text-xs font-semibold text-posterDark">ธนาคารกสิกรไทย (KBank) เลขบัญชี: <span class="font-mono text-posterBurgundy font-bold">123-4-56789-0</span></p>
+                        </div>
+
+                        <!-- Real-time Dynamic PromptPay QR Code Generator -->
+                        <div class="bg-white p-4 rounded-xl border border-posterPaper inline-block shadow-inner">
+                            <img id="qrCodeImg" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PROMPTPAY_KRIENGKRAI" alt="PromptPay QR Code" class="w-48 h-48 mx-auto rounded shadow-sm border border-gray-100">
+                            <p class="text-[11px] text-posterMuted mt-2 font-medium">
+                                <i class="fa-solid fa-qrcode mr-1 text-posterGreen"></i> PromptPay / ทุกแอปธนาคาร
+                            </p>
+                        </div>
+
+                        <div class="bg-posterCream border border-posterPaper p-3 rounded-xl text-center">
+                            <span class="text-xs text-posterMuted block">ยอดเงินที่ต้องชำระสุทธิ</span>
+                            <span id="paymentTotalAmount" class="text-3xl font-black font-kanit text-posterGreen">0 ฿</span>
+                        </div>
+                    </div>
+
+                    <!-- Order Seat Breakdown -->
+                    <div class="bg-posterCard p-5 rounded-2xl shadow-vintage border border-posterPaper space-y-3">
+                        <h4 class="font-kanit font-bold text-sm text-posterDark border-b border-posterPaper pb-2">
+                            สรุปที่นั่งที่จอง (<span id="summarySeatCount">0</span> ที่นั่ง)
+                        </h4>
+                        <div id="summarySeatsList" class="space-y-2 text-xs max-h-36 overflow-y-auto">
+                            <!-- JS Seats Breakdown -->
+                        </div>
+                        <div class="border-t border-posterPaper pt-2 flex justify-between items-center text-xs text-posterMuted">
+                            <span>ค่าธรรมเนียมการออกบัตร</span>
+                            <span class="font-bold text-posterGreen">ฟรี (0 ฿)</span>
+                        </div>
+                    </div>
+
+                    <!-- Back & Submit Buttons -->
+                    <div class="flex items-center gap-3">
+                        <button onclick="goToStep(1)" class="w-1/3 py-3 bg-posterPaper hover:bg-posterPaper/80 text-posterDark font-bold rounded-xl text-sm transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>ย้อนกลับ</span>
+                        </button>
+                        <button id="btnSubmitBooking" onclick="submitBooking()" class="w-2/3 py-3.5 bg-posterBurgundy hover:bg-posterBurgundyDark text-white font-bold font-kanit text-base rounded-xl shadow-vintage transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>ยืนยันการจองที่นั่ง</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- STEP 3: CONFIRMATION & E-TICKET -->
+        <div id="step3Container" class="hidden space-y-6 max-w-3xl mx-auto">
+            
+            <div class="bg-posterCard rounded-3xl shadow-vintage-lg border-2 border-posterGold overflow-hidden text-center relative">
+                
+                <!-- Success Header -->
+                <div class="bg-posterGreen text-white p-6 sm:p-8 space-y-2 relative border-b-2 border-posterGold/40">
+                    <div class="w-16 h-16 bg-amber-300 text-posterDark rounded-full flex items-center justify-center mx-auto text-3xl font-bold shadow-md mb-2">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h2 class="text-2xl sm:text-4xl font-black font-kanit text-amber-100">ส่งข้อมูลการจองเรียบร้อยแล้ว!</h2>
+                    <p class="text-xs sm:text-sm text-emerald-100">ขอบคุณสำหรับการจองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2</p>
+                    <div class="inline-block bg-white/10 px-4 py-1 rounded-full text-xs text-amber-200 font-mono mt-2 border border-white/20">
+                        Order Ref: <span id="ticketOrderRef">MK-2570-0000</span>
+                    </div>
+                </div>
+
+                <!-- Google Sheets Status -->
+                <div class="bg-amber-50/80 border-b border-amber-200 p-3 text-xs text-amber-900 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-cloud-arrow-up text-amber-700 animate-bounce"></i>
+                    <span id="cloudStatusText">บันทึกข้อมูลลง Google Sheets และอัปโหลดสลิปเข้า Google Drive เรียบร้อยแล้ว</span>
+                </div>
+
+                <!-- Digital Ticket Card View -->
+                <div class="p-6 sm:p-8 space-y-6 text-left">
+                    
+                    <div class="bg-posterCream p-5 rounded-2xl border-2 border-dashed border-posterGreen/40 relative">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-posterGreen/20 pb-4">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-posterBurgundy tracking-wider block">Concert Ticket</span>
+                                <h3 class="font-kanit font-bold text-xl text-posterGreen">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</h3>
+                                <p class="text-xs text-posterMuted">เสาร์ที่ 16 มกราคม 2570 | KK Market แม่ริม เชียงใหม่</p>
+                            </div>
+                            <div class="bg-white p-2 rounded-lg shadow-sm border border-posterPaper text-center flex-shrink-0">
+                                <img id="ticketQrImage" src="" alt="Ticket QR Code" class="w-20 h-20">
+                                <span class="text-[9px] text-posterMuted font-mono block mt-1">SCAN AT ENTRY</span>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Details Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-4 text-xs">
+                            <div>
+                                <span class="text-posterMuted block text-[10px]">ชื่อผู้จองบัตร</span>
+                                <span id="ticketCustName" class="font-bold text-posterDark">-</span>
+                            </div>
+                            <div>
+                                <span class="text-posterMuted block text-[10px]">เบอร์โทรศัพท์</span>
+                                <span id="ticketCustPhone" class="font-bold text-posterDark">-</span>
+                            </div>
+                            <div>
+                                <span class="text-posterMuted block text-[10px]">จำนวนที่นั่ง</span>
+                                <span id="ticketSeatCount" class="font-bold text-posterBurgundy">-</span>
+                            </div>
+                            <div>
+                                <span class="text-posterMuted block text-[10px]">ราคารวมทั้งสิ้น</span>
+                                <span id="ticketTotalPrice" class="font-bold text-posterGreen">-</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 pt-3 border-t border-posterGreen/20">
+                            <span class="text-xs text-posterMuted block mb-1">หมายเลขที่นั่งของคุณ:</span>
+                            <div id="ticketSeatsBadges" class="flex flex-wrap gap-1.5">
+                                <!-- Badges -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instructions -->
+                    <div class="text-xs text-posterMuted space-y-1 bg-posterCream/60 p-4 rounded-xl border border-posterPaper">
+                        <p class="font-bold text-posterDark"><i class="fa-solid fa-circle-info text-posterGreen mr-1"></i> คำแนะนำเพิ่มเติม:</p>
+                        <p>1. ทางผู้จัดงานจะทำการตรวจสอบหลักฐานการโอนเงินและส่งอีเมลยืนยันขั้นสุดท้ายให้ท่านภายใน 24 ชม.</p>
+                        <p>2. ท่านสามารถแคปหน้าจอนี้ หรือแสดงอีเมลรับบัตรแก่เจ้าหน้าที่ ณ จุดลงทะเบียนวันงาน</p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                        <button onclick="window.print()" class="flex-1 py-3 bg-posterGreen hover:bg-posterGreenDark text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs">
+                            <i class="fa-solid fa-print"></i>
+                            <span>พิมพ์ / บันทึกเป็น PDF</span>
+                        </button>
+                        <button onclick="resetToHome()" class="flex-1 py-3 bg-posterPaper hover:bg-posterPaper/80 text-posterDark font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-house"></i>
+                            <span>กลับสู่หน้าแรก</span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ORGANIZER / ADMIN GOOGLE SHEETS MODAL -->
+    <div id="adminModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <div class="bg-posterCard max-w-2xl w-full rounded-2xl shadow-2xl border-2 border-posterGold p-6 space-y-4 max-h-[90vh] overflow-y-auto relative">
+            <button onclick="toggleAdminModal()" class="absolute top-4 right-4 text-posterMuted hover:text-posterDark text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="border-b border-posterPaper pb-3">
+                <h3 class="font-kanit font-bold text-xl text-posterGreen flex items-center gap-2">
+                    <i class="fa-solid fa-gears text-posterBurgundy"></i>
+                    สำหรับผู้จัดงาน: การตั้งค่า Google Sheets & Drive
+                </h3>
+                <p class="text-xs text-posterMuted mt-1">ระบบนี้ถูกออกแบบให้เชื่อมต่อข้อมูลกับ Google Sheets และ Google Drive ได้แบบไม่ต้องผ่านเซิร์ฟเวอร์</p>
+            </div>
+
+            <div class="space-y-3 text-xs text-posterDark">
+                <div class="bg-posterCream p-3.5 rounded-xl border border-posterPaper space-y-2">
+                    <h4 class="font-bold text-posterGreen text-sm">วิธีเปิดใช้งาน Google Sheets & Google Drive Storage:</h4>
+                    <ol class="list-decimal list-inside space-y-1.5 text-posterMuted">
+                        <li>เปิด <a href="https://sheets.new" target="_blank" class="text-posterBurgundy underline font-bold">Google Sheets ใหม่</a> และตั้งชื่อตามต้องการ</li>
+                        <li>ไปที่เมนู <b>Extensions (ส่วนขยาย)</b> &rarr; <b>Apps Script</b></li>
+                        <li>วางโค้ด Apps Script ด้านล่างนี้ลงไป แล้วกด <b>Deploy (ทำให้ใช้งานได้) &rarr; New Deployment (การทำให้ใช้งานได้ใหม่)</b> เลือกสิทธิ์ <i>Anyone (ทุกคน)</i></li>
+                    </ol>
+                </div>
+
+                <div class="bg-gray-800 text-emerald-400 p-3 rounded-lg text-[11px] font-mono relative overflow-x-auto">
+                    <button onclick="copyScriptCode()" class="absolute top-2 right-2 bg-posterGreen text-white px-2 py-1 rounded text-[10px] hover:bg-posterGreenDark">
+                        <i class="fa-regular fa-copy mr-1"></i>คัดลอกโค้ด
+                    </button>
+                    <pre id="scriptCodeBlock">
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Create header row if empty
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(["Timestamp", "Order Ref", "Name", "Phone", "Email", "Seats", "Total Amount", "Slip Image / Note"]);
+    }
+    
+    sheet.appendRow([
+      new Date(),
+      data.orderRef,
+      data.custName,
+      data.custPhone,
+      data.custEmail,
+      data.seats.join(", "),
+      data.totalPrice,
+      data.custNote || "Slip Received"
+    ]);
+    
+    return ContentService.createTextOutput(JSON.stringify({result: "success"}))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService.createTextOutput(JSON.stringify({result: "error", error: err.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</pre>
+                </div>
+
+                <div>
+                    <label class="block font-bold mb-1">วาง Google Apps Script Web App URL ที่นี่:</label>
+                    <input type="url" id="googleScriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" class="w-full p-2.5 border border-posterPaper rounded-lg text-xs bg-white focus:ring-2 focus:ring-posterGreen outline-none">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 pt-2 border-t border-posterPaper">
+                <button onclick="saveGoogleSheetsConfig()" class="px-5 py-2 bg-posterGreen hover:bg-posterGreenDark text-white font-bold rounded-lg text-xs transition">
+                    บันทึกการตั้งค่า
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        /* ROW & SEATING CONFIGURATION (500 seats total) */
+        // Zone A: Rows A to G (7 rows * 25 seats = 175 seats @ 2,500 THB)
+        // Zone B: Rows H to T (13 rows * 25 seats = 325 seats @ 1,900 THB)
+        const ROW_CONFIG = [
+            { row: 'A', zone: 'A', price: 2500 },
+            { row: 'B', zone: 'A', price: 2500 },
+            { row: 'C', zone: 'A', price: 2500 },
+            { row: 'D', zone: 'A', price: 2500 },
+            { row: 'E', zone: 'A', price: 2500 },
+            { row: 'F', zone: 'A', price: 2500 },
+            { row: 'G', zone: 'A', price: 2500 },
+            { row: 'H', zone: 'B', price: 1900 },
+            { row: 'I', zone: 'B', price: 1900 },
+            { row: 'J', zone: 'B', price: 1900 },
+            { row: 'K', zone: 'B', price: 1900 },
+            { row: 'L', zone: 'B', price: 1900 },
+            { row: 'M', zone: 'B', price: 1900 },
+            { row: 'N', zone: 'B', price: 1900 },
+            { row: 'O', zone: 'B', price: 1900 },
+            { row: 'P', zone: 'B', price: 1900 },
+            { row: 'Q', zone: 'B', price: 1900 },
+            { row: 'R', zone: 'B', price: 1900 },
+            { row: 'S', zone: 'B', price: 1900 },
+            { row: 'T', zone: 'B', price: 1900 }
+        ];
+
+        // Global State Variables
+        const seatMapData = {};
+        const selectedSeats = new Set();
+        let currentStep = 1;
+        let uploadedSlipData = null;
+        let holdTimerInterval = null;
+        let webAppUrl = localStorage.getItem('mm_web_app_url') || '';
+
+        // Initialize mock seat data on window load
+        window.onload = function() {
+            initSeatData();
+            renderSeatGrid();
+            updateSummaryUI();
+
+            if (webAppUrl) {
+                const input = document.getElementById('googleScriptUrlInput');
+                if (input) input.value = webAppUrl;
+            }
+        };
+
+        function initSeatData() {
+            // Mock sold seat pattern for realistic demo (~8% sold)
+            const mockSoldSeats = new Set([
+                'A05', 'A06', 'B12', 'B13', 'C01', 'C02', 'D10', 'E15', 'E16', 'F20',
+                'H04', 'H05', 'I10', 'J14', 'J15', 'K01', 'L08', 'M22', 'P11', 'T25'
+            ]);
+
+            ROW_CONFIG.forEach(cfg => {
+                for (let num = 1; num <= 25; num++) {
+                    const seatId = `${cfg.row}${num < 10 ? '0' + num : num}`;
+                    seatMapData[seatId] = {
+                        id: seatId,
+                        row: cfg.row,
+                        num: num,
+                        zone: cfg.zone,
+                        price: cfg.price,
+                        isSold: mockSoldSeats.has(seatId)
+                    };
+                }
+            });
+        }
+
+        function renderSeatGrid() {
+            const container = document.getElementById('seatGridContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            ROW_CONFIG.forEach(cfg => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'flex items-center justify-center gap-1 sm:gap-1.5';
+
+                // Row Label Left
+                const labelLeft = document.createElement('span');
+                labelLeft.className = 'w-6 text-center font-kanit font-bold text-xs text-posterMuted';
+                labelLeft.textContent = cfg.row;
+                rowDiv.appendChild(labelLeft);
+
+                // Seats 1 to 25 with aisle gaps
+                for (let num = 1; num <= 25; num++) {
+                    if (num === 7 || num === 20) {
+                        const aisle = document.createElement('div');
+                        aisle.className = 'w-3 sm:w-5';
+                        rowDiv.appendChild(aisle);
+                    }
+
+                    const seatId = `${cfg.row}${num < 10 ? '0' + num : num}`;
+                    const seat = seatMapData[seatId];
+                    
+                    const btn = document.createElement('button');
+                    btn.id = `seat-${seatId}`;
+                    btn.type = 'button';
+                    btn.onclick = () => toggleSeatSelection(seatId);
+
+                    let bgClass = '';
+                    if (seat.isSold) {
+                        bgClass = 'bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed opacity-60';
+                        btn.disabled = true;
+                        btn.title = `${seatId} - SOLD OUT`;
+                    } else if (selectedSeats.has(seatId)) {
+                        bgClass = 'bg-amber-400 border-amber-600 text-posterDark font-bold ring-2 ring-amber-300 scale-105 z-10';
+                        btn.title = `${seatId} - เลือกอยู่ (${seat.price.toLocaleString()}฿)`;
+                    } else {
+                        if (seat.zone === 'A') {
+                            bgClass = 'bg-posterBurgundy hover:bg-posterBurgundyDark border-posterBurgundyDark text-white hover:scale-105';
+                        } else {
+                            bgClass = 'bg-posterGreen hover:bg-posterGreenDark border-posterGreenDark text-white hover:scale-105';
+                        }
+                        btn.title = `${seatId} - โซน ${seat.zone} (${seat.price.toLocaleString()}฿)`;
+                    }
+
+                    btn.className = `w-6 h-6 sm:w-7 sm:h-7 rounded text-[10px] sm:text-xs font-semibold border shadow-xs transition-all duration-150 flex items-center justify-center ${bgClass}`;
+                    btn.textContent = num;
+
+                    rowDiv.appendChild(btn);
+                }
+
+                // Row Label Right
+                const labelRight = document.createElement('span');
+                labelRight.className = 'w-6 text-center font-kanit font-bold text-xs text-posterMuted';
+                labelRight.textContent = cfg.row;
+                rowDiv.appendChild(labelRight);
+
+                container.appendChild(rowDiv);
+            });
+        }
+
+        function toggleSeatSelection(seatId) {
+            const seat = seatMapData[seatId];
+            if (!seat || seat.isSold) return;
+
+            if (selectedSeats.has(seatId)) {
+                selectedSeats.delete(seatId);
+            } else {
+                if (selectedSeats.size >= 10) {
+                    alert('ท่านสามารถเลือกที่นั่งได้สูงสุด 10 ที่นั่งต่อการจอง');
+                    return;
+                }
+                selectedSeats.add(seatId);
+            }
+
+            renderSeatGrid();
+            updateSummaryUI();
+        }
+
+        // Auto Select Adjacent Seats Helper
+        function autoSelectSeats(count) {
+            selectedSeats.clear();
+
+            for (const cfg of ROW_CONFIG) {
+                let consecutive = [];
+                for (let num = 1; num <= 25; num++) {
+                    const seatId = `${cfg.row}${num < 10 ? '0' + num : num}`;
+                    const seat = seatMapData[seatId];
+
+                    if (!seat.isSold) {
+                        consecutive.push(seatId);
+                        if (consecutive.length === count) {
+                            consecutive.forEach(id => selectedSeats.add(id));
+                            renderSeatGrid();
+                            updateSummaryUI();
+                            return;
+                        }
+                    } else {
+                        consecutive = [];
+                    }
+                }
+            }
+
+            // Fallback: Pick any available seats
+            let picked = 0;
+            for (const id in seatMapData) {
+                if (!seatMapData[id].isSold) {
+                    selectedSeats.add(id);
+                    picked++;
+                    if (picked === count) break;
+                }
+            }
+
+            renderSeatGrid();
+            updateSummaryUI();
+        }
+
+        function clearSelectedSeats() {
+            selectedSeats.clear();
+            renderSeatGrid();
+            updateSummaryUI();
+        }
+
+        function updateSummaryUI() {
+            const seatArray = Array.from(selectedSeats).sort();
+            const count = seatArray.length;
+            let totalPrice = 0;
+
+            const badgeContainer = document.getElementById('selectedSeatBadges');
+            const summaryList = document.getElementById('summarySeatsList');
+            if (badgeContainer) badgeContainer.innerHTML = '';
+            if (summaryList) summaryList.innerHTML = '';
+
+            if (count === 0) {
+                if (badgeContainer) badgeContainer.innerHTML = '<span class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง กรุณาคลิกเลือกที่นั่งบนผังด้านบน</span>';
+                if (summaryList) summaryList.innerHTML = '<span class="text-xs text-posterMuted italic">ไม่มีรายการที่นั่ง</span>';
+            } else {
+                seatArray.forEach(id => {
+                    const seat = seatMapData[id];
+                    totalPrice += seat.price;
+
+                    // Badge in step 1
+                    if (badgeContainer) {
+                        const badge = document.createElement('span');
+                        badge.className = `inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold shadow-xs ${seat.zone === 'A' ? 'bg-red-100 text-posterBurgundy border border-red-200' : 'bg-emerald-100 text-posterGreen border border-emerald-200'}`;
+                        badge.innerHTML = `
+                            ${id} (${seat.zone})
+                            <i class="fa-solid fa-xmark text-[10px] cursor-pointer hover:text-red-700 ml-1" onclick="toggleSeatSelection('${id}')"></i>
+                        `;
+                        badgeContainer.appendChild(badge);
+                    }
+
+                    // Item in step 2 summary breakdown
+                    if (summaryList) {
+                        const item = document.createElement('div');
+                        item.className = 'flex justify-between items-center py-1 border-b border-posterPaper/50';
+                        item.innerHTML = `
+                            <span class="font-bold text-posterDark">ที่นั่ง ${id} (Zone ${seat.zone})</span>
+                            <span class="font-mono text-posterBurgundy font-semibold">${seat.price.toLocaleString()} ฿</span>
+                        `;
+                        summaryList.appendChild(item);
+                    }
+                });
+            }
+
+            // Update UI Counters
+            document.getElementById('selectedCountBadge').textContent = `${count} ที่นั่ง`;
+            document.getElementById('totalPriceDisplay').textContent = `${totalPrice.toLocaleString()} ฿`;
+            document.getElementById('headerSeatCount').textContent = `${count} ที่นั่ง`;
+            document.getElementById('headerTotalPrice').textContent = `${totalPrice.toLocaleString()}฿`;
+            document.getElementById('paymentTotalAmount').textContent = `${totalPrice.toLocaleString()} ฿`;
+            document.getElementById('summarySeatCount').textContent = count;
+
+            // Toggle Sticky Cart Header Button
+            const cartHeaderBtn = document.getElementById('cartSummaryBtn');
+            if (cartHeaderBtn) {
+                if (count > 0) {
+                    cartHeaderBtn.classList.remove('hidden');
+                    cartHeaderBtn.classList.add('flex');
+                } else {
+                    cartHeaderBtn.classList.add('hidden');
+                    cartHeaderBtn.classList.remove('flex');
+                }
+            }
+
+            // Enable/Disable Step 2 Button
+            const btnStep2 = document.getElementById('btnGoToStep2');
+            if (btnStep2) {
+                if (count > 0) {
+                    btnStep2.disabled = false;
+                    btnStep2.className = 'px-6 py-3 bg-posterBurgundy hover:bg-posterBurgundyDark text-white font-bold font-kanit text-base rounded-xl cursor-pointer shadow-vintage transition flex items-center gap-2';
+                } else {
+                    btnStep2.disabled = true;
+                    btnStep2.className = 'px-6 py-3 bg-gray-300 text-gray-500 font-bold font-kanit text-base rounded-xl cursor-not-allowed shadow transition flex items-center gap-2';
+                }
+            }
+
+            // Update Dynamic PromptPay QR Code
+            if (totalPrice > 0) {
+                const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=PROMPTPAY_KKMARKET_AMOUNT_${totalPrice}`;
+                const qrImg = document.getElementById('qrCodeImg');
+                if (qrImg) qrImg.src = qrUrl;
+            }
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+
+            // Hide all steps
+            document.getElementById('step1Container').classList.add('hidden');
+            document.getElementById('step2Container').classList.add('hidden');
+            document.getElementById('step3Container').classList.add('hidden');
+
+            // Show current step
+            document.getElementById(`step${step}Container`).classList.remove('hidden');
+
+            // Update Progress Bar
+            const progressBar = document.getElementById('progressBar');
+            if (step === 1) {
+                progressBar.style.width = '0%';
+                setStepCircleActive(1);
+            } else if (step === 2) {
+                progressBar.style.width = '50%';
+                setStepCircleActive(2);
+                startHoldTimer();
+            } else if (step === 3) {
+                progressBar.style.width = '100%';
+                setStepCircleActive(3);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setStepCircleActive(step) {
+            [1, 2, 3].forEach(s => {
+                const circle = document.getElementById(`stepCircle${s}`);
+                const text = document.getElementById(`stepText${s}`);
+                if (s <= step) {
+                    circle.className = 'w-9 h-9 rounded-full bg-posterGreen text-white font-bold flex items-center justify-center text-sm shadow-sm transition-all';
+                    if (text) text.className = 'text-xs font-semibold mt-1.5 text-posterGreen';
+                } else {
+                    circle.className = 'w-9 h-9 rounded-full bg-posterPaper text-posterMuted font-bold flex items-center justify-center text-sm shadow-sm transition-all';
+                    if (text) text.className = 'text-xs font-semibold mt-1.5 text-posterMuted';
+                }
+            });
+        }
+
+        function startHoldTimer() {
+            if (holdTimerInterval) clearInterval(holdTimerInterval);
+            let totalSeconds = 15 * 60; // 15 minutes hold
+
+            const display = document.getElementById('holdTimer');
+            holdTimerInterval = setInterval(() => {
+                totalSeconds--;
+                if (totalSeconds <= 0) {
+                    clearInterval(holdTimerInterval);
+                    alert('หมดเวลาล็อกที่นั่งชั่วคราว กรุณาทำการเลือกที่นั่งใหม่อีกครั้ง');
+                    goToStep(1);
+                    return;
+                }
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                if (display) display.textContent = `${m < 10 ? '0' + m : m}:${s < 10 ? '0' + s : s}`;
+            }, 1000);
+        }
+
+        function handleSlipUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 5 * 1024 * 1024) {
+                alert('ไฟล์มีขนาดเกิน 5MB กรุณาเลือกไฟล์ที่มีขนาดเล็กลง');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                uploadedSlipData = e.target.result;
+                document.getElementById('uploadPlaceholder').classList.add('hidden');
+                document.getElementById('uploadPreview').classList.remove('hidden');
+                document.getElementById('slipPreviewImg').src = uploadedSlipData;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function submitBooking() {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const email = document.getElementById('custEmail').value.trim();
+            const note = document.getElementById('custNote').value.trim();
+
+            if (!name || !phone || !email) {
+                alert('กรุณากรอกข้อมูล ชื่อ เบอร์โทรศัพท์ และอีเมลให้ครบถ้วน');
+                return;
+            }
+
+            if (!uploadedSlipData) {
+                alert('กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง');
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmitBooking');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังบันทึกข้อมูล...';
+
+            const seatArray = Array.from(selectedSeats).sort();
+            let totalAmt = 0;
+            seatArray.forEach(id => totalAmt += seatMapData[id].price);
+
+            const orderRef = 'MK-2570-' + Math.floor(1000 + Math.random() * 9000);
+
+            // Populate Ticket View Elements
+            document.getElementById('ticketOrderRef').textContent = orderRef;
+            document.getElementById('ticketCustName').textContent = name;
+            document.getElementById('ticketCustPhone').textContent = phone;
+            document.getElementById('ticketSeatCount').textContent = `${seatArray.length} ที่นั่ง`;
+            document.getElementById('ticketTotalPrice').textContent = `${totalAmt.toLocaleString()} ฿`;
+
+            const ticketBadgesContainer = document.getElementById('ticketSeatsBadges');
+            ticketBadgesContainer.innerHTML = '';
+            seatArray.forEach(id => {
+                const seat = seatMapData[id];
+                const badge = document.createElement('span');
+                badge.className = `inline-block px-2.5 py-1 rounded text-xs font-bold shadow-xs ${seat.zone === 'A' ? 'bg-posterBurgundy text-white' : 'bg-posterGreen text-white'}`;
+                badge.textContent = `${id} (${seat.zone})`;
+                ticketBadgesContainer.appendChild(badge);
+            });
+
+            // Set Ticket QR Code
+            document.getElementById('ticketQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${orderRef}`;
+
+            // Mark selected seats as SOLD OUT
+            seatArray.forEach(id => {
+                if (seatMapData[id]) seatMapData[id].isSold = true;
+            });
+
+            // Post payload to Google Apps Script if configured
+            if (webAppUrl) {
+                const payload = {
+                    orderRef: orderRef,
+                    custName: name,
+                    custPhone: phone,
+                    custEmail: email,
+                    custNote: note,
+                    seats: seatArray,
+                    totalPrice: totalAmt
+                };
+
+                fetch(webAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                }).catch(err => console.log('Sync err:', err));
+            }
+
+            setTimeout(() => {
+                if (holdTimerInterval) clearInterval(holdTimerInterval);
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ยืนยันการจองที่นั่ง';
+                goToStep(3);
+            }, 800);
+        }
+
+        function resetToHome() {
+            selectedSeats.clear();
+            uploadedSlipData = null;
+            document.getElementById('bookingForm').reset();
+            document.getElementById('uploadPlaceholder').classList.remove('hidden');
+            document.getElementById('uploadPreview').classList.add('hidden');
+            renderSeatGrid();
+            updateSummaryUI();
+            goToStep(1);
+        }
+
+        function scrollToForm() {
+            const el = document.getElementById('selectionSummaryBar');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function toggleAdminModal() {
+            const modal = document.getElementById('adminModal');
+            if (modal) modal.classList.toggle('hidden');
+        }
+
+        function copyScriptCode() {
+            const code = document.getElementById('scriptCodeBlock').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                alert('คัดลอกโค้ด Google Apps Script เรียบร้อยแล้ว!');
+            }).catch(() => {
+                document.execCommand('copy');
+                alert('คัดลอกโค้ดเรียบร้อยแล้ว!');
+            });
+        }
+
+        function saveGoogleSheetsConfig() {
+            const url = document.getElementById('googleScriptUrlInput').value.trim();
+            webAppUrl = url;
+            localStorage.setItem('mm_web_app_url', url);
+            alert('บันทึกการเชื่อมต่อ Google Sheets Web App URL เรียบร้อยแล้ว!');
+            toggleAdminModal();
+        }
+    </script>
+</body>
+</html>
