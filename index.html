@@ -1571,7 +1571,13 @@ if (hero) {
             reader.readAsDataURL(file);
         }
 
+        let isBookingSubmitting = false;
+        
         async function submitBooking() {
+
+    // ป้องกันการกดปุ่มซ้ำระหว่างประมวลผล
+    if (isBookingSubmitting) return;
+            
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
@@ -1598,27 +1604,48 @@ if (hero) {
                 return;
             }
 
-            // Keep a snapshot of the seats the customer chose before refreshing the server state.
-            const seatsChosenBeforeRefresh = Array.from(selectedSeats);
-            // Re-check against the live Google Sheet immediately before sending the booking.
-            const statusLoaded = await refreshSeatStatus(false);
-            if (!statusLoaded) {
-                alert('ตรวจสอบสถานะที่นั่งจากระบบกลางไม่ได้ กรุณาลองใหม่อีกครั้ง');
-                return;
-            }
-            const newlyTaken = seatsChosenBeforeRefresh.filter(id => !seatMapData[id] || seatMapData[id].isSold);
-            if (newlyTaken.length) {
-                alert('ที่นั่ง ' + newlyTaken.join(', ') + ' มีผู้จองไปแล้ว กรุณาเลือกที่นั่งใหม่');
-                goToStep(1);
-                return;
-            }
+           
+            // =========================================
+            // ล็อกปุ่มทันที ป้องกันการกดซ้ำ
+            // =========================================
+
+            isBookingSubmitting = true;
 
             const btnSubmit = document.getElementById('btnSubmitBooking');
             const originalButtonHtml = btnSubmit.innerHTML;
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังส่งข้อมูลและสลิป...';
 
-            const seatArray = Array.from(selectedSeats).sort();
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบและยืนยันการจอง...';
+
+            // ครอบคลุมการตรวจสอบสถานะที่นั่งใน try ด้วย เพื่อให้ปลดล็อกปุ่มได้
+            // แม้การเชื่อมต่อ Google Sheets จะเกิดข้อผิดพลาด
+            try {
+                // เก็บรายการที่นั่งที่ลูกค้าเลือกไว้
+                const seatsChosenBeforeRefresh = Array.from(selectedSeats);
+
+                // ตรวจสอบสถานะที่นั่งจาก Google Sheets ก่อนส่งรายการจอง
+                const statusLoaded = await refreshSeatStatus(false);
+
+                if (!statusLoaded) {
+                    throw new Error('ตรวจสอบสถานะที่นั่งจากระบบกลางไม่ได้ กรุณาลองใหม่อีกครั้ง');
+                }
+
+                // ตรวจสอบว่ามีคนจองที่นั่งไปแล้วหรือไม่
+                const newlyTaken = seatsChosenBeforeRefresh.filter(
+                    id => !seatMapData[id] || seatMapData[id].isSold
+                );
+
+                if (newlyTaken.length) {
+                    alert('ที่นั่ง ' + newlyTaken.join(', ') + ' มีผู้จองไปแล้ว กรุณาเลือกที่นั่งใหม่');
+                    goToStep(1);
+                    isBookingSubmitting = false;
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = originalButtonHtml;
+                    return;
+                }
+
+                const seatArray = Array.from(selectedSeats).sort();
             let totalAmt = 0;
             seatArray.forEach(id => totalAmt += seatMapData[id].price);
 
@@ -1626,7 +1653,6 @@ if (hero) {
             const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
                 Math.random().toString(36).slice(2, 6).toUpperCase();
 
-            try {
                 // Apps Script expects slipBase64 and removes the data:image/...;base64, prefix itself.
                 const payload = {
                     orderRef: orderRef,
@@ -1652,10 +1678,18 @@ if (hero) {
 
                 let bookingVerified = false;
                 let lastStatusError = null;
-                for (let attempt = 0; attempt < 24; attempt++) {
-                    await new Promise(resolve => setTimeout(resolve, 2500));
+
+                // ตรวจทันทีหลังส่ง แล้วค่อยเว้นช่วงสั้น ๆ ระหว่างตรวจซ้ำ
+                // ลดเวลารอจากเดิมที่หน่วงก่อนตรวจทุกครั้ง 2.5 วินาที จำนวน 24 รอบ
+                for (let attempt = 0; attempt < 12; attempt++) {
+                    if (attempt > 0) {
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                    }
                     try {
-                        const check = await callAppsScriptJSONP({ action: 'orderStatus', orderRef: orderRef }, 12000);
+                        const check = await callAppsScriptJSONP(
+                            { action: 'orderStatus', orderRef: orderRef },
+                            5000
+                        );
                         if (check && check.success && check.found === true) {
                             bookingVerified = true;
                             break;
@@ -1707,18 +1741,32 @@ document.getElementById('ticketQrImage').src =
                     if (seatMapData[id]) seatMapData[id].isSold = true;
                 });
 
-                if (holdTimerInterval) clearInterval(holdTimerInterval);
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = originalButtonHtml;
-                goToStep(3);
-                refreshSeatStatus(false);
+              
+if (holdTimerInterval) clearInterval(holdTimerInterval);
 
-            } catch (err) {
-                console.error('Booking submission error:', err);
-                btnSubmit.disabled = false;
-                btnSubmit.innerHTML = originalButtonHtml;
-                alert('ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตและ URL ของ Apps Script แล้วลองอีกครั้ง');
-            }
+// ปลดล็อกสถานะการส่งข้อมูล
+isBookingSubmitting = false;
+
+btnSubmit.disabled = false;
+btnSubmit.innerHTML = originalButtonHtml;
+
+goToStep(3);
+refreshSeatStatus(false);
+
+           
+} catch (err) {
+    console.error('Booking submission error:', err);
+
+    // ปลดล็อกให้ลูกค้าลองใหม่ได้
+    isBookingSubmitting = false;
+
+    btnSubmit.disabled = false;
+    btnSubmit.innerHTML = originalButtonHtml;
+
+    alert(err && err.message
+        ? 'ส่งข้อมูลไม่สำเร็จ: ' + err.message
+        : 'ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตและ URL ของ Apps Script แล้วลองอีกครั้ง');
+}
         }
 
 
