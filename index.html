@@ -150,6 +150,85 @@ select {
     }
 }
 
+
+
+
+/* =========================================
+   MOBILE: ปรับกล่องสรุปที่นั่ง
+   ไม่กระทบระบบจองหรือคำนวณราคา
+========================================= */
+
+@media screen and (max-width: 640px) {
+
+    /* กล่องหัวเว็บจัดเรียงใหม่ให้มีพื้นที่ */
+    header > div {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* กลุ่มโลโก้และชื่องาน */
+    header > div > div:first-child {
+        flex: 1 1 100%;
+        min-width: 0;
+        gap: 10px;
+    }
+
+    header > div > div:first-child h1 {
+        font-size: clamp(14px, 4vw, 18px);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    /* พื้นที่กล่องจำนวนที่นั่ง */
+    header > div > div:last-child {
+        flex: 1 1 100%;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* กล่องจำนวนที่นั่งและราคา */
+    #cartSummaryBtn {
+        width: 100%;
+        max-width: 360px;
+        min-width: 0;
+        box-sizing: border-box;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+    #headerSeatCount {
+        flex: 1;
+        min-width: 0;
+        text-align: left;
+        white-space: nowrap;
+    }
+
+    #headerTotalPrice {
+        flex-shrink: 0;
+        font-size: 14px;
+        padding: 5px 9px;
+    }
+}
+
+/* มือถือจอเล็กมาก */
+@media screen and (max-width: 360px) {
+    #cartSummaryBtn {
+        padding: 8px 10px;
+        gap: 5px;
+        font-size: 12px;
+    }
+
+    #headerTotalPrice {
+        font-size: 12px;
+        padding: 4px 7px;
+    }
+}
+
+        
         
     </style>
 </head>
