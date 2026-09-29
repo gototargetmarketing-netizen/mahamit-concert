@@ -399,6 +399,58 @@ select {
 }
 
 
+/* =========================================
+   MOBILE ONLY: แสดง QR ก่อนแนบสลิป
+   ไม่เปลี่ยน Layout บนคอมพิวเตอร์
+========================================= */
+
+@media screen and (max-width: 767px) {
+
+    /* ให้คอลัมน์เดิมแสดงลูกเป็น Grid items
+       เพื่อจัดลำดับเฉพาะมือถือ */
+    #step2Container > .grid > div:first-child,
+    #step2Container > .grid > div:last-child {
+        display: contents;
+    }
+
+    /* ข้อมูลผู้จอง - อยู่บนสุด */
+    #step2Container > .grid > div:first-child > .flex,
+    #step2Container > .grid > div:first-child > .bg-amber-50,
+    #step2Container > .grid > div:first-child > form {
+        grid-column: 1 / -1;
+        order: 1;
+        margin-top: 0 !important;
+    }
+
+    /* QR Code และยอดเงิน - แสดงก่อนแนบสลิป */
+    #step2Container > .grid > div:last-child > .bg-posterCard:first-child {
+        grid-column: 1 / -1;
+        order: 2;
+        margin-top: 0 !important;
+    }
+
+    /* กล่องแนบสลิป - ย้ายลำดับการแสดงผลเท่านั้น */
+    #step2Container > .grid > div:first-child > .border-t {
+        grid-column: 1 / -1;
+        order: 3;
+        margin-top: 0 !important;
+    }
+
+    /* สรุปที่นั่ง */
+    #step2Container > .grid > div:last-child > .bg-posterCard:nth-child(2) {
+        grid-column: 1 / -1;
+        order: 4;
+        margin-top: 0 !important;
+    }
+
+    /* ปุ่มย้อนกลับและยืนยัน */
+    #step2Container > .grid > div:last-child > .flex {
+        grid-column: 1 / -1;
+        order: 5;
+        margin-top: 0 !important;
+    }
+
+}
         
     </style>
 </head>
