@@ -97,9 +97,7 @@
     </header>
 
     <!-- Concert Banner Hero with Poster Image -->
-<section id="concertHero"
-         class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
-    
+<section class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
     <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             
             <!-- Left Details Column -->
@@ -645,17 +643,15 @@ function doPost(e) {
         const selectedSeats = new Set();
         let currentStep = 1;
         let uploadedSlipData = null;
+        let uploadedSlipFile = null;
         let holdTimerInterval = null;
-        const webAppUrl = 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
+        let webAppUrl = localStorage.getItem('mm_web_app_url') || 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
 
         // Initialize mock seat data on window load
         window.onload = function() {
             initSeatData();
             renderSeatGrid();
             updateSummaryUI();
-
-            // Ensure the booking page always opens at Step 1 (seat selection)
-            goToStep(1);
 
             if (webAppUrl) {
                 const input = document.getElementById('googleScriptUrlInput');
@@ -896,12 +892,6 @@ function doPost(e) {
         function goToStep(step) {
             currentStep = step;
 
-            const hero = document.getElementById('concertHero');
-
-if (hero) {
-    hero.classList.toggle('hidden', step !== 1);
-}
-
             // Hide all steps
             document.getElementById('step1Container').classList.add('hidden');
             document.getElementById('step2Container').classList.add('hidden');
@@ -964,7 +954,12 @@ if (hero) {
             const file = event.target.files[0];
             if (!file) return;
 
+            uploadedSlipFile = file;
+
             if (file.size > 5 * 1024 * 1024) {
+                uploadedSlipFile = null;
+                uploadedSlipData = null;
+                event.target.value = '';
                 alert('ไฟล์มีขนาดเกิน 5MB กรุณาเลือกไฟล์ที่มีขนาดเล็กลง');
                 return;
             }
@@ -979,7 +974,7 @@ if (hero) {
             reader.readAsDataURL(file);
         }
 
-        function submitBooking() {
+        async function submitBooking() {
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
@@ -990,48 +985,37 @@ if (hero) {
                 return;
             }
 
-            if (!uploadedSlipData) {
+            if (!uploadedSlipData || !uploadedSlipFile) {
                 alert('กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง');
                 return;
             }
 
+            if (!webAppUrl || !webAppUrl.includes('/exec')) {
+                alert('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL ที่ลงท้ายด้วย /exec กรุณาตั้งค่าก่อน');
+                return;
+            }
+
+            if (selectedSeats.size === 0) {
+                alert('กรุณาเลือกที่นั่งอย่างน้อย 1 ที่นั่ง');
+                goToStep(1);
+                return;
+            }
+
             const btnSubmit = document.getElementById('btnSubmitBooking');
+            const originalButtonHtml = btnSubmit.innerHTML;
             btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังบันทึกข้อมูล...';
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังส่งข้อมูลและสลิป...';
 
             const seatArray = Array.from(selectedSeats).sort();
             let totalAmt = 0;
             seatArray.forEach(id => totalAmt += seatMapData[id].price);
 
-            const orderRef = 'MK-2570-' + Math.floor(1000 + Math.random() * 9000);
+            // Make the order reference less likely to collide than a 4-digit random number.
+            const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
+                Math.random().toString(36).slice(2, 6).toUpperCase();
 
-            // Populate Ticket View Elements
-            document.getElementById('ticketOrderRef').textContent = orderRef;
-            document.getElementById('ticketCustName').textContent = name;
-            document.getElementById('ticketCustPhone').textContent = phone;
-            document.getElementById('ticketSeatCount').textContent = `${seatArray.length} ที่นั่ง`;
-            document.getElementById('ticketTotalPrice').textContent = `${totalAmt.toLocaleString()} ฿`;
-
-            const ticketBadgesContainer = document.getElementById('ticketSeatsBadges');
-            ticketBadgesContainer.innerHTML = '';
-            seatArray.forEach(id => {
-                const seat = seatMapData[id];
-                const badge = document.createElement('span');
-                badge.className = `inline-block px-2.5 py-1 rounded text-xs font-bold shadow-xs ${seat.zone === 'A' ? 'bg-posterBurgundy text-white' : 'bg-posterGreen text-white'}`;
-                badge.textContent = `${id} (${seat.zone})`;
-                ticketBadgesContainer.appendChild(badge);
-            });
-
-            // Set Ticket QR Code
-            document.getElementById('ticketQrImage').src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${orderRef}`;
-
-            // Mark selected seats as SOLD OUT
-            seatArray.forEach(id => {
-                if (seatMapData[id]) seatMapData[id].isSold = true;
-            });
-
-            // Post payload to Google Apps Script if configured
-            if (webAppUrl) {
+            try {
+                // Apps Script expects slipBase64 and removes the data:image/...;base64, prefix itself.
                 const payload = {
                     orderRef: orderRef,
                     custName: name,
@@ -1039,28 +1023,66 @@ if (hero) {
                     custEmail: email,
                     custNote: note,
                     seats: seatArray,
-                    totalPrice: totalAmt
+                    totalPrice: totalAmt,
+                    slipBase64: uploadedSlipData,
+                    slipMimeType: uploadedSlipFile.type || 'image/jpeg',
+                    slipFileName: uploadedSlipFile.name || (orderRef + '-slip.jpg')
                 };
 
-                fetch(webAppUrl, {
+                // Use text/plain + no-cors to avoid a browser CORS preflight against Apps Script.
+                // With no-cors, browser cannot read the Apps Script JSON response; success here
+                // only means the request was sent, not that the server-side write was verified.
+                await fetch(webAppUrl, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify(payload)
-                }).catch(err => console.log('Sync err:', err));
-            }
+                });
 
-            setTimeout(() => {
+                // Show the ticket-pending screen only after the request has been dispatched.
+                document.getElementById('ticketOrderRef').textContent = orderRef;
+                document.getElementById('ticketCustName').textContent = name;
+                document.getElementById('ticketCustPhone').textContent = phone;
+                document.getElementById('ticketSeatCount').textContent = `${seatArray.length} ที่นั่ง`;
+                document.getElementById('ticketTotalPrice').textContent = `${totalAmt.toLocaleString()} ฿`;
+
+                const ticketBadgesContainer = document.getElementById('ticketSeatsBadges');
+                ticketBadgesContainer.innerHTML = '';
+                seatArray.forEach(id => {
+                    const seat = seatMapData[id];
+                    const badge = document.createElement('span');
+                    badge.className = `inline-block px-2.5 py-1 rounded text-xs font-bold shadow-xs ${seat.zone === 'A' ? 'bg-posterBurgundy text-white' : 'bg-posterGreen text-white'}`;
+                    badge.textContent = `${id} (${seat.zone})`;
+                    ticketBadgesContainer.appendChild(badge);
+                });
+
+                document.getElementById('ticketQrImage').src =
+                    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(orderRef)}`;
+
+                // Keep selected seats marked locally as pending; authoritative sold/available
+                // status must come from the Google Sheet/server, not this browser alone.
+                seatArray.forEach(id => {
+                    if (seatMapData[id]) seatMapData[id].isSold = true;
+                });
+
                 if (holdTimerInterval) clearInterval(holdTimerInterval);
                 btnSubmit.disabled = false;
-                btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> ยืนยันการจองที่นั่ง';
+                btnSubmit.innerHTML = originalButtonHtml;
                 goToStep(3);
-            }, 800);
+
+                alert('ส่งคำขอจองแล้ว กรุณารอเจ้าหน้าที่ตรวจสอบสลิปและยืนยันการจอง หากไม่พบข้อมูลใน Google Sheet ให้ตรวจสอบ Apps Script และบันทึกการทำงาน');
+            } catch (err) {
+                console.error('Booking submission error:', err);
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalButtonHtml;
+                alert('ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตและ URL ของ Apps Script แล้วลองอีกครั้ง');
+            }
         }
 
         function resetToHome() {
             selectedSeats.clear();
             uploadedSlipData = null;
+            uploadedSlipFile = null;
             document.getElementById('bookingForm').reset();
             document.getElementById('uploadPlaceholder').classList.remove('hidden');
             document.getElementById('uploadPreview').classList.add('hidden');
@@ -1091,11 +1113,32 @@ if (hero) {
 
         function saveGoogleSheetsConfig() {
             const url = document.getElementById('googleScriptUrlInput').value.trim();
+            if (!url || !url.includes('/exec')) {
+                alert('กรุณาใส่ Web App URL ที่ลงท้ายด้วย /exec');
+                return;
+            }
             webAppUrl = url;
             localStorage.setItem('mm_web_app_url', url);
             alert('บันทึกการเชื่อมต่อ Google Sheets Web App URL เรียบร้อยแล้ว!');
             toggleAdminModal();
         }
     </script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const step1 = document.getElementById('step1Container');
+    const step2 = document.getElementById('step2Container');
+    const step3 = document.getElementById('step3Container');
+
+    if (step1) step1.classList.remove('hidden');
+    if (step2) step2.classList.add('hidden');
+    if (step3) step3.classList.add('hidden');
+});
+</script>
+
+
+    
 </body>
 </html>
