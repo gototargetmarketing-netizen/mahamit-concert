@@ -97,8 +97,8 @@
     </header>
 
     <!-- Concert Banner Hero with Poster Image -->
-<section class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
-    <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+    <section class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             
             <!-- Left Details Column -->
             <div class="text-center md:text-left space-y-4 max-w-xl">
@@ -652,6 +652,9 @@ function doPost(e) {
             renderSeatGrid();
             updateSummaryUI();
 
+            // Ensure the booking page always opens at Step 1 (seat selection)
+            goToStep(1);
+
             if (webAppUrl) {
                 const input = document.getElementById('googleScriptUrlInput');
                 if (input) input.value = webAppUrl;
@@ -1086,22 +1089,5 @@ function doPost(e) {
             toggleAdminModal();
         }
     </script>
-
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const step1 = document.getElementById('step1Container');
-    const step2 = document.getElementById('step2Container');
-    const step3 = document.getElementById('step3Container');
-
-    if (step1) step1.classList.remove('hidden');
-    if (step2) step2.classList.add('hidden');
-    if (step3) step3.classList.add('hidden');
-});
-</script>
-
-
-    
 </body>
 </html>
