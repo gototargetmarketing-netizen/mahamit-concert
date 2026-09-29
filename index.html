@@ -519,6 +519,121 @@ select {
     max-width: calc(100% - 36px);
 }
 
+
+
+
+/* ===== MAHAMIT PROMO BADGE ===== */
+
+.promo-glow {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    padding: 12px 24px;
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, 0.88);
+    border: 1.5px solid rgba(66, 94, 34, 0.4);
+
+    color: #365D20;
+    font-weight: 800;
+
+    box-shadow: 0 0 12px rgba(66, 94, 34, 0.12);
+
+    animation: promoGlow 2.8s ease-in-out infinite;
+
+    overflow: hidden;
+}
+
+/* แสงวิ่งผ่านพื้นหลัง */
+.promo-glow::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+
+    background: linear-gradient(
+        110deg,
+        transparent,
+        rgba(255, 255, 255, 0.8),
+        transparent
+    );
+
+    transform: skewX(-20deg);
+    animation: promoShimmer 3.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* ข้อความ */
+.promo-glow .promo-text {
+    position: relative;
+    z-index: 1;
+    animation: promoTextGlow 2.8s ease-in-out infinite;
+}
+
+/* ไอคอนกระพริบเบา ๆ */
+.promo-glow .promo-icon {
+    position: relative;
+    z-index: 1;
+    animation: promoIconPulse 1.8s ease-in-out infinite;
+}
+
+/* แสงเรืองรอบป้าย */
+@keyframes promoGlow {
+    0%, 100% {
+        box-shadow: 0 0 8px rgba(66, 94, 34, 0.12);
+        border-color: rgba(66, 94, 34, 0.35);
+    }
+    50% {
+        box-shadow: 0 0 22px rgba(66, 94, 34, 0.38);
+        border-color: rgba(66, 94, 34, 0.8);
+    }
+}
+
+/* แสงวิ่ง */
+@keyframes promoShimmer {
+    0%, 20% {
+        left: -120%;
+    }
+    65%, 100% {
+        left: 150%;
+    }
+}
+
+/* ข้อความเรืองแสง */
+@keyframes promoTextGlow {
+    0%, 100% {
+        text-shadow: 0 0 0 transparent;
+    }
+    50% {
+        text-shadow: 0 0 8px rgba(66, 94, 34, 0.28);
+    }
+}
+
+/* ไอคอนเต้นเบา ๆ */
+@keyframes promoIconPulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* รองรับผู้ใช้ที่ตั้งค่าลดการเคลื่อนไหว */
+@media (prefers-reduced-motion: reduce) {
+    .promo-glow,
+    .promo-glow::before,
+    .promo-glow .promo-text,
+    .promo-glow .promo-icon {
+        animation: none !important;
+    }
+}
+
         
         
     </style>
@@ -578,11 +693,12 @@ select {
     <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             
             <!-- Left Details Column -->
-            <div class="text-center md:text-left space-y-4 max-w-xl">
-                <div class="inline-flex items-center gap-2 bg-posterCream border border-posterGreen/30 text-posterGreen px-3.5 py-1 rounded-full text-xs font-semibold shadow-xs">
-                    <i class="fa-solid fa-compact-disc text-posterGreen"></i>
-                    กว่า 40 ปี ของบทเพลง มิตรภาพ และความทรงจำ
-                </div>
+           <div class="promo-glow">
+    <i class="fa-solid fa-compact-disc promo-icon"></i>
+    <span class="promo-text">
+        กว่า 40 ปี ของบทเพลง มิตรภาพ และความทรงจำ
+    </span>
+</div>
                 
                 <div>
                     <span class="block text-posterBurgundy font-kanit font-semibold text-sm sm:text-base tracking-widest uppercase">มาหามิตร คอนเสิร์ต #2</span>
