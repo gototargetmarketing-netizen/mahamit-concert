@@ -1315,8 +1315,17 @@ if (hero) {
                     ticketBadgesContainer.appendChild(badge);
                 });
 
-                document.getElementById('ticketQrImage').src =
-                    `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(orderRef)}`;
+                // QR Code สำหรับตรวจสอบบัตรเข้างาน
+const ticketQRData = [
+    'MAHAMIT CONCERT #2',
+    'Order Ref: ' + orderRef,
+    'Name: ' + name,
+    'Seats: ' + seatArray.join(', ')
+].join('\n');
+
+document.getElementById('ticketQrImage').src =
+    'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data='
+    + encodeURIComponent(ticketQRData);
 
                 // The booking row has been verified on the server; refresh authoritative seats.
                 seatArray.forEach(id => {
