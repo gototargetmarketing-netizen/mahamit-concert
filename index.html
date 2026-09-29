@@ -451,6 +451,55 @@ select {
     }
 
 }
+
+
+
+/* =========================================
+   MOBILE ONLY: ช่องกรอกข้อมูลสีขาวชัดเจน
+   MAHAMIT CONCERT #2
+========================================= */
+
+@media screen and (max-width: 767px) {
+
+    /* ช่องกรอกชื่อ เบอร์โทร อีเมล */
+    #bookingForm input[type="text"],
+    #bookingForm input[type="tel"],
+    #bookingForm input[type="email"] {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #B8B8B8 !important;
+        border-radius: 12px !important;
+
+        color: #23201D !important;
+
+        min-height: 54px;
+        padding-top: 14px;
+        padding-bottom: 14px;
+
+        box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    }
+
+    /* สีข้อความตัวอย่างในช่องกรอก */
+    #bookingForm input::placeholder {
+        color: #999999 !important;
+        opacity: 1;
+    }
+
+    /* เมื่อแตะหรือเลือกช่องกรอก */
+    #bookingForm input:focus {
+        background-color: #FFFFFF !important;
+        border-color: #425E22 !important;
+
+        outline: none !important;
+
+        box-shadow: 0 0 0 3px rgba(66,94,34,0.15) !important;
+    }
+
+}
+
+
+
+
+        
         
     </style>
 </head>
