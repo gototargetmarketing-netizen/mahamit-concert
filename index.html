@@ -1369,53 +1369,77 @@ function focusBookingField(elementId, message) {
             const email = document.getElementById('custEmail').value.trim();
             const note = document.getElementById('custNote').value.trim();
 
-           // ตรวจสอบชื่อ เบอร์โทร และอีเมล
-if (!name || !phone || !email) {
 
-    alert('กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน');
+            // ตรวจสอบข้อมูลและเลื่อนไปยังช่องที่ยังกรอกไม่ครบ
+            function scrollToMissingField(element) {
+                if (!element) return;
 
-    const missingField = !name
-        ? document.getElementById('custName')
-        : !phone
-            ? document.getElementById('custPhone')
-            : document.getElementById('custEmail');
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center'
+                });
 
-    if (missingField) {
-        missingField.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
+                // เน้นกรอบสีแดงชั่วคราวให้เห็นชัด
+                const oldBorder = element.style.border;
+                const oldShadow = element.style.boxShadow;
 
-        setTimeout(() => {
-            missingField.focus();
-        }, 500);
-    }
+                element.style.border = '2px solid #dc2626';
+                element.style.boxShadow = '0 0 0 4px rgba(220,38,38,0.15)';
 
-    return;
-}
+                setTimeout(() => {
+                    element.style.border = oldBorder;
+                    element.style.boxShadow = oldShadow;
+                }, 3000);
+            }
 
-// ตรวจสอบไฟล์สลิป
-if (!uploadedSlipData || !uploadedSlipFile) {
+            // ตรวจสอบชื่อ
+            if (!name) {
+                alert('กรุณากรอกชื่อ - นามสกุลผู้เข้างาน');
+                const field = document.getElementById('custName');
+                scrollToMissingField(field);
+                field.focus({ preventScroll: true });
+                return;
+            }
 
-    alert('กรุณาแนบสลิปการโอนเงินก่อนยืนยันการจอง');
+            // ตรวจสอบเบอร์โทรศัพท์
+            if (!phone) {
+                alert('กรุณากรอกเบอร์โทรศัพท์ติดต่อ');
+                const field = document.getElementById('custPhone');
+                scrollToMissingField(field);
+                field.focus({ preventScroll: true });
+                return;
+            }
 
-    const slipSection =
-        document.getElementById('uploadSlip') ||
-        document.getElementById('slipUpload') ||
-        document.querySelector('input[type="file"]');
+            // ตรวจสอบอีเมล
+            if (!email) {
+                alert('กรุณากรอกอีเมลสำหรับรับ E-Ticket');
+                const field = document.getElementById('custEmail');
+                scrollToMissingField(field);
+                field.focus({ preventScroll: true });
+                return;
+            }
 
-    if (slipSection) {
-        slipSection.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
-    }
+            // ตรวจสอบสลิป
+            if (!uploadedSlipData || !uploadedSlipFile) {
+                alert('กรุณาแนบสลิปการโอนเงินก่อนยืนยันการจอง');
 
-    return;
-}
+                const dropzone = document.getElementById('dropzone');
+                scrollToMissingField(dropzone);
+
+                // เน้นพื้นที่แนบสลิป
+                if (dropzone) {
+                    dropzone.style.backgroundColor = '#fff1f2';
+
+                    setTimeout(() => {
+                        dropzone.style.backgroundColor = '';
+                    }, 3000);
+                }
+
+                return;
+            }
 
             if (!webAppUrl || !webAppUrl.includes('/exec')) {
-                alert('ยังไม่ได้ตั้งค่า Google Apps Script Web App URL ที่ลงท้ายด้วย /exec กรุณาตั้งค่าก่อน');
+                alert('ยังไม่ได้ตั้งค่า');
                 return;
             }
 
