@@ -519,7 +519,68 @@ select {
     max-width: calc(100% - 36px);
 }
 
-        
+
+        /* =========================================
+   MAHAMIT CONCERT HERO
+   Premium Blurred Poster Background
+========================================= */
+
+#concertHero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background-color: #EFE9DC;
+}
+
+/* ภาพโปสเตอร์ขยายเต็มพื้นที่ด้านหลัง */
+#concertHero::before {
+    content: "";
+    position: absolute;
+    inset: -25px;
+    z-index: -2;
+
+    background-image: url("./concert-poster.jpg");
+    background-size: cover;
+    background-position: center 40%;
+    background-repeat: no-repeat;
+
+    filter: blur(12px);
+    transform: scale(1.08);
+
+    opacity: 0.30;
+    pointer-events: none;
+}
+
+/* Overlay สีครีม ช่วยให้ข้อความอ่านง่าย */
+#concertHero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(239, 233, 220, 0.94) 0%,
+            rgba(239, 233, 220, 0.82) 48%,
+            rgba(239, 233, 220, 0.58) 100%
+        );
+
+    pointer-events: none;
+}
+
+/* มือถือ: ปรับภาพและความเบลอให้พอดี */
+@media (max-width: 768px) {
+    #concertHero::before {
+        background-position: center top;
+        filter: blur(10px);
+        opacity: 0.24;
+    }
+
+    #concertHero::after {
+        background: rgba(239, 233, 220, 0.82);
+    }
+}
         
     </style>
 </head>
