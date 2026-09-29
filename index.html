@@ -198,7 +198,45 @@ select {
     }
 }
 
+.cart-summary-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+}
 
+.cart-summary-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cart-seat-list {
+    display: none;
+}
+
+@media screen and (max-width: 640px) {
+    #cartSummaryBtn {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        padding: 12px 16px;
+    }
+
+    .cart-seat-list {
+        display: block;
+        width: 100%;
+        font-size: 13px;
+        line-height: 1.6;
+        font-weight: 500;
+        color: #fff;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        border-top: 1px solid rgba(255,255,255,.25);
+        padding-top: 6px;
+    }
+}
         
         
     </style>
@@ -230,9 +268,20 @@ select {
             <div class="flex items-center space-x-2 sm:space-x-4">
 
                 <div id="cartSummaryBtn" class="hidden bg-posterBurgundy text-white px-3 py-1.5 rounded text-xs sm:text-sm font-medium items-center gap-2 shadow cursor-pointer hover:bg-posterBurgundyDark transition" onclick="scrollToForm()">
-                    <i class="fa-solid fa-chair text-amber-200"></i>
-                    <span id="headerSeatCount">0 ที่นั่ง</span>
-                    <span class="bg-amber-300 text-posterDark text-xs px-1.5 py-0.5 rounded font-bold" id="headerTotalPrice">0฿</span>
+                   <div class="cart-summary-main">
+    <div class="cart-summary-label">
+        <i class="fa-solid fa-chair text-amber-200"></i>
+        <span id="headerSeatCount">0 ที่นั่ง</span>
+    </div>
+
+    <span
+        class="bg-amber-300 text-posterDark text-xs px-1.5 py-0.5 rounded font-bold"
+        id="headerTotalPrice">
+        0฿
+    </span>
+</div>
+
+<div id="headerSeatNumbers" class="cart-seat-list"></div>
                 </div>
             </div>
         </div>
@@ -1117,6 +1166,17 @@ if (showMessage) {
             document.getElementById('selectedCountBadge').textContent = `${count} ที่นั่ง`;
             document.getElementById('totalPriceDisplay').textContent = `${totalPrice.toLocaleString()} ฿`;
             document.getElementById('headerSeatCount').textContent = `${count} ที่นั่ง`;
+const seatNumbersEl =
+    document.getElementById('headerSeatNumbers');
+
+if (seatNumbersEl) {
+    seatNumbersEl.textContent = count > 0
+        ? 'ที่นั่ง: ' + seatArray
+            .map(id => `${id} (${seatMapData[id].zone})`)
+            .join(', ')
+        : '';
+}
+            
             document.getElementById('headerTotalPrice').textContent = `${totalPrice.toLocaleString()}฿`;
             document.getElementById('paymentTotalAmount').textContent = `${totalPrice.toLocaleString()} ฿`;
             document.getElementById('summarySeatCount').textContent = count;
