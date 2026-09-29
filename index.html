@@ -81,6 +81,76 @@
         .shadow-vintage-lg {
             box-shadow: 6px 10px 0px 0px rgba(35, 32, 29, 0.2);
         }
+
+
+/* =========================================
+   MOBILE RESPONSIVE - ป้องกันซูมช่องกรอกข้อมูล
+   รองรับ iPhone, Android และมือถือหลายขนาดจอ
+========================================= */
+
+/* ป้องกันหน้าเว็บกว้างเกินหน้าจอ */
+html {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* ช่องกรอกข้อมูลทุกประเภท */
+input,
+textarea,
+select {
+    font-size: 16px !important;
+    line-height: 1.5;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* สำหรับมือถือและแท็บเล็ต */
+@media screen and (max-width: 768px) {
+
+    input,
+    textarea,
+    select {
+        font-size: 16px !important;
+        line-height: 1.5;
+        max-width: 100%;
+        box-sizing: border-box;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    /* ป้องกันช่องกรอกล้นจอ */
+    input,
+    textarea,
+    select,
+    button {
+        max-width: 100%;
+    }
+
+    /* ป้องกันข้อความในช่องกรอกใหญ่เกินพื้นที่ */
+    input,
+    textarea {
+        min-width: 0;
+    }
+
+    /* ปรับช่องกรอกให้เต็มความกว้างของกล่อง */
+    input[type="text"],
+    input[type="tel"],
+    input[type="email"],
+    textarea {
+        width: 100%;
+    }
+}
+
+        
     </style>
 </head>
 <body class="min-h-full flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
