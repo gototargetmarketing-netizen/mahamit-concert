@@ -980,8 +980,6 @@ async function retrySeatStatus() {
         // Global State Variables
         const seatMapData = {};
         const selectedSeats = new Set();
-        // Prevent duplicate booking submissions from repeated clicks.
-        let bookingSubmitInProgress = false;
         let currentStep = 1;
         let uploadedSlipData = null;
         let uploadedSlipFile = null;
@@ -1413,16 +1411,10 @@ if (hero) {
         }
 
         async function submitBooking() {
-            // Ignore any repeated click while a booking request is in progress.
-            if (bookingSubmitInProgress) return;
-
-            const btnSubmit = document.getElementById('btnSubmitBooking');
-            const originalButtonHtml = btnSubmit.innerHTML;
-
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
-            const note = document.getElementById('custNote').value.trim();
+            const note = '';
 
             if (!name || !phone || !email) {
                 alert('กรุณากรอกข้อมูล ชื่อ เบอร์โทรศัพท์ และอีเมลให้ครบถ้วน');
@@ -1445,37 +1437,25 @@ if (hero) {
                 return;
             }
 
-            // Lock immediately before the first async operation to prevent double-clicks.
-            bookingSubmitInProgress = true;
-            btnSubmit.disabled = true;
-            btnSubmit.style.opacity = '0.7';
-            btnSubmit.style.cursor = 'not-allowed';
-            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบและยืนยันการจอง...';
-
             // Keep a snapshot of the seats the customer chose before refreshing the server state.
             const seatsChosenBeforeRefresh = Array.from(selectedSeats);
             // Re-check against the live Google Sheet immediately before sending the booking.
             const statusLoaded = await refreshSeatStatus(false);
             if (!statusLoaded) {
-                bookingSubmitInProgress = false;
-                btnSubmit.disabled = false;
-                btnSubmit.style.opacity = '';
-                btnSubmit.style.cursor = '';
-                btnSubmit.innerHTML = originalButtonHtml;
                 alert('ตรวจสอบสถานะที่นั่งจากระบบกลางไม่ได้ กรุณาลองใหม่อีกครั้ง');
                 return;
             }
             const newlyTaken = seatsChosenBeforeRefresh.filter(id => !seatMapData[id] || seatMapData[id].isSold);
             if (newlyTaken.length) {
-                bookingSubmitInProgress = false;
-                btnSubmit.disabled = false;
-                btnSubmit.style.opacity = '';
-                btnSubmit.style.cursor = '';
-                btnSubmit.innerHTML = originalButtonHtml;
                 alert('ที่นั่ง ' + newlyTaken.join(', ') + ' มีผู้จองไปแล้ว กรุณาเลือกที่นั่งใหม่');
                 goToStep(1);
                 return;
             }
+
+            const btnSubmit = document.getElementById('btnSubmitBooking');
+            const originalButtonHtml = btnSubmit.innerHTML;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังส่งข้อมูลและสลิป...';
 
             const seatArray = Array.from(selectedSeats).sort();
             let totalAmt = 0;
@@ -1567,23 +1547,16 @@ document.getElementById('ticketQrImage').src =
                 });
 
                 if (holdTimerInterval) clearInterval(holdTimerInterval);
-                // Keep the button disabled after successful booking.
-                btnSubmit.disabled = true;
-                btnSubmit.style.opacity = '0.7';
-                btnSubmit.style.cursor = 'not-allowed';
-                btnSubmit.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>จองสำเร็จแล้ว';
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalButtonHtml;
                 goToStep(3);
                 refreshSeatStatus(false);
 
             } catch (err) {
                 console.error('Booking submission error:', err);
-                // Allow retry only after a failed attempt.
-                bookingSubmitInProgress = false;
                 btnSubmit.disabled = false;
-                btnSubmit.style.opacity = '';
-                btnSubmit.style.cursor = '';
                 btnSubmit.innerHTML = originalButtonHtml;
-                alert('ส่งข้อมูลไม่สำเร็จ: ' + (err.message || err) + '\nกรุณาตรวจสอบสถานะการจองก่อนลองใหม่');
+                alert('ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตและ URL ของ Apps Script แล้วลองอีกครั้ง');
             }
         }
 
