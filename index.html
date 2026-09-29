@@ -498,6 +498,26 @@ select {
 
 
 
+/* =========================================
+   PROGRESS BAR: จัดเส้นให้อยู่ในแนววงกลม
+========================================= */
+
+#bookingFlow .mb-8.max-w-2xl > .flex {
+    position: relative;
+}
+
+/* เส้นพื้นหลัง */
+#bookingFlow .mb-8.max-w-2xl > .flex > div.absolute:first-child {
+    left: 18px !important;
+    right: 18px !important;
+    width: auto !important;
+}
+
+/* เส้นแสดงความคืบหน้า */
+#progressBar {
+    left: 18px !important;
+    max-width: calc(100% - 36px);
+}
 
         
         
