@@ -1086,5 +1086,22 @@ function doPost(e) {
             toggleAdminModal();
         }
     </script>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const step1 = document.getElementById('step1Container');
+    const step2 = document.getElementById('step2Container');
+    const step3 = document.getElementById('step3Container');
+
+    if (step1) step1.classList.remove('hidden');
+    if (step2) step2.classList.add('hidden');
+    if (step3) step3.classList.add('hidden');
+});
+</script>
+
+
+    
 </body>
 </html>
