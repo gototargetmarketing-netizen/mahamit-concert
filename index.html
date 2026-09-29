@@ -52,6 +52,80 @@
             }
         }
     </script>
+
+<style>
+/* เฉพาะตอนบันทึกหรือพิมพ์ PDF */
+@media print {
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm;
+  }
+
+  html, body {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    font-family: 'Kanit', sans-serif !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ซ่อนปุ่มและส่วนที่ไม่จำเป็นใน PDF */
+  button,
+  .no-print,
+  nav,
+  footer {
+    display: none !important;
+  }
+
+  /* กล่องหลักของบัตร */
+  #ticketPrintArea {
+    width: 100% !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    background: white !important;
+  }
+
+  /* ป้องกันการ์ดถูกตัดแบ่งหน้า */
+  #ticketPrintArea .ticket-card {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    box-shadow: none !important;
+    margin: 0 auto !important;
+    width: 100% !important;
+  }
+
+  /* QR Code ต้องคมและอ่านได้ */
+  #ticketPrintArea img {
+    max-width: 100% !important;
+    height: auto;
+  }
+
+  #ticketPrintArea .qr-code {
+    width: 35mm !important;
+    height: 35mm !important;
+    object-fit: contain !important;
+  }
+
+  /* รักษาสีของข้อมูลและบัตร */
+  #ticketPrintArea * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+</style>
+
+
+
+
+
+    
     <style>
         body {
             font-family: 'Prompt', sans-serif;
