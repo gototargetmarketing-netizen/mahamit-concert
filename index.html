@@ -97,8 +97,10 @@
     </header>
 
     <!-- Concert Banner Hero with Poster Image -->
-    <section class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
-        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+<section id="concertHero"
+         class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
+    
+    <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             
             <!-- Left Details Column -->
             <div class="text-center md:text-left space-y-4 max-w-xl">
@@ -893,6 +895,12 @@ function doPost(e) {
 
         function goToStep(step) {
             currentStep = step;
+
+            const hero = document.getElementById('concertHero');
+
+if (hero) {
+    hero.classList.toggle('hidden', step !== 1);
+}
 
             // Hide all steps
             document.getElementById('step1Container').classList.add('hidden');
