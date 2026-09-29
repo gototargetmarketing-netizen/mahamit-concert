@@ -647,7 +647,7 @@ function doPost(e) {
         let currentStep = 1;
         let uploadedSlipData = null;
         let holdTimerInterval = null;
-        let webAppUrl = localStorage.getItem('mm_web_app_url') || '';
+        const webAppUrl = 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
 
         // Initialize mock seat data on window load
         window.onload = function() {
