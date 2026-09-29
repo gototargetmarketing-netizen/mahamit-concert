@@ -834,32 +834,7 @@ select {
         
                     </form>
 
-                    <!-- Payment Slip Attachment -->
-                    <div class="border-t border-posterPaper pt-4 space-y-3">
-                        <label class="block text-xs font-bold text-posterDark uppercase tracking-wider">
-                            <i class="fa-solid fa-file-invoice-dollar text-posterGreen mr-1"></i>
-                            แนบหลักฐานการโอนเงิน (สลิป) *
-                        </label>
-                        
-                        <div id="dropzone" onclick="document.getElementById('slipInput').click();" class="border-2 border-dashed border-posterGreen/40 hover:border-posterGreen bg-posterCream p-5 rounded-xl text-center cursor-pointer transition">
-                            <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="handleSlipUpload(event)">
-                            
-                            <div id="uploadPlaceholder" class="space-y-2">
-                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-posterGreen"></i>
-                                <p class="text-xs sm:text-sm font-semibold text-posterDark">คลิกเพื่ออัปโหลด หรือลากไฟล์สลิปมาวางที่นี่</p>
-                                <p class="text-[11px] text-posterMuted">รองรับไฟล์ JPG, PNG, WEBP (ไม่เกิน 5MB)</p>
-                            </div>
 
-                            <div id="uploadPreview" class="hidden flex flex-col items-center space-y-2">
-                                <img id="slipPreviewImg" src="" alt="Slip Preview" class="max-h-48 rounded-lg shadow border border-posterPaper object-contain">
-                                <span class="text-xs text-posterGreen font-semibold flex items-center gap-1">
-                                    <i class="fa-solid fa-circle-check"></i> แนบสลิปเรียบร้อยแล้ว
-                                </span>
-                                <span class="text-[11px] text-posterMuted underline">คลิกเพื่อเปลี่ยนรูปสลิป</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Right Column: QR Code & Payment Summary Card -->
                 <div class="lg:col-span-5 space-y-6">
@@ -906,7 +881,52 @@ select {
                             <span id="paymentTotalAmount" class="text-3xl font-black font-kanit text-posterGreen">0 ฿</span>
                         </div>
                     </div>
+<!-- Payment Slip Attachment -->
+<div class="border-t border-posterPaper pt-4 space-y-3">
+    <label class="block text-xs font-bold text-posterDark uppercase tracking-wider">
+        <i class="fa-solid fa-file-invoice-dollar text-posterGreen mr-1"></i>
+        แนบหลักฐานการโอนเงิน (สลิป) *
+    </label>
 
+    <div id="dropzone"
+         onclick="document.getElementById('slipInput').click();"
+         class="border-2 border-dashed border-posterGreen/40 hover:border-posterGreen bg-posterCream p-5 rounded-xl text-center cursor-pointer transition">
+
+        <input type="file"
+               id="slipInput"
+               accept="image/*"
+               class="hidden"
+               onchange="handleSlipUpload(event)">
+
+        <div id="uploadPlaceholder" class="space-y-2">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl text-posterGreen"></i>
+            <p class="text-xs sm:text-sm font-semibold text-posterDark">
+                คลิกเพื่ออัปโหลด หรือลากไฟล์สลิปมาวางที่นี่
+            </p>
+            <p class="text-[11px] text-posterMuted">
+                รองรับไฟล์ JPG, PNG, WEBP (ไม่เกิน 5MB)
+            </p>
+        </div>
+
+        <div id="uploadPreview" class="hidden flex flex-col items-center space-y-2">
+            <img id="slipPreviewImg"
+                 src=""
+                 alt="Slip Preview"
+                 class="max-h-48 rounded-lg shadow border border-posterPaper object-contain">
+
+            <span class="text-xs text-posterGreen font-semibold flex items-center gap-1">
+                <i class="fa-solid fa-circle-check"></i>
+                แนบสลิปเรียบร้อยแล้ว
+            </span>
+
+            <span class="text-[11px] text-posterMuted underline">
+                คลิกเพื่อเปลี่ยนรูปสลิป
+            </span>
+        </div>
+    </div>
+</div>
+
+                    
                     <!-- Order Seat Breakdown -->
                     <div class="bg-posterCard p-5 rounded-2xl shadow-vintage border border-posterPaper space-y-3">
                         <h4 class="font-kanit font-bold text-sm text-posterDark border-b border-posterPaper pb-2">
