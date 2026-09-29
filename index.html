@@ -1077,7 +1077,6 @@ if (hero) {
                 btnSubmit.innerHTML = originalButtonHtml;
                 goToStep(3);
 
-                alert('ส่งคำขอจองแล้ว กรุณารอเจ้าหน้าที่ตรวจสอบสลิปและยืนยันการจอง หากไม่พบข้อมูลใน Google Sheet ให้ตรวจสอบ Apps Script และบันทึกการทำงาน');
             } catch (err) {
                 console.error('Booking submission error:', err);
                 btnSubmit.disabled = false;
