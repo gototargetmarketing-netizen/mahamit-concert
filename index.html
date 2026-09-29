@@ -2392,7 +2392,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 </div>
 
-   <script>
+ <script>
 (function () {
     const popup = document.getElementById(
         'mahamitWelcomePopup'
@@ -2404,32 +2404,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (!popup || !closeBtn) return;
 
-    const storageKey = 'mahamit_popup_closed';
-
-    // แสดง Popup เฉพาะผู้ที่ยังไม่เคยปิด
-    try {
-        if (!localStorage.getItem(storageKey)) {
-            popup.classList.add('show');
-        }
-    } catch (e) {
-        popup.classList.add('show');
-    }
+    // แสดง Popup ทุกครั้งที่เปิดหรือรีเฟรชหน้า
+    popup.classList.add('show');
 
     // ปิด Popup
     function closePopup() {
         popup.classList.remove('show');
-
-        try {
-            localStorage.setItem(storageKey, '1');
-        } catch (e) {
-            // หาก Browser ปิดกั้น localStorage
-            // ยังสามารถปิด Popup ได้ตามปกติ
-        }
     }
 
     closeBtn.addEventListener('click', closePopup);
 
-    // กดพื้นที่มืดด้านนอกเพื่อปิดได้
+    // คลิกพื้นที่ด้านนอกเพื่อปิด
     popup.addEventListener('click', function (e) {
         if (e.target === popup) {
             closePopup();
@@ -2443,7 +2428,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 })();
-</script> 
+</script>
     
 </body>
 </html>
