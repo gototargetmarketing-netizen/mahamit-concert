@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2</title>
+    <title>จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์</title>
     <!-- Load FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Load Google Fonts -->
@@ -544,29 +544,15 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="border-b border-posterPaper pb-3">
-                <h3 class="font-kanit font-bold text-xl text-posterGreen flex items-center gap-2">
-                    <i class="fa-solid fa-gears text-posterBurgundy"></i>
-                    สำหรับผู้จัดงาน: การตั้งค่า Google Sheets & Drive
-                </h3>
-                <p class="text-xs text-posterMuted mt-1">ระบบนี้ถูกออกแบบให้เชื่อมต่อข้อมูลกับ Google Sheets และ Google Drive ได้แบบไม่ต้องผ่านเซิร์ฟเวอร์</p>
-            </div>
 
-            <div class="space-y-3 text-xs text-posterDark">
-                <div class="bg-posterCream p-3.5 rounded-xl border border-posterPaper space-y-2">
-                    <h4 class="font-bold text-posterGreen text-sm">วิธีเปิดใช้งาน Google Sheets & Google Drive Storage:</h4>
-                    <ol class="list-decimal list-inside space-y-1.5 text-posterMuted">
-                        <li>เปิด <a href="https://sheets.new" target="_blank" class="text-posterBurgundy underline font-bold">Google Sheets ใหม่</a> และตั้งชื่อตามต้องการ</li>
-                        <li>ไปที่เมนู <b>Extensions (ส่วนขยาย)</b> &rarr; <b>Apps Script</b></li>
-                        <li>วางโค้ด Apps Script ด้านล่างนี้ลงไป แล้วกด <b>Deploy (ทำให้ใช้งานได้) &rarr; New Deployment (การทำให้ใช้งานได้ใหม่)</b> เลือกสิทธิ์ <i>Anyone (ทุกคน)</i></li>
-                    </ol>
-                </div>
 
                 <div class="bg-gray-800 text-emerald-400 p-3 rounded-lg text-[11px] font-mono relative overflow-x-auto">
                     <button onclick="copyScriptCode()" class="absolute top-2 right-2 bg-posterGreen text-white px-2 py-1 rounded text-[10px] hover:bg-posterGreenDark">
                         <i class="fa-regular fa-copy mr-1"></i>คัดลอกโค้ด
                     </button>
                     <pre id="scriptCodeBlock">
+
+                        
 function doPost(e) {
   try {
     var data = JSON.parse(e.postData.contents);
