@@ -1618,6 +1618,11 @@ if (hero) {
             btnSubmit.disabled = true;
             btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังส่งข้อมูลและสลิป...';
 
+            // ให้เบราว์เซอร์แสดง Spinner ก่อนเริ่มประมวลผล
+await new Promise(resolve =>
+    requestAnimationFrame(() => setTimeout(resolve, 0))
+);
+
             const seatArray = Array.from(selectedSeats).sort();
             let totalAmt = 0;
             seatArray.forEach(id => totalAmt += seatMapData[id].price);
