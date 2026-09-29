@@ -519,6 +519,65 @@ select {
     max-width: calc(100% - 36px);
 }
 
+
+
+/* =========================================
+   MAHAMIT CONCERT #2
+   BLURRED POSTER BACKGROUND - LANDING ONLY
+========================================= */
+
+/* กำหนดพื้นที่หน้าแรก */
+#landingPage {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+}
+
+/* ภาพโปสเตอร์เบลอเต็มพื้นที่หน้าแรก */
+#landingPage::before {
+    content: "";
+    position: absolute;
+    inset: -25px;
+
+    background-image: url("./concert-poster.jpg");
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+    filter: blur(18px);
+    transform: scale(1.05);
+
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ชั้นสีโปร่งแสง ช่วยให้ตัวหนังสืออ่านง่าย */
+#landingPage::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background: rgba(239, 233, 220, 0.72);
+
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* เอาพื้นหลังทึบเดิมออกเฉพาะ 2 ส่วนในหน้าแรก */
+#landingPage > #concertHero,
+#landingPage > section:not(#concertHero) {
+    background-color: transparent !important;
+    position: relative;
+}
+
+/* ให้เนื้อหาหน้าแรกอยู่เหนือพื้นหลัง */
+#landingPage > #concertHero > div,
+#landingPage > section:not(#concertHero) > div {
+    position: relative;
+    z-index: 1;
+}
+
+
         
         
     </style>
