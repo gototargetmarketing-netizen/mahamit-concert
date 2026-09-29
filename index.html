@@ -1315,11 +1315,13 @@ if (hero) {
                     ticketBadgesContainer.appendChild(badge);
                 });
 
-                // QR Code สำหรับตรวจสอบบัตรเข้างาน
+// QR Code สำหรับตรวจสอบบัตรเข้างาน
 const ticketQRData = [
     'MAHAMIT CONCERT #2',
     'Order Ref: ' + orderRef,
     'Name: ' + name,
+    'Phone: ' + phone,
+    'Number of Seats: ' + seatArray.length,
     'Seats: ' + seatArray.join(', ')
 ].join('\n');
 
