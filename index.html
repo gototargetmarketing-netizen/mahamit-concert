@@ -1626,6 +1626,15 @@ if (hero) {
             const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
                 Math.random().toString(36).slice(2, 6).toUpperCase();
 
+
+// ให้เบราว์เซอร์แสดงสถานะโหลดทันที
+await new Promise(resolve => {
+    requestAnimationFrame(() =>
+        requestAnimationFrame(resolve)
+    );
+});
+
+            
             try {
                 // Apps Script expects slipBase64 and removes the data:image/...;base64, prefix itself.
                 const payload = {
