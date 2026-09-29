@@ -523,59 +523,66 @@ select {
 
 /* =========================================
    MAHAMIT CONCERT #2
-   BLURRED POSTER BACKGROUND - LANDING ONLY
+   BACKGROUND POSTER - BEHIND ALL CONTENT
 ========================================= */
 
-/* กำหนดพื้นที่หน้าแรก */
 #landingPage {
-    position: relative;
-    isolation: isolate;
+    position: relative !important;
+    isolation: isolate !important;
     overflow: hidden;
+    background: #e9e2d2 !important;
 }
 
-/* ภาพโปสเตอร์เบลอเต็มพื้นที่หน้าแรก */
+/* ภาพโปสเตอร์อยู่ชั้นหลัง */
 #landingPage::before {
     content: "";
     position: absolute;
-    inset: -25px;
+    inset: -30px;
 
     background-image: url("./concert-poster.jpg");
     background-size: cover;
-    background-position: center center;
+    background-position: center top;
     background-repeat: no-repeat;
 
-    filter: blur(18px);
-    transform: scale(1.05);
+    filter: blur(12px);
+    transform: scale(1.08);
 
-    z-index: -2;
+    opacity: 1;
+    z-index: 0;
     pointer-events: none;
 }
 
-/* ชั้นสีโปร่งแสง ช่วยให้ตัวหนังสืออ่านง่าย */
+/* ชั้นสีดำโปร่งแสงบนภาพ ช่วยให้ข้อความชัด */
 #landingPage::after {
     content: "";
     position: absolute;
     inset: 0;
 
-    background: rgba(239, 233, 220, 0.72);
+    background: rgba(15, 20, 12, 0.48);
 
-    z-index: -1;
+    z-index: 0;
     pointer-events: none;
 }
 
-/* เอาพื้นหลังทึบเดิมออกเฉพาะ 2 ส่วนในหน้าแรก */
-#landingPage > #concertHero,
-#landingPage > section:not(#concertHero) {
-    background-color: transparent !important;
-    position: relative;
-}
-
-/* ให้เนื้อหาหน้าแรกอยู่เหนือพื้นหลัง */
-#landingPage > #concertHero > div,
-#landingPage > section:not(#concertHero) > div {
+/* เนื้อหาทั้งหมดอยู่เหนือภาพพื้นหลัง */
+#landingPage > * {
     position: relative;
     z-index: 1;
 }
+
+/* การ์ดข้อมูลยังคงอ่านง่าย */
+#landingPage .bg-posterCard {
+    position: relative;
+    z-index: 1;
+}
+
+/* รูปโปสเตอร์หลักไม่ถูกเบลอ */
+#landingPage #mainPosterImg {
+    filter: none !important;
+    position: relative;
+    z-index: 2;
+}
+
 
 
         
