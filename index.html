@@ -1851,7 +1851,7 @@ if (hero) {
             const originalButtonHtml = btnSubmit.innerHTML;
             isBookingSubmitting = true;
             btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังตรวจสอบและยืนยันการจอง...';
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังยืนยันการจอง';
 
             // ให้เบราว์เซอร์วาดสถานะโหลดบนปุ่มทันที ก่อนเริ่มเรียก Google Sheets
             // ใช้ 2 เฟรมเพื่อให้การเปลี่ยนข้อความ/ปิดปุ่มแสดงผลจริงก่อนงาน async ถัดไป
