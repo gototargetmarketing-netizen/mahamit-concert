@@ -287,6 +287,9 @@ select {
         </div>
     </header>
 
+<div id="landingPage">
+
+    
     <!-- Concert Banner Hero with Poster Image -->
 <section id="concertHero"
          class="bg-posterPaper border-b border-posterPaper/80 text-posterDark py-8 px-4 relative overflow-hidden">
@@ -403,8 +406,46 @@ select {
         </div>
     </section>
 
+<!-- ปุ่มเข้าสู่ระบบจอง -->
+<section class="bg-posterCream px-4 py-8 sm:py-12 text-center">
+
+    <div class="max-w-xl mx-auto">
+
+        <p class="text-posterMuted text-sm sm:text-base mb-4">
+            เลือกที่นั่งที่คุณต้องการ แล้วมาร่วมเก็บความทรงจำดี ๆ ไปด้วยกัน
+        </p>
+
+        <button
+            type="button"
+            onclick="enterBooking()"
+            class="w-full sm:w-auto px-10 py-4
+                   bg-posterBurgundy hover:bg-posterBurgundyDark
+                   text-white font-kanit font-bold
+                   text-lg sm:text-xl rounded-xl
+                   shadow-vintage-lg transition
+                   flex items-center justify-center gap-3 mx-auto">
+
+            <i class="fa-solid fa-ticket"></i>
+
+            <span>สำรองที่นั่ง / Reservation</span>
+
+            <i class="fa-solid fa-arrow-right"></i>
+
+        </button>
+
+        <p class="text-xs text-posterMuted mt-3">
+            Online Seat Reservation
+        </p>
+
+    </div>
+
+</section>
+</div>
+    
+
     <!-- Main Content App Body -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-8">
+    <main id="bookingFlow"
+      class="hidden flex-grow max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-8">
         
         <!-- Step Progress Bar -->
         <div class="mb-8 max-w-2xl mx-auto">
@@ -1522,7 +1563,19 @@ document.getElementById('ticketQrImage').src =
             }
         }
 
+
+function enterBooking() {
+    document.getElementById('landingPage').classList.add('hidden');
+
+    document.getElementById('bookingFlow').classList.remove('hidden');
+
+    goToStep(1);
+}
+        
         function resetToHome() {
+
+            document.getElementById('landingPage').classList.remove('hidden');
+    document.getElementById('bookingFlow').classList.add('hidden');
             selectedSeats.clear();
             uploadedSlipData = null;
             uploadedSlipFile = null;
@@ -1571,13 +1624,18 @@ document.getElementById('ticketQrImage').src =
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+
     const step1 = document.getElementById('step1Container');
     const step2 = document.getElementById('step2Container');
     const step3 = document.getElementById('step3Container');
 
-    if (step1) step1.classList.remove('hidden');
+    if (step1) step1.classList.add('hidden');
     if (step2) step2.classList.add('hidden');
     if (step3) step3.classList.add('hidden');
+
+    document.getElementById('landingPage').classList.remove('hidden');
+    document.getElementById('bookingFlow').classList.add('hidden');
+
 });
 </script>
 
