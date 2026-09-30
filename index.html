@@ -651,27 +651,52 @@ select {
 </head>
 <body class="min-h-full flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
 
-    <!-- Navigation Header -->
-    <header class="bg-posterGreen text-white shadow-md sticky top-0 z-40 border-b-2 border-posterGold/40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="resetToHome()">
-                <!-- Logo Badge -->
+<!-- Navigation Header -->
+<header class="bg-posterGreen text-white shadow-md sticky top-0 z-40 border-b-2 border-posterGold/40">
 
-<!-- Logo Badge -->
-<div class="flex items-center justify-center">
-    <img
-        src="./logo.png"
-        alt="เกรียงไกร มหามิตร"
-        class="h-10 sm:h-14 w-auto object-contain"
-    >
-</div>
-                <div>
-                    <h1 class="font-kanit font-bold text-base sm:text-xl text-amber-100 leading-tight tracking-wide">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</h1>
-                    <p class="text-[10px] sm:text-[11px] text-emerald-200/90 block mt-1">
-    A Celebration of Friendship Concert
-</p>
-                </div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 relative">
+
+        <!-- CENTER BRANDING -->
+        <div
+            class="flex items-center justify-center
+                   gap-3 sm:gap-4
+                   cursor-pointer"
+            onclick="resetToHome()"
+        >
+
+            <!-- Logo -->
+            <div class="flex items-center justify-center flex-shrink-0">
+                <img
+                    src="./logo.png"
+                    alt="เกรียงไกร มหามิตร"
+                    class="h-10 sm:h-12 md:h-14 w-auto object-contain"
+                >
             </div>
+
+            <!-- Concert Name -->
+            <div class="text-left">
+
+                <h1
+                    class="font-kanit font-bold
+                           text-base sm:text-xl md:text-2xl
+                           text-amber-100
+                           leading-tight
+                           tracking-wide"
+                >
+                    มิตรภาพไม่มีวันดึกดำบรรพ์ #2
+                </h1>
+
+                <p
+                    class="text-[10px] sm:text-xs md:text-sm
+                           text-emerald-200/90
+                           block mt-1"
+                >
+                    A Celebration of Friendship Concert
+                </p>
+
+            </div>
+
+        </div>
 
             <div class="flex items-center space-x-2 sm:space-x-4">
 
