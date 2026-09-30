@@ -645,6 +645,14 @@ select {
     }
 }
 
+        
+        
+/* ช่องที่กรอกไม่ครบ/ไม่ถูกต้อง: กรอบแดง หายเองเมื่อแก้ไข */
+.field-invalid {
+    border-color: #DC2626 !important;
+    background-color: #FEF2F2 !important;
+    box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25) !important;
+}
 
 /* =========================================
    BOOKING LOADING POPUP
@@ -867,10 +875,6 @@ select {
     }
 }
 
-
-
-        
-        
     </style>
 </head>
 <body class="min-h-full flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
@@ -991,9 +995,13 @@ select {
         </div>
     </div>
 
-    <!-- Location -->
-   <div class="flex items-center gap-4
-            bg-white/60 rounded-xl p-3 sm:p-4">
+    <!-- Location: กดแล้วเปิด Google Maps ในแท็บใหม่ -->
+   <a href="https://maps.app.goo.gl/ieSH22KfPAx6B4Fs9"
+      target="_blank" rel="noopener noreferrer"
+      aria-label="เปิดสถานที่จัดงาน เกรียงไกรมาหามิตร (KK Market) ใน Google Maps"
+      class="flex items-center gap-4
+            bg-white/60 rounded-xl p-3 sm:p-4
+            hover:bg-white/90 active:bg-white transition-colors">
 
         <div class="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14
                     rounded-xl bg-posterGreen/10
@@ -1016,8 +1024,14 @@ select {
                 เกรียงไกรมาหามิตร (KK Market)
                 แม่ริม, เชียงใหม่
             </p>
+
+            <p class="mt-1 text-xs sm:text-sm font-medium text-posterGreen
+                      flex items-center gap-1.5">
+                เปิดใน Google Maps
+                <i class="fa-solid fa-arrow-up-right-from-square text-[0.7rem]"></i>
+            </p>
         </div>
-    </div>
+    </a>
 
 </div>
 
@@ -1318,7 +1332,7 @@ select {
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold text-posterDark mb-1">อีเมล (รับบัตร E-Ticket) *</label>
+                                <label class="block text-xs font-semibold text-posterDark mb-1">อีเมล (สำหรับรับอีเมลยืนยันการจอง) *</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                         <i class="fa-solid fa-envelope text-xs"></i>
@@ -1452,9 +1466,10 @@ select {
                 <!-- Success Header -->
                 <div class="bg-posterGreen text-white p-6 sm:p-8 space-y-2 relative border-b-2 border-posterGold/40">
                     <div class="w-16 h-16 bg-amber-300 text-posterDark rounded-full flex items-center justify-center mx-auto text-3xl font-bold shadow-md mb-2">
-                        <i class="fa-solid fa-check"></i>
+                        <i class="fa-solid fa-hourglass-half"></i>
                     </div>
-                    <h2 class="text-2xl sm:text-4xl font-black font-kanit text-amber-100">ส่งข้อมูลการจองเรียบร้อยแล้ว!</h2>
+                    <h2 class="text-2xl sm:text-4xl font-black font-kanit text-amber-100">ได้รับรายการจองของคุณแล้ว</h2>
+                    <p class="text-sm sm:text-base text-amber-200 font-semibold">อยู่ระหว่างตรวจสอบการชำระเงิน</p>
                     <p class="text-xs sm:text-sm text-emerald-100">ขอบคุณสำหรับการจองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2</p>
                     <div class="inline-block bg-white/10 px-4 py-1 rounded-full text-xs text-amber-200 font-mono mt-2 border border-white/20">
                         Order Ref: <span id="ticketOrderRef">MK-2570-0000</span>
@@ -1469,13 +1484,15 @@ select {
                     <div class="bg-posterCream p-5 rounded-2xl border-2 border-dashed border-posterGreen/40 relative">
                         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-posterGreen/20 pb-4">
                             <div>
-                                <span class="text-[10px] uppercase font-bold text-posterBurgundy tracking-wider block">Concert Ticket</span>
+                                <span class="text-[10px] font-bold text-posterBurgundy tracking-wider block">รายละเอียดการจอง</span>
                                 <h3 class="font-kanit font-bold text-xl text-posterGreen">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</h3>
                                 <p class="text-xs text-posterMuted">เสาร์ที่ 16 มกราคม 2570 | KK Market แม่ริม เชียงใหม่</p>
                             </div>
-                            <div class="bg-white p-2 rounded-lg shadow-sm border border-posterPaper text-center flex-shrink-0">
-                                <img id="ticketQrImage" src="" alt="Ticket QR Code" class="w-20 h-20">
-                                <span class="text-[9px] text-posterMuted font-mono block mt-1">SCAN AT ENTRY</span>
+                            <!-- ยังไม่ใช่บัตรเข้างาน: แสดงสถานะแทน QR Code -->
+                            <div class="flex-shrink-0 inline-flex items-center gap-2 px-3.5 py-2 rounded-full
+                                        bg-amber-100 border border-amber-300 text-amber-800 text-xs sm:text-sm font-bold">
+                                <i class="fa-solid fa-hourglass-half"></i>
+                                <span>รอตรวจสอบการชำระเงิน</span>
                             </div>
                         </div>
 
@@ -1510,8 +1527,12 @@ select {
                     <!-- Instructions -->
                     <div class="text-xs text-posterMuted space-y-1 bg-posterCream/60 p-4 rounded-xl border border-posterPaper">
                         <p class="font-bold text-posterDark"><i class="fa-solid fa-circle-info text-posterGreen mr-1"></i> คำแนะนำเพิ่มเติม:</p>
-                        <p>1. ทางผู้จัดงานจะทำการตรวจสอบหลักฐานการโอนเงินและส่งอีเมลยืนยันขั้นสุดท้ายให้ท่านภายใน 24 ชม.</p>
-                        <p>2. ท่านสามารถแคปหน้าจอนี้ หรือแสดงอีเมลรับบัตรแก่เจ้าหน้าที่ ณ จุดลงทะเบียนวันงาน</p>
+                        <p>1. ผู้จัดงานจะตรวจสอบการชำระเงินและส่งอีเมลยืนยันไปที่ <span id="ticketCustEmail" class="font-bold text-posterDark break-all">อีเมลของท่าน</span> ภายใน 24 ชม.</p>
+                        <p>2. กรุณาแคปหน้าจอนี้หรือจดเลขอ้างอิงการจองไว้ สำหรับติดต่อผู้จัดงาน</p>
+                        <p>3. วันงาน กรุณาแสดงอีเมลยืนยันแก่เจ้าหน้าที่ ณ จุดลงทะเบียน</p>
+                        <p>4. หากไม่ได้รับอีเมลภายใน 24 ชม. กรุณาตรวจสอบในกล่องจดหมายขยะ (Spam) หรือติดต่อผู้จัดงาน
+                            ทาง Facebook: <a href="https://www.facebook.com/KriengkraiMahamit/" target="_blank" rel="noopener noreferrer" class="font-bold text-posterGreen underline">Kriengkrai Mahamit</a>
+                            หรือโทร <a href="tel:0905235223" class="font-bold text-posterGreen underline">090 523 5223</a></p>
                     </div>
 
                     <div class="flex flex-col sm:flex-row gap-3 pt-2">
@@ -1650,11 +1671,14 @@ async function retrySeatStatus() {
         let currentStep = 1;
         let uploadedSlipData = null;
         let uploadedSlipFile = null;
+        let slipProcessing = null; // Promise ระหว่างอ่าน/ย่อรูปสลิป
         let holdTimerInterval = null;
         let webAppUrl = localStorage.getItem('mm_web_app_url') || 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
 
         // Load authoritative seat status from Google Sheets on page load.
-        window.onload = async function() {
+        // ใช้ DOMContentLoaded แทน window.onload เพื่อเริ่มโหลดที่นั่งทันที
+        // ไม่ต้องรอรูปภาพ ฟอนต์ และไอคอนทั้งหน้าโหลดเสร็จก่อน
+        document.addEventListener('DOMContentLoaded', async function() {
             initSeatData();
             renderSeatGrid();
             updateSummaryUI();
@@ -1672,8 +1696,11 @@ async function retrySeatStatus() {
 
 await refreshSeatStatus(true);
             // Refresh periodically so customers see bookings made by other visitors.
-            setInterval(() => refreshSeatStatus(false), 30000);
-        };
+            // ข้ามการรีเฟรชเมื่อแท็บไม่ได้เปิดดูอยู่ เพื่อลดโหลดของ Apps Script
+            setInterval(() => {
+                if (!document.hidden) refreshSeatStatus(false);
+            }, 30000);
+        });
 
         function initSeatData() {
             // Seat status starts available and is then populated from Google Sheets.
@@ -2067,17 +2094,61 @@ if (hero) {
                 return;
             }
 
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                uploadedSlipData = e.target.result;
-                document.getElementById('uploadPlaceholder').classList.add('hidden');
-                document.getElementById('uploadPreview').classList.remove('hidden');
-                document.getElementById('slipPreviewImg').src = uploadedSlipData;
-            };
-            reader.readAsDataURL(file);
+            uploadedSlipData = null;
+            document.getElementById('dropzone').classList.remove('field-invalid');
+
+            slipProcessing = new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const originalData = e.target.result;
+                    document.getElementById('uploadPlaceholder').classList.add('hidden');
+                    document.getElementById('uploadPreview').classList.remove('hidden');
+                    document.getElementById('slipPreviewImg').src = originalData;
+
+                    const compressed = await compressSlipImage(originalData);
+                    // ผู้ใช้อาจเปลี่ยนไฟล์ระหว่างย่อรูป ให้ใช้เฉพาะผลของไฟล์ล่าสุด
+                    if (uploadedSlipFile === file) uploadedSlipData = compressed;
+                    resolve();
+                };
+                reader.onerror = () => resolve();
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // ย่อรูปสลิปก่อนส่ง: รูปจากมือถือมักใหญ่หลาย MB และเมื่อแปลงเป็น base64 จะใหญ่ขึ้นอีก ~33%
+        // ย่อด้านยาวให้ไม่เกิน 1600px (ตัวอักษรและ QR บนสลิปยังอ่านได้ชัด) ทำให้อัปโหลดเร็วขึ้นมาก
+        // ถ้าเบราว์เซอร์เปิดไฟล์ไม่ได้ (เช่น HEIC บน Android/Chrome) จะส่งไฟล์เดิม
+        function compressSlipImage(dataUrl, maxSide = 1600, quality = 0.85) {
+            return new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => {
+                    try {
+                        const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.round(img.naturalWidth * scale);
+                        canvas.height = Math.round(img.naturalHeight * scale);
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#fff'; // พื้นหลังขาวแทนส่วนโปร่งใสของ PNG
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const jpeg = canvas.toDataURL('image/jpeg', quality);
+                        resolve(jpeg.length < dataUrl.length ? jpeg : dataUrl);
+                    } catch (err) {
+                        resolve(dataUrl);
+                    }
+                };
+                img.onerror = () => resolve(dataUrl);
+                img.src = dataUrl;
+            });
         }
 
         let isBookingSubmitting = false;
+
+        // เอากรอบแดงออกทันทีเมื่อผู้ใช้เริ่มแก้ช่องนั้น
+        ['custName', 'custPhone', 'custEmail'].forEach(id => {
+            const input = document.getElementById(id);
+            if (input) input.addEventListener('input', () => input.classList.remove('field-invalid'));
+        });
 
 /* =========================================
    BOOKING LOADING POPUP
@@ -2108,7 +2179,7 @@ function hideBookingLoading() {
     document.body.style.overflow = '';
 }
 
-        
+
         async function submitBooking() {
             // ตรวจและล็อกทันทีตั้งแต่เริ่ม เพื่อกันการกดซ้ำระหว่างรอเครือข่าย
             if (isBookingSubmitting) return;
@@ -2119,40 +2190,49 @@ function hideBookingLoading() {
             const note = '';
 
 
-            // ตรวจสอบเบอร์โทรศัพท์: ต้องเป็นตัวเลข 10 หลักเท่านั้น
-if (!/^[0-9]{10}$/.test(phone)) {
-    showCustomAlert(
-        'กรุณาตรวจสอบข้อมูล',
-        'กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข 10 หลักให้ถูกต้อง',
-        'fa-solid fa-circle-info',
-        '#DC2626',
-        '#FEE2E2'
-    );
+            // ถ้ารูปสลิปยังย่อไม่เสร็จ ให้รอก่อน แทนการเตือนว่ายังไม่ได้แนบ
+            // (ล็อกปุ่มระหว่างรอ กันการกดซ้ำ)
+            if (uploadedSlipFile && !uploadedSlipData && slipProcessing) {
+                isBookingSubmitting = true;
+                try {
+                    await slipProcessing;
+                } finally {
+                    isBookingSubmitting = false;
+                }
+            }
 
-    document.getElementById('custPhone').focus();
-    return;
-}
-
-// ตรวจสอบอีเมล: ต้องมีรูปแบบถูกต้องและมี @
-if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showCustomAlert(
-        'กรุณาตรวจสอบข้อมูล',
-        'กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com',
-        'fa-solid fa-circle-info',
-        '#DC2626',
-        '#FEE2E2'
-    );
-
-    document.getElementById('custEmail').focus();
-    return;
-}
-
-            if (!name || !phone || !email) {
-                alert('กรุณากรอกข้อมูล ชื่อ เบอร์โทรศัพท์ และอีเมลให้ครบถ้วน');
-                return;
+            // ตรวจทุกช่องตามลำดับบนหน้าจอ: ชื่อ → เบอร์ → อีเมล → สลิป
+            const invalidFields = [];
+            if (!name) {
+                invalidFields.push({ id: 'custName', label: 'ชื่อ-นามสกุล',
+                    message: 'กรุณากรอกชื่อ-นามสกุลผู้จอง' });
+            }
+            if (!/^[0-9]{10}$/.test(phone)) {
+                invalidFields.push({ id: 'custPhone', label: 'เบอร์โทรศัพท์ 10 หลัก',
+                    message: 'กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข 10 หลักให้ถูกต้อง' });
+            }
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                invalidFields.push({ id: 'custEmail', label: 'อีเมล',
+                    message: 'กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com' });
             }
             if (!uploadedSlipData || !uploadedSlipFile) {
-                alert('กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง');
+                invalidFields.push({ id: 'dropzone', label: 'สลิปการโอนเงิน',
+                    message: 'กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง' });
+            }
+
+            if (invalidFields.length) {
+                invalidFields.forEach(f => document.getElementById(f.id).classList.add('field-invalid'));
+
+                // พาไปที่ช่องแรกที่ต้องแก้ก่อนเปิดหน้าต่างแจ้งเตือน
+                // หน้าต่างแจ้งเตือนจะคืนโฟกัสกลับมาที่ช่องนี้เมื่อกดตกลง
+                const first = document.getElementById(invalidFields[0].id);
+                first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                if (first.tagName === 'INPUT') first.focus({ preventScroll: true });
+
+                alert(invalidFields.length === 1
+                    ? invalidFields[0].message
+                    : 'กรุณาตรวจสอบข้อมูลในช่องที่มีกรอบสีแดง: ' +
+                      invalidFields.map(f => f.label).join(', '));
                 return;
             }
             if (!webAppUrl || !webAppUrl.includes('/exec')) {
@@ -2165,18 +2245,13 @@ if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 return;
             }
 
-const btnSubmit = document.getElementById('btnSubmitBooking');
-const originalButtonHtml = btnSubmit.innerHTML;
+            const btnSubmit = document.getElementById('btnSubmitBooking');
+            const originalButtonHtml = btnSubmit.innerHTML;
+            isBookingSubmitting = true;
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังยืนยันการจอง';
+            showBookingLoading();
 
-isBookingSubmitting = true;
-
-btnSubmit.disabled = true;
-
-btnSubmit.innerHTML =
-    '<i class="fa-solid fa-spinner fa-spin mr-2"></i>กำลังยืนยันการจอง';
-
-/* เปิด Popup Loading */
-showBookingLoading();
             // ให้เบราว์เซอร์วาดสถานะโหลดบนปุ่มทันที ก่อนเริ่มเรียก Google Sheets
             // ใช้ 2 เฟรมเพื่อให้การเปลี่ยนข้อความ/ปิดปุ่มแสดงผลจริงก่อนงาน async ถัดไป
             await new Promise(resolve => {
@@ -2184,29 +2259,20 @@ showBookingLoading();
             });
 
             try {
-                // เก็บที่นั่งที่ลูกค้าเลือกไว้ก่อนตรวจสถานะล่าสุด
-                const seatsChosenBeforeRefresh = Array.from(selectedSeats);
-                const statusLoaded = await refreshSeatStatus(false);
-
-                if (!statusLoaded) {
-                    throw new Error('ตรวจสอบสถานะที่นั่งจากระบบกลางไม่ได้ กรุณาลองใหม่อีกครั้ง');
-                }
-
-                const newlyTaken = seatsChosenBeforeRefresh.filter(
-                    id => !seatMapData[id] || seatMapData[id].isSold
-                );
-                if (newlyTaken.length) {
-                    alert('ที่นั่ง ' + newlyTaken.join(', ') + ' มีผู้จองไปแล้ว กรุณาเลือกที่นั่งใหม่');
-                    goToStep(1);
-                    return;
-                }
-
+                // ไม่ต้องโหลดสถานะที่นั่งซ้ำก่อนส่ง เพราะ Apps Script ตรวจที่นั่งชนภายใต้ล็อกอยู่แล้ว
+                // และจะตอบกลับข้อความแจ้งถ้าที่นั่งถูกจองไปก่อน (ประหยัดการเรียก Apps Script ไป 1 รอบ)
                 const seatArray = Array.from(selectedSeats).sort();
                 let totalAmt = 0;
                 seatArray.forEach(id => totalAmt += seatMapData[id].price);
 
                 const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
                     Math.random().toString(36).slice(2, 6).toUpperCase();
+
+                // ชนิดไฟล์ตามข้อมูลจริงที่ส่ง (สลิปที่ถูกย่อแล้วจะเป็น JPEG)
+                const slipMimeType = uploadedSlipData.slice(5, uploadedSlipData.indexOf(';')) ||
+                    uploadedSlipFile.type || 'image/jpeg';
+                let slipFileName = uploadedSlipFile.name || (orderRef + '-slip.jpg');
+                if (slipMimeType === 'image/jpeg') slipFileName = slipFileName.replace(/\.[^.]+$/, '') + '.jpg';
 
                 const payload = {
                     orderRef: orderRef,
@@ -2217,49 +2283,41 @@ showBookingLoading();
                     seats: seatArray,
                     totalPrice: totalAmt,
                     slipBase64: uploadedSlipData,
-                    slipMimeType: uploadedSlipFile.type || 'image/jpeg',
-                    slipFileName: uploadedSlipFile.name || (orderRef + '-slip.jpg')
+                    slipMimeType: slipMimeType,
+                    slipFileName: slipFileName
                 };
 
-                // เริ่มส่งข้อมูลไป Apps Script แบบไม่บล็อกหน้าเว็บ
-                // no-cors อ่านผลตอบกลับไม่ได้ และการรอ fetch จะทำให้รอขั้นตอนอีเมลฝั่งเซิร์ฟเวอร์ด้วย
-                // จึงเริ่ม POST ทิ้งไว้ แล้วตรวจ orderStatus ควบคู่กัน
-                const postRequest = fetch(webAppUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify(payload)
-                }).catch(postErr => {
-                    console.warn('Booking POST transport error; will still verify order status:', postErr);
-                    return null;
-                });
+                // ส่งข้อมูลแล้วอ่านผลตอบกลับจาก Apps Script โดยตรง
+                // (Content-Type text/plain ไม่ต้องทำ CORS preflight และ Apps Script อนุญาตให้อ่านผลได้)
+                let bookingResult = null;
+                try {
+                    const response = await fetch(webAppUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                        body: JSON.stringify(payload)
+                    });
+                    bookingResult = await response.json();
+                } catch (postErr) {
+                    console.warn('Booking POST response unreadable; verifying via orderStatus:', postErr);
+                }
 
-                // ตรวจสอบว่ารายการถูกบันทึกจริง โดยเริ่มตรวจทันทีและรอไม่เกิน 30 รอบ
-                let bookingVerified = false;
-                let lastStatusError = null;
-                for (let attempt = 0; attempt < 30; attempt++) {
-                    await new Promise(resolve => setTimeout(resolve, attempt === 0 ? 350 : 650));
-                    try {
-                        const check = await callAppsScriptJSONP(
-                            { action: 'orderStatus', orderRef: orderRef }, 7000
-                        );
-                        if (check && check.success && check.found === true) {
-                            bookingVerified = true;
-                            break;
+                if (bookingResult) {
+                    if (bookingResult.success !== true) {
+                        const message = bookingResult.message || 'บันทึกการจองไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
+                        if (message.includes('ถูกจองไปแล้ว')) {
+                            alert(message);
+                            refreshSeatStatus(false);
+                            goToStep(1);
+                            return;
                         }
-                        if (check && check.success === false) {
-                            throw new Error(check.message || 'ตรวจสอบสถานะการจองไม่ได้');
-                        }
-                    } catch (verifyErr) {
-                        lastStatusError = verifyErr;
+                        throw new Error(message);
                     }
-                }
-                if (!bookingVerified) {
-                    throw new Error(lastStatusError ? lastStatusError.message :
-                        'ยังไม่พบรายการจองใน Google Sheets ภายในเวลาที่กำหนด');
+                } else if (!(await waitForOrderSaved(orderRef))) {
+                    // อ่านผลตอบกลับไม่ได้ (เช่น เน็ตหลุดระหว่างรอ) จึงตรวจจาก Google Sheets แทน
+                    throw new Error('ยังไม่พบรายการจองใน Google Sheets กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองอีกครั้ง');
                 }
 
-                // แสดง E-Ticket หลังยืนยันว่ามีรายการในระบบแล้วเท่านั้น
+                // แสดงหน้ารับรายการจองหลังยืนยันว่ามีรายการในระบบแล้วเท่านั้น
                 document.getElementById('ticketOrderRef').textContent = orderRef;
                 document.getElementById('ticketCustName').textContent = name;
                 document.getElementById('ticketCustPhone').textContent = phone;
@@ -2276,18 +2334,9 @@ showBookingLoading();
                     ticketBadgesContainer.appendChild(badge);
                 });
 
-                // QR Code สำหรับตรวจสอบบัตรเข้างาน
-                const ticketQRData = [
-                    'MAHAMIT CONCERT #2',
-                    'Order Ref: ' + orderRef,
-                    'Name: ' + name,
-                    'Phone: ' + phone,
-                    'Number of Seats: ' + seatArray.length,
-                    'Seats: ' + seatArray.join(', ')
-                ].join('\\n');
-                document.getElementById('ticketQrImage').src =
-                    'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' +
-                    encodeURIComponent(ticketQRData);
+                // หน้านี้เป็นใบรับรายการจอง (ยังไม่ใช่บัตรเข้างาน) จึงไม่มี QR Code
+                // ลูกค้าจะได้รับอีเมลยืนยันหลังผู้จัดงานตรวจสอบการชำระเงินแล้ว
+                document.getElementById('ticketCustEmail').textContent = email;
 
                 seatArray.forEach(id => {
                     if (seatMapData[id]) seatMapData[id].isSold = true;
@@ -2296,22 +2345,34 @@ showBookingLoading();
                 if (holdTimerInterval) clearInterval(holdTimerInterval);
                 goToStep(3);
                 refreshSeatStatus(false);
-                // ไม่ต้องรอการส่งอีเมลของ Apps Script ก่อนแสดงหน้าบัตร
-                postRequest.catch(() => {});
 
             } catch (err) {
                 console.error('Booking submission error:', err);
                 alert(err && err.message ? err.message :
                     'ส่งข้อมูลไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตและ URL ของ Apps Script แล้วลองอีกครั้ง');
-} finally {
+            } finally {
+                hideBookingLoading();
+                // ปลดล็อกปุ่มทุกกรณีที่จบการทำงาน
+                isBookingSubmitting = false;
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalButtonHtml;
+            }
+        }
 
-    hideBookingLoading();
-
-    isBookingSubmitting = false;
-    btnSubmit.disabled = false;
-    btnSubmit.innerHTML = originalButtonHtml;
-
-}
+        // ใช้เมื่ออ่านผลตอบกลับจาก POST ไม่ได้: ตรวจว่ารายการถูกบันทึกลงชีตหรือยัง
+        async function waitForOrderSaved(orderRef, attempts = 15) {
+            for (let attempt = 0; attempt < attempts; attempt++) {
+                try {
+                    const check = await callAppsScriptJSONP(
+                        { action: 'orderStatus', orderRef: orderRef }, 10000
+                    );
+                    if (check && check.success && check.found === true) return true;
+                } catch (verifyErr) {
+                    console.warn('Order status check failed:', verifyErr);
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+            return false;
         }
 
 function enterBooking() {
@@ -2330,6 +2391,7 @@ function enterBooking() {
             uploadedSlipData = null;
             uploadedSlipFile = null;
             document.getElementById('bookingForm').reset();
+            document.querySelectorAll('.field-invalid').forEach(el => el.classList.remove('field-invalid'));
             document.getElementById('uploadPlaceholder').classList.remove('hidden');
             document.getElementById('uploadPreview').classList.add('hidden');
             renderSeatGrid();
@@ -2546,8 +2608,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         <!-- MESSAGE -->
         <p class="booking-loading-message">
-            กรุณารอสักครู่<br>
-            ระบบกำลังตรวจสอบและยืนยันที่นั่งของคุณ
+            ระบบกำลังตรวจสอบและยืนยันที่นั่งของคุณ<br>
+            อาจใช้เวลาประมาณ 10–30 วินาที<br>
+            กรุณาอย่าปิดหรือรีเฟรชหน้านี้
         </p>
 
         <!-- LOADING DOTS -->
