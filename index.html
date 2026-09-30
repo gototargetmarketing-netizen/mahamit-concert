@@ -2267,6 +2267,7 @@ function hideBookingLoading() {
 
                 const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
                     Math.random().toString(36).slice(2, 6).toUpperCase();
+                const bookingTime = new Date().toISOString();
 
                 // ชนิดไฟล์ตามข้อมูลจริงที่ส่ง (สลิปที่ถูกย่อแล้วจะเป็น JPEG)
                 const slipMimeType = uploadedSlipData.slice(5, uploadedSlipData.indexOf(';')) ||
@@ -2276,6 +2277,7 @@ function hideBookingLoading() {
 
                 const payload = {
                     orderRef: orderRef,
+                    bookingTime: bookingTime,
                     custName: name,
                     custPhone: phone,
                     custEmail: email,
