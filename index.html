@@ -494,6 +494,51 @@ select {
         box-shadow: 0 0 0 3px rgba(66,94,34,0.15) !important;
     }
 
+    /* กรอบแดงของช่องที่กรอกไม่ครบ ต้องชนะสไตล์มือถือด้านบน
+       (ความเจาะจงเท่ากัน จึงต้องวางไว้หลังกฎ input และ :focus) */
+    #bookingForm input.field-invalid {
+        border-color: #DC2626 !important;
+        background-color: #FEF2F2 !important;
+        box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25) !important;
+    }
+
+    /* ช่องวันที่/เวลาที่โอน (อยู่นอก #bookingForm) ให้หน้าตาเหมือนช่องอื่น */
+    #transferDate,
+    #transferTime {
+        background-color: #FFFFFF !important;
+        border: 1.5px solid #B8B8B8 !important;
+        border-radius: 12px !important;
+        color: #23201D !important;
+        min-height: 54px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+    }
+
+    #transferDate:focus,
+    #transferTime:focus {
+        border-color: #425E22 !important;
+        box-shadow: 0 0 0 3px rgba(66,94,34,0.15) !important;
+    }
+
+    #transferDate.field-invalid,
+    #transferTime.field-invalid {
+        border-color: #DC2626 !important;
+        background-color: #FEF2F2 !important;
+        box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25) !important;
+    }
+
+}
+
+/* iPhone: ช่องวันที่/เวลาไม่ล้นคอลัมน์ และชิดซ้ายเหมือนช่องอื่น */
+#transferDate,
+#transferTime {
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 0;
+    display: block;
+}
+#transferDate::-webkit-date-and-time-value,
+#transferTime::-webkit-date-and-time-value {
+    text-align: left;
 }
 
 
@@ -1369,7 +1414,22 @@ select {
                             <i class="fa-solid fa-file-invoice-dollar text-posterGreen mr-1"></i>
                             แนบหลักฐานการโอนเงิน (สลิป) *
                         </label>
-                        
+
+                        <!-- วันและเวลาที่โอนเงิน (ดูได้จากสลิป) -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label for="transferDate" class="block text-xs font-semibold text-posterDark mb-1">วันที่โอน *</label>
+                                <input type="date" id="transferDate" required
+                                    class="w-full px-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                            </div>
+                            <div>
+                                <label for="transferTime" class="block text-xs font-semibold text-posterDark mb-1">เวลาที่โอน *</label>
+                                <input type="time" id="transferTime" required
+                                    class="w-full px-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-posterMuted -mt-1">ดูวันและเวลาได้จากสลิปการโอนเงิน</p>
+
                         <div id="dropzone" onclick="document.getElementById('slipInput').click();" class="border-2 border-dashed border-posterGreen/40 hover:border-posterGreen bg-posterCream p-5 rounded-xl text-center cursor-pointer transition">
                             <input type="file" id="slipInput" accept="image/*" class="hidden" onchange="handleSlipUpload(event)">
                             
@@ -1430,8 +1490,26 @@ select {
     ขยาย QR Code / ดูเต็มหน้าจอ
 </button>
 
+                        <!-- โค้ดส่วนลด: ตรวจกับ Apps Script แล้วแสดงยอดหลังลดก่อนลูกค้าโอนเงิน -->
+                        <div class="text-left space-y-2">
+                            <label for="discountCodeInput" class="block text-xs font-semibold text-posterDark">
+                                <i class="fa-solid fa-tag text-posterGreen mr-1"></i> โค้ดส่วนลด (ถ้ามี)
+                            </label>
+                            <div class="flex gap-2">
+                                <input type="text" id="discountCodeInput" autocomplete="off" autocapitalize="characters" spellcheck="false"
+                                    placeholder="กรอกโค้ดส่วนลด"
+                                    class="flex-1 min-w-0 px-3 py-2.5 border border-posterPaper rounded-lg text-sm uppercase bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none disabled:bg-posterCream disabled:text-posterMuted">
+                                <button type="button" id="btnApplyDiscount" onclick="toggleDiscountCode()"
+                                    class="px-4 py-2.5 bg-posterGreen hover:bg-posterGreenDark text-white text-sm font-bold rounded-lg transition whitespace-nowrap disabled:opacity-60 disabled:cursor-wait">
+                                    ใช้โค้ด
+                                </button>
+                            </div>
+                            <p id="discountMessage" class="hidden text-xs font-medium"></p>
+                        </div>
+
                         <div class="bg-posterCream border border-posterPaper p-3 rounded-xl text-center">
                             <span class="text-xs text-posterMuted block">ยอดเงินที่ต้องชำระสุทธิ</span>
+                            <span id="paymentOriginalAmount" class="hidden text-sm text-posterMuted line-through mr-1"></span>
                             <span id="paymentTotalAmount" class="text-3xl font-black font-kanit text-posterGreen">0 ฿</span>
                         </div>
                     </div>
@@ -1447,6 +1525,10 @@ select {
                         <div class="border-t border-posterPaper pt-2 flex justify-between items-center text-xs text-posterMuted">
                             <span>ค่าธรรมเนียมการออกบัตร</span>
                             <span class="font-bold text-posterGreen">ฟรี (0 ฿)</span>
+                        </div>
+                        <div id="summaryDiscountRow" class="hidden flex justify-between items-center text-xs text-posterMuted">
+                            <span>ส่วนลด (<span id="summaryDiscountCode"></span>)</span>
+                            <span id="summaryDiscountAmount" class="font-bold text-posterBurgundy"></span>
                         </div>
                     </div>
 
@@ -1522,6 +1604,7 @@ select {
                             <div>
                                 <span class="text-posterMuted block text-[10px]">ราคารวมทั้งสิ้น</span>
                                 <span id="ticketTotalPrice" class="font-bold text-posterGreen">-</span>
+                                <span id="ticketDiscountNote" class="hidden block text-[10px] text-posterMuted"></span>
                             </div>
                         </div>
 
@@ -1929,6 +2012,137 @@ if (showMessage) {
             updateSummaryUI();
         }
 
+        /* ===== DISCOUNT CODE ===== */
+        // โค้ดที่ใช้อยู่ (เงื่อนไขจาก Apps Script) ใช้คำนวณใหม่เมื่อลูกค้าเปลี่ยนที่นั่ง
+        let appliedDiscount = null; // { code, type, value, minSeats }
+
+        // ต้องคำนวณแบบเดียวกับ evaluateDiscount_ ใน code.gs ไม่อย่างนั้นระบบจะไม่รับการจอง (ยอดไม่ตรง)
+        function discountAmountFor(rule, seatCount, subtotal) {
+            if (!rule || seatCount === 0 || (rule.minSeats && seatCount < rule.minSeats)) return 0;
+            return rule.type === 'percent'
+                ? Math.floor(subtotal * rule.value / 100)
+                : Math.min(Math.floor(rule.value), subtotal);
+        }
+
+        function discountLabel(rule) {
+            return rule.type === 'percent' ? `ลด ${rule.value}%` : `ลด ${Number(rule.value).toLocaleString()} บาท`;
+        }
+
+        function showDiscountMessage(type, text) {
+            const el = document.getElementById('discountMessage');
+            if (!el) return;
+            el.textContent = text || '';
+            el.className = 'text-xs font-medium ' + (type === 'success' ? 'text-posterGreen' : 'text-red-600');
+            el.classList.toggle('hidden', !text);
+        }
+
+        function renderDiscountControls() {
+            const input = document.getElementById('discountCodeInput');
+            const btn = document.getElementById('btnApplyDiscount');
+            if (!input || !btn) return;
+            input.disabled = !!appliedDiscount;
+            btn.textContent = appliedDiscount ? 'ยกเลิกโค้ด' : 'ใช้โค้ด';
+            btn.classList.toggle('bg-posterGreen', !appliedDiscount);
+            btn.classList.toggle('hover:bg-posterGreenDark', !appliedDiscount);
+            btn.classList.toggle('bg-gray-500', !!appliedDiscount);
+            btn.classList.toggle('hover:bg-gray-600', !!appliedDiscount);
+        }
+
+        function removeDiscountCode(message) {
+            appliedDiscount = null;
+            const input = document.getElementById('discountCodeInput');
+            if (input) input.value = '';
+            showDiscountMessage('error', message || '');
+            renderDiscountControls();
+            updateSummaryUI();
+        }
+
+        async function toggleDiscountCode() {
+            if (appliedDiscount) {
+                removeDiscountCode();
+                return;
+            }
+            const input = document.getElementById('discountCodeInput');
+            const btn = document.getElementById('btnApplyDiscount');
+            const code = input.value.trim().toUpperCase();
+            input.classList.remove('field-invalid');
+            if (!code) {
+                showDiscountMessage('error', 'กรุณากรอกโค้ดส่วนลด');
+                input.focus();
+                return;
+            }
+            if (selectedSeats.size === 0) {
+                showDiscountMessage('error', 'กรุณาเลือกที่นั่งก่อนใช้โค้ดส่วนลด');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i>กำลังตรวจสอบ';
+            showDiscountMessage('', '');
+            try {
+                // Apps Script อาจตอบช้า จึงรอนานกว่าค่าปกติ
+                const result = await callAppsScriptJSONP({
+                    action: 'checkDiscount',
+                    code: code,
+                    seats: Array.from(selectedSeats).sort().join(',')
+                }, 30000);
+                if (!result || result.success !== true) {
+                    throw new Error((result && result.message) || 'ตรวจสอบโค้ดไม่สำเร็จ');
+                }
+                if (!result.valid) {
+                    input.classList.add('field-invalid');
+                    showDiscountMessage('error', result.message);
+                    return;
+                }
+                appliedDiscount = {
+                    code: result.code,
+                    type: result.type,
+                    value: Number(result.value),
+                    minSeats: Number(result.minSeats) || 0
+                };
+                input.value = result.code;
+                updateSummaryUI();
+            } catch (err) {
+                showDiscountMessage('error', (err && err.message ? err.message : 'ตรวจสอบโค้ดไม่สำเร็จ') + ' กรุณาลองใหม่อีกครั้ง');
+            } finally {
+                btn.disabled = false;
+                renderDiscountControls();
+            }
+        }
+
+        // แสดงส่วนลดและยอดสุทธิ คืนยอดที่ต้องชำระหลังหักส่วนลด
+        function renderDiscountSummary(count, subtotal) {
+            if (appliedDiscount && appliedDiscount.minSeats && count > 0 && count < appliedDiscount.minSeats) {
+                const rule = appliedDiscount;
+                appliedDiscount = null;
+                const input = document.getElementById('discountCodeInput');
+                if (input) input.value = '';
+                renderDiscountControls();
+                showDiscountMessage('error', `ยกเลิกโค้ด ${rule.code} แล้ว เพราะโค้ดนี้ใช้ได้เมื่อจองตั้งแต่ ${rule.minSeats} ที่นั่งขึ้นไป`);
+            }
+
+            const discount = discountAmountFor(appliedDiscount, count, subtotal);
+            const net = subtotal - discount;
+
+            const original = document.getElementById('paymentOriginalAmount');
+            if (original) {
+                original.textContent = `${subtotal.toLocaleString()} ฿`;
+                original.classList.toggle('hidden', discount === 0);
+            }
+            const row = document.getElementById('summaryDiscountRow');
+            if (row) {
+                row.classList.toggle('hidden', discount === 0);
+                document.getElementById('summaryDiscountCode').textContent = appliedDiscount ? appliedDiscount.code : '';
+                document.getElementById('summaryDiscountAmount').textContent = `−${discount.toLocaleString()} ฿`;
+            }
+            if (appliedDiscount) {
+                showDiscountMessage('success', count > 0
+                    ? `✓ ใช้โค้ด ${appliedDiscount.code} ${discountLabel(appliedDiscount)} (−${discount.toLocaleString()} ฿)`
+                    : `✓ ใช้โค้ด ${appliedDiscount.code} ${discountLabel(appliedDiscount)}`);
+            }
+            return net;
+        }
+
         function updateSummaryUI() {
             const seatArray = Array.from(selectedSeats).sort();
             const count = seatArray.length;
@@ -1986,8 +2200,9 @@ if (seatNumbersEl) {
         : '';
 }
             
-            document.getElementById('headerTotalPrice').textContent = `${totalPrice.toLocaleString()}฿`;
-            document.getElementById('paymentTotalAmount').textContent = `${totalPrice.toLocaleString()} ฿`;
+            const netPrice = renderDiscountSummary(count, totalPrice);
+            document.getElementById('headerTotalPrice').textContent = `${netPrice.toLocaleString()}฿`;
+            document.getElementById('paymentTotalAmount').textContent = `${netPrice.toLocaleString()} ฿`;
             document.getElementById('summarySeatCount').textContent = count;
 
             // Toggle Sticky Cart Header Button
@@ -2154,10 +2369,31 @@ if (hero) {
         let isBookingSubmitting = false;
 
         // เอากรอบแดงออกทันทีเมื่อผู้ใช้เริ่มแก้ช่องนั้น
-        ['custName', 'custPhone', 'custEmail'].forEach(id => {
+        ['custName', 'custPhone', 'custEmail', 'transferDate', 'transferTime', 'discountCodeInput'].forEach(id => {
             const input = document.getElementById(id);
-            if (input) input.addEventListener('input', () => input.classList.remove('field-invalid'));
+            if (input) {
+                input.addEventListener('input', () => input.classList.remove('field-invalid'));
+                input.addEventListener('change', () => input.classList.remove('field-invalid'));
+            }
         });
+
+        // วันที่ในเครื่องลูกค้า รูปแบบ YYYY-MM-DD (ใช้กับช่อง type="date")
+        function localDateString(d) {
+            return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                String(d.getDate()).padStart(2, '0');
+        }
+
+        // ตั้งวันที่โอนเป็นวันนี้ และห้ามเลือกวันในอนาคต ส่วนเวลาให้ลูกค้าเลือกเองจากสลิป
+        function resetTransferFields() {
+            const dateInput = document.getElementById('transferDate');
+            const timeInput = document.getElementById('transferTime');
+            if (!dateInput || !timeInput) return;
+            const today = localDateString(new Date());
+            dateInput.max = today;
+            dateInput.value = today;
+            timeInput.value = '';
+        }
+        resetTransferFields();
 
 /* =========================================
    BOOKING LOADING POPUP
@@ -2196,6 +2432,8 @@ function hideBookingLoading() {
             const name = document.getElementById('custName').value.trim();
             const phone = document.getElementById('custPhone').value.trim();
             const email = document.getElementById('custEmail').value.trim();
+            const transferDate = document.getElementById('transferDate').value;
+            const transferTime = document.getElementById('transferTime').value;
             const note = '';
 
 
@@ -2210,7 +2448,7 @@ function hideBookingLoading() {
                 }
             }
 
-            // ตรวจทุกช่องตามลำดับบนหน้าจอ: ชื่อ → เบอร์ → อีเมล → สลิป
+            // ตรวจทุกช่องตามลำดับบนหน้าจอ: ชื่อ → เบอร์ → อีเมล → วันที่โอน → เวลาที่โอน → สลิป
             const invalidFields = [];
             if (!name) {
                 invalidFields.push({ id: 'custName', label: 'ชื่อ-นามสกุล',
@@ -2224,9 +2462,33 @@ function hideBookingLoading() {
                 invalidFields.push({ id: 'custEmail', label: 'อีเมล',
                     message: 'กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com' });
             }
+            // เทียบเป็นข้อความได้ เพราะรูปแบบ YYYY-MM-DD และ HH:MM เรียงตามเวลาอยู่แล้ว
+            const now = new Date();
+            const today = localDateString(now);
+            const nowTime = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0');
+            if (!transferDate) {
+                invalidFields.push({ id: 'transferDate', label: 'วันที่โอน',
+                    message: 'กรุณาเลือกวันที่โอนเงินตามสลิป' });
+            } else if (transferDate > today) {
+                invalidFields.push({ id: 'transferDate', label: 'วันที่โอน',
+                    message: 'วันที่โอนต้องไม่เกินวันนี้' });
+            }
+            if (!transferTime) {
+                invalidFields.push({ id: 'transferTime', label: 'เวลาที่โอน',
+                    message: 'กรุณาเลือกเวลาที่โอนเงินตามสลิป' });
+            } else if (transferDate === today && transferTime > nowTime) {
+                invalidFields.push({ id: 'transferTime', label: 'เวลาที่โอน',
+                    message: 'เวลาที่โอนต้องไม่เกินเวลาปัจจุบัน' });
+            }
             if (!uploadedSlipData || !uploadedSlipFile) {
                 invalidFields.push({ id: 'dropzone', label: 'สลิปการโอนเงิน',
                     message: 'กรุณาแนบไฟล์สลิปการโอนเงินเพื่อยืนยันการสั่งจอง' });
+            }
+            // พิมพ์โค้ดไว้แต่ยังไม่ได้กด "ใช้โค้ด" ยอดที่แสดงจึงยังไม่ได้หักส่วนลด
+            const typedCode = document.getElementById('discountCodeInput').value.trim();
+            if (typedCode && !appliedDiscount) {
+                invalidFields.push({ id: 'discountCodeInput', label: 'โค้ดส่วนลด',
+                    message: 'กรุณากด "ใช้โค้ด" เพื่อตรวจสอบโค้ดส่วนลด หรือลบโค้ดออกก่อนยืนยันการจอง' });
             }
 
             if (invalidFields.length) {
@@ -2273,6 +2535,9 @@ function hideBookingLoading() {
                 const seatArray = Array.from(selectedSeats).sort();
                 let totalAmt = 0;
                 seatArray.forEach(id => totalAmt += seatMapData[id].price);
+                const discountAmt = discountAmountFor(appliedDiscount, seatArray.length, totalAmt);
+                const discountCode = appliedDiscount && discountAmt > 0 ? appliedDiscount.code : '';
+                totalAmt -= discountAmt;
 
                 const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
                     Math.random().toString(36).slice(2, 6).toUpperCase();
@@ -2290,8 +2555,11 @@ function hideBookingLoading() {
                     custName: name,
                     custPhone: phone,
                     custEmail: email,
+                    transferDate: transferDate,
+                    transferTime: transferTime,
                     custNote: note,
                     seats: seatArray,
+                    discountCode: discountCode,
                     totalPrice: totalAmt,
                     slipBase64: uploadedSlipData,
                     slipMimeType: slipMimeType,
@@ -2334,6 +2602,9 @@ function hideBookingLoading() {
                 document.getElementById('ticketCustPhone').textContent = phone;
                 document.getElementById('ticketSeatCount').textContent = `${seatArray.length} ที่นั่ง`;
                 document.getElementById('ticketTotalPrice').textContent = `${totalAmt.toLocaleString()} ฿`;
+                const ticketDiscountNote = document.getElementById('ticketDiscountNote');
+                ticketDiscountNote.textContent = discountCode ? `โค้ด ${discountCode} (−${discountAmt.toLocaleString()} ฿)` : '';
+                ticketDiscountNote.classList.toggle('hidden', !discountCode);
 
                 const ticketBadgesContainer = document.getElementById('ticketSeatsBadges');
                 ticketBadgesContainer.innerHTML = '';
@@ -2402,6 +2673,11 @@ function enterBooking() {
             uploadedSlipData = null;
             uploadedSlipFile = null;
             document.getElementById('bookingForm').reset();
+            resetTransferFields(); // อยู่นอก bookingForm จึงไม่ถูกล้างด้วย reset()
+            appliedDiscount = null;
+            document.getElementById('discountCodeInput').value = '';
+            showDiscountMessage('', '');
+            renderDiscountControls();
             document.querySelectorAll('.field-invalid').forEach(el => el.classList.remove('field-invalid'));
             document.getElementById('uploadPlaceholder').classList.remove('hidden');
             document.getElementById('uploadPreview').classList.add('hidden');
