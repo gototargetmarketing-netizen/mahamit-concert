@@ -82,6 +82,7 @@
         .seat-btn { border: 2px solid var(--ok); background: #fff; color: var(--ok); border-radius: 12px; padding: 8px 12px; font-size: 15px; font-weight: 600; min-width: 74px; }
         .seat-btn.done { border-color: var(--line); background: #f3f2ee; color: var(--muted); font-weight: 400; cursor: default; }
         .seat-btn small { display: block; font-size: 11px; font-weight: 400; }
+        .seat-btn small.holder { font-size: 13px; font-weight: 600; max-width: 160px; }
         .empty { text-align: center; color: var(--muted); padding: 30px 10px; }
 
         /* ---------- ผลการสแกนเต็มจอ ---------- */
@@ -97,6 +98,8 @@
         .r-zone.A { color: var(--bad); }
         .r-zone.B { color: var(--ok); }
         .r-detail { font-size: 18px; margin-top: 14px; line-height: 1.6; opacity: .95; }
+        .r-detail .r-name { display: block; font-size: 26px; font-weight: 700; line-height: 1.3; }
+        .r-detail .r-booker { display: block; font-size: 14px; opacity: .85; }
         .r-next { margin-top: 26px; border: 2px solid #fff; background: transparent; color: #fff; border-radius: 999px; padding: 12px 34px; font-size: 18px; font-weight: 600; }
     </style>
 </head>
@@ -140,7 +143,7 @@
             </div>
 
             <div id="searchView" class="hidden">
-                <input id="searchInput" type="search" placeholder="ชื่อ / เบอร์โทร / เลขอ้างอิง / ที่นั่ง" oninput="renderSearch()">
+                <input id="searchInput" type="search" placeholder="ชื่อผู้นั่ง / ชื่อผู้จอง / เบอร์โทร / เลขอ้างอิง / ที่นั่ง" oninput="renderSearch()">
                 <div id="searchResults"></div>
             </div>
         </main>
@@ -192,7 +195,7 @@
             store('mm_scan_device', deviceId);
         }
         let pending = load('mm_scan_pending', []);          // รายการที่สแกนแล้วแต่ยังส่งไม่สำเร็จ
-        let seatsByKey = {};                                  // "เลขอ้างอิง|ที่นั่ง" → { r, s, h, n, p }
+        let seatsByKey = {};                                  // "เลขอ้างอิง|ที่นั่ง" → { r, s, h, n: ผู้จอง, p, a: ผู้นั่ง }
         let serverCheckins = {};                              // "เลขอ้างอิง|ที่นั่ง" → { t, by }
         let lastLoadedAt = null;
         let syncing = false;
@@ -373,6 +376,14 @@
             handleQr(text);
         }
 
+        // ชื่อผู้นั่งตัวใหญ่ (ให้ทีมงานถามชื่อตอนให้ริสแบนด์) + ชื่อผู้จองตัวเล็ก
+        // รายการที่ไม่มีชื่อผู้นั่ง แสดงชื่อผู้จองแทน
+        function holderHtml(info) {
+            if (!info.a) return `<span class="r-name">${escapeHtml(info.n)}</span>`;
+            return `<span class="r-name">${escapeHtml(info.a)}</span>` +
+                (info.n ? `<span class="r-booker">ผู้จอง: ${escapeHtml(info.n)}</span>` : '');
+        }
+
         // SHA-256 ของรหัสลับ 16 ตัวแรก ต้องตรงกับ tokenHash_ ใน code.gs
         async function tokenHash(token) {
             const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));
@@ -402,13 +413,13 @@
             const existing = checkinOf(key);
             if (existing) {
                 showResult('bad', '!', 'เข้างานไปแล้ว', seat, zoneOf(seat),
-                    `เข้าเมื่อ ${timeText(existing.t)} น. โดย ${escapeHtml(existing.by)}<br>${escapeHtml(info.n)}`);
+                    `${holderHtml(info)}เข้าเมื่อ ${timeText(existing.t)} น. โดย ${escapeHtml(existing.by)}`);
                 return;
             }
             addPending({ ref, seat, token, method: 'qr' });
             const progress = orderProgress(ref);
             showResult('ok', '✓', 'เข้างานได้', seat, zoneOf(seat),
-                `${escapeHtml(info.n)}<br>ออเดอร์นี้เข้าแล้ว ${progress.done} จาก ${progress.total} ที่นั่ง`, true);
+                `${holderHtml(info)}ออเดอร์นี้เข้าแล้ว ${progress.done} จาก ${progress.total} ที่นั่ง`, true);
         }
 
         /* ===== เช็คอิน ===== */
@@ -489,10 +500,11 @@
         async function manualCheckin(ref, seat) {
             const info = seatsByKey[ref + '|' + seat];
             if (!info || checkinOf(ref + '|' + seat)) return;
-            if (!confirm(`เช็คอินที่นั่ง ${seat} ของ ${info.n} ?\n(ใช้เมื่อลูกค้าไม่มี QR ควรตรวจบัตรประชาชนหรือเบอร์โทรก่อน)`)) return;
+            const who = info.a ? `${info.a} (ผู้จอง: ${info.n})` : info.n;
+            if (!confirm(`เช็คอินที่นั่ง ${seat} ของ ${who} ?\n(ใช้เมื่อลูกค้าไม่มี QR ควรตรวจบัตรประชาชนหรือเบอร์โทรก่อน)`)) return;
             addPending({ ref, seat, token: '', method: 'manual' });
             renderSearch();
-            showResult('ok', '✓', 'เข้างานได้', seat, zoneOf(seat), escapeHtml(info.n) + '<br>(ค้นหาชื่อ)', true);
+            showResult('ok', '✓', 'เข้างานได้', seat, zoneOf(seat), holderHtml(info) + '(ค้นหาชื่อ)', true);
         }
 
         /* ===== แสดงผล ===== */
@@ -587,10 +599,15 @@
                 return;
             }
             const orders = {};
+            // ค้นหาได้ทั้งชื่อผู้จองและชื่อผู้นั่ง แสดงทุกที่นั่งของออเดอร์ที่ตรง
+            const matchedRefs = new Set();
             Object.values(seatsByKey).forEach(s => {
-                const text = [s.n, s.p, s.r, s.s].join(' ').toLowerCase();
-                if (!text.includes(q)) return;
-                (orders[s.r] = orders[s.r] || { name: s.n, phone: s.p, ref: s.r, seats: [] }).seats.push(s.s);
+                const text = [s.n, s.a, s.p, s.r, s.s].join(' ').toLowerCase();
+                if (text.includes(q)) matchedRefs.add(s.r);
+            });
+            Object.values(seatsByKey).forEach(s => {
+                if (!matchedRefs.has(s.r)) return;
+                (orders[s.r] = orders[s.r] || { name: s.n, phone: s.p, ref: s.r, seats: [] }).seats.push(s);
             });
             const list = Object.values(orders).slice(0, 30);
             if (!list.length) {
@@ -602,11 +619,13 @@
                     <div class="order-name">${escapeHtml(o.name)}</div>
                     <div class="order-meta">${escapeHtml(o.phone)} · ${escapeHtml(o.ref)}</div>
                     <div class="seat-buttons">
-                        ${o.seats.sort().map(seat => {
+                        ${o.seats.sort((x, y) => x.s.localeCompare(y.s)).map(info => {
+                            const seat = info.s;
+                            const holder = info.a ? `<small class="holder">${escapeHtml(info.a)}</small>` : '';
                             const c = checkinOf(o.ref + '|' + seat);
                             return c
-                                ? `<button class="seat-btn done" type="button" disabled>${escapeHtml(seat)}<small>เข้าแล้ว ${timeText(c.t)}</small></button>`
-                                : `<button class="seat-btn" type="button" onclick="manualCheckin('${escapeHtml(o.ref)}','${escapeHtml(seat)}')">${escapeHtml(seat)}<small>โซน ${zoneOf(seat)}</small></button>`;
+                                ? `<button class="seat-btn done" type="button" disabled>${escapeHtml(seat)}${holder}<small>เข้าแล้ว ${timeText(c.t)}</small></button>`
+                                : `<button class="seat-btn" type="button" onclick="manualCheckin('${escapeHtml(o.ref)}','${escapeHtml(seat)}')">${escapeHtml(seat)}${holder}<small>โซน ${zoneOf(seat)}</small></button>`;
                         }).join('')}
                     </div>
                 </div>`).join('');
