@@ -80,6 +80,7 @@
         }
         .zone-A { background: var(--burgundy); }
         .zone-B { background: var(--green-ok); }
+        .holder { font-size: 20px; font-weight: 600; margin: -4px 0 12px; word-break: break-word; }
         .qr { width: min(78vw, 300px); margin: 0 auto; background: #fff; }
         .qr svg { display: block; width: 100%; height: auto; }
         .share {
@@ -142,14 +143,16 @@
                 .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
         }
 
-        // ลิงก์จากอีเมล: ticket.html#r=เลขอ้างอิง&n=ชื่อ&s=A01.รหัสลับ,A02.รหัสลับ
+        // ลิงก์จากอีเมล: ticket.html#r=เลขอ้างอิง&n=ชื่อผู้จอง&s=A01.รหัสลับ,A02.รหัสลับ&a=ชื่อผู้นั่ง A01,ชื่อผู้นั่ง A02
+        // (a เรียงตามลำดับเดียวกับ s ลิงก์เก่าที่ไม่มี a ยังเปิดได้ แค่ไม่แสดงชื่อผู้นั่ง)
         function readTicketData() {
             const params = new URLSearchParams(location.hash.slice(1));
             const orderRef = (params.get('r') || '').trim();
             const name = (params.get('n') || '').trim();
-            const seats = (params.get('s') || '').split(',').map(item => {
+            const holders = (params.get('a') || '').split(',');
+            const seats = (params.get('s') || '').split(',').map((item, i) => {
                 const [seat, token] = item.split('.');
-                return { seat, token };
+                return { seat, token, holder: (holders[i] || '').trim() };
             }).filter(t => /^[A-Z]\d{2}$/.test(t.seat || '') && /^[A-Za-z0-9_-]{16}$/.test(t.token || ''));
             return { orderRef, name, seats };
         }
@@ -166,7 +169,8 @@
             return location.origin + location.pathname +
                 '#r=' + encodeURIComponent(data.orderRef) +
                 '&n=' + encodeURIComponent(data.name) +
-                '&s=' + ticket.seat + '.' + ticket.token;
+                '&s=' + ticket.seat + '.' + ticket.token +
+                '&a=' + encodeURIComponent(ticket.holder || '');
         }
 
         function showToast(message) {
@@ -180,7 +184,7 @@
         async function shareSeat(index) {
             const ticket = ticketData.seats[index];
             const url = seatLink(ticketData, ticket);
-            const text = `บัตรเข้างาน MAHAMIT CONCERT #2 ที่นั่ง ${ticket.seat}`;
+            const text = `บัตรเข้างาน MAHAMIT CONCERT #2 ที่นั่ง ${ticket.seat}` + (ticket.holder ? ` (${ticket.holder})` : '');
             try {
                 if (navigator.share) {
                     await navigator.share({ title: text, text: text, url: url });
@@ -223,6 +227,7 @@
                     <section class="ticket">
                         <div class="seat">ที่นั่ง ${esc(t.seat)}</div>
                         <div class="zone zone-${zone}">โซน ${zone}</div>
+                        ${t.holder ? `<div class="holder">${esc(t.holder)}</div>` : ''}
                         <div class="qr" aria-label="QR ที่นั่ง ${esc(t.seat)}">${qrSvg(payload)}</div>
                         ${data.seats.length > 1 ? `<button class="share" type="button" onclick="shareSeat(${i})">แชร์ที่นั่งนี้ให้เพื่อน</button>` : ''}
                     </section>`;
