@@ -443,7 +443,8 @@ select {
         margin-top: 0 !important;
     }
 
-    /* ปุ่มย้อนกลับและยืนยัน */
+    /* ช่องติ๊กยินยอม PDPA และปุ่มย้อนกลับ/ยืนยัน (ลำดับเดียวกัน จึงเรียงตามโค้ด: PDPA ก่อนปุ่ม) */
+    #step2Container > .grid > div:last-child > .pdpa-consent,
     #step2Container > .grid > div:last-child > .flex {
         grid-column: 1 / -1;
         order: 5;
@@ -464,7 +465,8 @@ select {
     /* ช่องกรอกชื่อ เบอร์โทร อีเมล */
     #bookingForm input[type="text"],
     #bookingForm input[type="tel"],
-    #bookingForm input[type="email"] {
+    #bookingForm input[type="email"],
+    #bookingForm select {
         background-color: #FFFFFF !important;
         border: 1.5px solid #B8B8B8 !important;
         border-radius: 12px !important;
@@ -485,7 +487,8 @@ select {
     }
 
     /* เมื่อแตะหรือเลือกช่องกรอก */
-    #bookingForm input:focus {
+    #bookingForm input:focus,
+    #bookingForm select:focus {
         background-color: #FFFFFF !important;
         border-color: #425E22 !important;
 
@@ -496,7 +499,8 @@ select {
 
     /* กรอบแดงของช่องที่กรอกไม่ครบ ต้องชนะสไตล์มือถือด้านบน
        (ความเจาะจงเท่ากัน จึงต้องวางไว้หลังกฎ input และ :focus) */
-    #bookingForm input.field-invalid {
+    #bookingForm input.field-invalid,
+    #bookingForm select.field-invalid {
         border-color: #DC2626 !important;
         background-color: #FEF2F2 !important;
         box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.25) !important;
@@ -1358,7 +1362,7 @@ select {
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                     <i class="fa-solid fa-user text-xs"></i>
                                 </span>
-                                <input type="text" id="custName" required placeholder="นายมิตรภาพ ดีงาม" class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
+                                <input type="text" id="custName" required class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none">
                             </div>
                         </div>
 
@@ -1378,7 +1382,6 @@ select {
     pattern="[0-9]{10}"
     minlength="10"
     maxlength="10"
-    placeholder="0812345678"
     oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)"
     title="กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข 10 หลัก"
     class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none"
@@ -1398,14 +1401,23 @@ select {
     required
     pattern="[^@\s]+@[^@\s]+\.[^@\s]+"
     title="กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com"
-    placeholder="yourname@email.com"
     class="w-full pl-9 pr-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-posterCream/50 focus:bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none"
 >
                                 </div>
                             </div>
                         </div>
 
-        
+                        <!-- ชื่อผู้นั่งแต่ละที่นั่ง: สร้างแถวตามที่นั่งที่เลือก (renderAttendeeFields) -->
+                        <div class="border-t border-posterPaper pt-4 space-y-3">
+                            <div>
+                                <label class="block text-xs font-bold text-posterDark uppercase tracking-wider">
+                                    <i class="fa-solid fa-users text-posterGreen mr-1"></i>
+                                    ชื่อผู้เข้าร่วมงานแต่ละที่นั่ง *
+                                </label>
+                                <p class="text-[11px] text-posterMuted mt-1">กรอกชื่อ-นามสกุลจริงตามบัตรประชาชน และอายุของผู้ที่จะนั่งแต่ละที่นั่ง</p>
+                            </div>
+                            <div id="attendeeList" class="space-y-3"></div>
+                        </div>
                     </form>
 
                     <!-- Payment Slip Attachment -->
@@ -1530,6 +1542,18 @@ select {
                             <span>ส่วนลด (<span id="summaryDiscountCode"></span>)</span>
                             <span id="summaryDiscountAmount" class="font-bold text-posterBurgundy"></span>
                         </div>
+                    </div>
+
+                    <!-- ยินยอม PDPA (ต้องติ๊กก่อนยืนยันการจอง) -->
+                    <div id="pdpaBox" class="pdpa-consent bg-posterCard p-4 rounded-2xl border border-posterPaper">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" id="pdpaConsent" class="mt-0.5 w-5 h-5 shrink-0 accent-posterGreen cursor-pointer">
+                            <span class="text-xs text-posterDark leading-relaxed">
+                                ข้าพเจ้าได้อ่านและยอมรับ
+                                <button type="button" onclick="event.preventDefault(); openPrivacyModal();" class="text-posterGreen font-bold underline">นโยบายความเป็นส่วนตัว</button>
+                                และยินยอมให้ผู้จัดงานใช้ข้อมูลส่วนบุคคลของข้าพเจ้าและผู้เข้าร่วมงานตามที่กรอกไว้ เพื่อการจอง การเข้างาน และการดำเนินการที่เกี่ยวข้องกับการจัดงานนี้ โดยข้าพเจ้าได้แจ้งและได้รับความยินยอมจากผู้เข้าร่วมงานทุกท่านแล้ว
+                            </span>
+                        </label>
                     </div>
 
                     <!-- Back & Submit Buttons -->
@@ -1765,6 +1789,10 @@ async function retrySeatStatus() {
         let uploadedSlipFile = null;
         let slipProcessing = null; // Promise ระหว่างอ่าน/ย่อรูปสลิป
         let holdTimerInterval = null;
+        // ชื่อผู้นั่งที่กรอกไว้ จำตามรหัสที่นั่ง: ย้อนไปเปลี่ยนที่นั่งแล้วชื่อของที่นั่งเดิมไม่หาย
+        let attendeeData = {};             // { A01: { title, firstName, lastName, age } }
+        let selfSeatId = '';               // ที่นั่งที่ติ๊ก "ใช้ชื่อผู้จอง"
+        let renderedAttendeeSeats = null;  // ชุดที่นั่งที่สร้างช่องกรอกไว้ล่าสุด
         let webAppUrl = localStorage.getItem('mm_web_app_url') || 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
 
         // Load authoritative seat status from Google Sheets on page load.
@@ -1957,6 +1985,7 @@ if (showMessage) {
             if (selectedSeats.has(seatId)) {
                 selectedSeats.delete(seatId);
             } else {
+                // ต้องตรงกับ MAX_SEATS_PER_BOOKING ใน code.gs
                 if (selectedSeats.size >= 10) {
                     alert('ท่านสามารถเลือกที่นั่งได้สูงสุด 10 ที่นั่งต่อการจอง');
                     return;
@@ -2235,7 +2264,154 @@ const qrImg = document.getElementById('qrCodeImg');
 if (qrImg) {
     qrImg.src = './promptpay-qr.png';
 }
+            renderAttendeeFields();
         }
+
+        // ==========================================
+        // ชื่อผู้นั่งแต่ละที่นั่ง (ใช้ทำประกันอุบัติเหตุ)
+        // ==========================================
+
+        // ต้องตรงกับค่าชื่อเดียวกันใน code.gs
+        const ATTENDEE_TITLES = ['นาย', 'นาง', 'นางสาว', 'ด.ช.', 'ด.ญ.'];
+        const ATTENDEE_MIN_AGE = 1;
+        const ATTENDEE_MAX_AGE = 100;
+        const CHILD_TITLES = ['ด.ช.', 'ด.ญ.'];   // ใช้กับอายุต่ำกว่า CHILD_AGE_LIMIT
+        const CHILD_AGE_LIMIT = 15;
+        const PERSON_NAME_PATTERN = /^[A-Za-zก-ฮเ-ไ][A-Za-zก-๎.'\- ]{0,49}$/;
+
+        function cleanPersonName(value) {
+            return String(value || '').trim().replace(/\s+/g, ' ');
+        }
+
+        function escapeAttr(value) {
+            return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // แยกชื่อผู้จอง เช่น "นายมิตรภาพ ดีงาม" → นาย / มิตรภาพ / ดีงาม
+        function splitBookerName(fullName) {
+            let text = cleanPersonName(fullName);
+            let title = '';
+            // เทียบคำนำหน้าที่ยาวกว่าก่อน (นางสาว ก่อน นาง)
+            const titles = ATTENDEE_TITLES.slice().sort((a, b) => b.length - a.length);
+            for (const t of titles) {
+                if (text.startsWith(t)) {
+                    title = t;
+                    text = text.slice(t.length).trim();
+                    break;
+                }
+            }
+            const parts = text ? text.split(' ') : [];
+            return { title: title, firstName: parts[0] || '', lastName: parts.slice(1).join(' ') };
+        }
+
+        // สร้างช่องกรอก 1 แถวต่อ 1 ที่นั่ง
+        // ผังที่นั่งรีเฟรชเองเป็นระยะ จึงสร้างใหม่เฉพาะเมื่อชุดที่นั่งเปลี่ยน ไม่อย่างนั้นช่องที่กำลังพิมพ์จะหลุด
+        function renderAttendeeFields() {
+            const list = document.getElementById('attendeeList');
+            if (!list) return;
+            const seats = Array.from(selectedSeats).sort();
+            const key = seats.join(',');
+            if (key === renderedAttendeeSeats) return;
+            renderedAttendeeSeats = key;
+            if (selfSeatId && !selectedSeats.has(selfSeatId)) selfSeatId = '';
+
+            if (!seats.length) {
+                list.innerHTML = '<p class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง</p>';
+                return;
+            }
+
+            const inputClass = 'w-full px-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none';
+            list.innerHTML = seats.map(id => {
+                const a = attendeeData[id] || {};
+                const zone = seatMapData[id] ? seatMapData[id].zone : '';
+                const options = '<option value="">คำนำหน้า</option>' + ATTENDEE_TITLES.map(t =>
+                    `<option value="${t}"${a.title === t ? ' selected' : ''}>${t}</option>`).join('');
+                return `
+                    <div class="rounded-xl border border-posterPaper bg-posterCream/40 p-3 space-y-2" data-seat="${id}">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="font-bold text-sm text-posterDark">ที่นั่ง ${id}${zone ? ` <span class="text-[11px] font-normal text-posterMuted">(Zone ${zone})</span>` : ''}</span>
+                            <label class="flex items-center gap-1.5 text-xs text-posterMuted cursor-pointer select-none">
+                                <input type="checkbox" class="attendee-self w-4 h-4 accent-posterGreen"${selfSeatId === id ? ' checked' : ''}>
+                                ใช้ชื่อผู้จอง
+                            </label>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-[7.5rem_1fr_1fr_5rem] gap-2">
+                            <select id="att-${id}-title" data-field="title" aria-label="คำนำหน้าชื่อ ที่นั่ง ${id}" class="${inputClass}">${options}</select>
+                            <input type="text" id="att-${id}-firstName" data-field="firstName" maxlength="50" autocomplete="off" placeholder="ชื่อ" aria-label="ชื่อ ที่นั่ง ${id}" value="${escapeAttr(a.firstName)}" class="${inputClass}">
+                            <input type="text" id="att-${id}-lastName" data-field="lastName" maxlength="50" autocomplete="off" placeholder="นามสกุล" aria-label="นามสกุล ที่นั่ง ${id}" value="${escapeAttr(a.lastName)}" class="${inputClass}">
+                            <input type="text" id="att-${id}-age" data-field="age" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="อายุ (ปี)" aria-label="อายุ ที่นั่ง ${id}" value="${escapeAttr(a.age)}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)" class="${inputClass}">
+                        </div>
+                    </div>`;
+            }).join('');
+        }
+
+        // ใส่ค่าจาก attendeeData กลับลงช่องของที่นั่งนั้น (ใช้หลังเติมชื่อผู้จองให้อัตโนมัติ)
+        function fillAttendeeRow(seat) {
+            const a = attendeeData[seat] || {};
+            ['title', 'firstName', 'lastName', 'age'].forEach(field => {
+                const input = document.getElementById(`att-${seat}-${field}`);
+                if (!input) return;
+                input.value = a[field] || '';
+                if (input.value) input.classList.remove('field-invalid');
+            });
+        }
+
+        // ติ๊ก "ใช้ชื่อผู้จอง" = เติมชื่อผู้จองลงที่นั่งนั้น (ติ๊กได้ทีละที่นั่ง)
+        function setSelfSeat(seat) {
+            const previous = selfSeatId;
+            selfSeatId = seat;
+            // ย้ายไปติ๊กที่นั่งอื่น: ล้างชื่อที่เติมไว้ในที่นั่งเดิม ไม่อย่างนั้นชื่อจะซ้ำกัน
+            if (previous && seat && previous !== seat) {
+                attendeeData[previous] = {};
+                fillAttendeeRow(previous);
+            }
+            if (seat) copyBookerNameToSelfSeat();
+            document.querySelectorAll('#attendeeList .attendee-self').forEach(box => {
+                box.checked = box.closest('[data-seat]').dataset.seat === seat;
+            });
+        }
+
+        function copyBookerNameToSelfSeat() {
+            if (!selfSeatId) return;
+            const parsed = splitBookerName(document.getElementById('custName').value);
+            const old = attendeeData[selfSeatId] || {};
+            // ชื่อผู้จองไม่มีคำนำหน้า: ใช้คำนำหน้าที่เลือกไว้เดิม (อายุต้องกรอกเอง คงค่าเดิมไว้)
+            attendeeData[selfSeatId] = {
+                title: parsed.title || old.title || '',
+                firstName: parsed.firstName,
+                lastName: parsed.lastName,
+                age: old.age || ''
+            };
+            fillAttendeeRow(selfSeatId);
+        }
+
+        function onAttendeeEdit(event) {
+            const target = event.target;
+            const row = target.closest('[data-seat]');
+            if (!row) return;
+            const seat = row.dataset.seat;
+            if (target.classList.contains('attendee-self')) {
+                if (event.type === 'change') setSelfSeat(target.checked ? seat : '');
+                return;
+            }
+            const field = target.dataset.field;
+            if (!field) return;
+            target.classList.remove('field-invalid');
+            (attendeeData[seat] = attendeeData[seat] || {})[field] = target.value;
+            // แก้ชื่อในที่นั่งนี้เอง จึงไม่ใช่ชื่อผู้จองอีกต่อไป เลิกเติมชื่อให้อัตโนมัติ
+            if (seat === selfSeatId && (field === 'firstName' || field === 'lastName') && event.type === 'input') {
+                selfSeatId = '';
+                row.querySelector('.attendee-self').checked = false;
+            }
+        }
+
+        document.getElementById('attendeeList').addEventListener('input', onAttendeeEdit);
+        document.getElementById('attendeeList').addEventListener('change', onAttendeeEdit);
+        // แก้ชื่อผู้จองระหว่างที่ติ๊ก "ใช้ชื่อผู้จอง" ไว้ ให้ชื่อในที่นั่งเปลี่ยนตาม
+        document.getElementById('custName').addEventListener('input', copyBookerNameToSelfSeat);
+        document.getElementById('pdpaConsent').addEventListener('change', () =>
+            document.getElementById('pdpaBox').classList.remove('field-invalid'));
 
         function goToStep(step) {
             currentStep = step;
@@ -2287,7 +2463,7 @@ if (hero) {
 
         function startHoldTimer() {
             if (holdTimerInterval) clearInterval(holdTimerInterval);
-            let totalSeconds = 15 * 60; // 15 minutes hold
+            let totalSeconds = 20 * 60; // 20 นาที (เผื่อเวลากรอกชื่อผู้นั่งทุกที่นั่ง)
 
             const display = document.getElementById('holdTimer');
             holdTimerInterval = setInterval(() => {
@@ -2462,6 +2638,57 @@ function hideBookingLoading() {
                 invalidFields.push({ id: 'custEmail', label: 'อีเมล',
                     message: 'กรุณากรอกอีเมลให้ถูกต้อง เช่น yourname@email.com' });
             }
+            // ผู้นั่งทุกที่นั่ง: คำนำหน้า ชื่อ นามสกุล อายุ ครบ ถูกรูปแบบ และชื่อไม่ซ้ำกันในการจองนี้
+            const attendeeSeen = {};
+            Array.from(selectedSeats).sort().forEach(id => {
+                const a = attendeeData[id] || {};
+                const label = 'ชื่อผู้นั่งที่ ' + id;
+                if (!ATTENDEE_TITLES.includes(a.title)) {
+                    invalidFields.push({ id: `att-${id}-title`, label: label,
+                        message: `กรุณาเลือกคำนำหน้าชื่อของที่นั่ง ${id}` });
+                }
+                ['firstName', 'lastName'].forEach(field => {
+                    const value = cleanPersonName(a[field]);
+                    const what = field === 'firstName' ? 'ชื่อ' : 'นามสกุล';
+                    if (!value) {
+                        invalidFields.push({ id: `att-${id}-${field}`, label: label,
+                            message: `กรุณากรอก${what}ของผู้นั่งที่นั่ง ${id}` });
+                    } else if (!PERSON_NAME_PATTERN.test(value)) {
+                        invalidFields.push({ id: `att-${id}-${field}`, label: label,
+                            message: `${what}ของที่นั่ง ${id} ใช้ได้เฉพาะตัวอักษรไทยหรืออังกฤษ` });
+                    }
+                });
+                const ageText = String(a.age || '').trim();
+                const age = Number(ageText);
+                if (!ageText) {
+                    invalidFields.push({ id: `att-${id}-age`, label: label,
+                        message: `กรุณากรอกอายุของผู้นั่งที่นั่ง ${id}` });
+                } else if (!/^\d{1,3}$/.test(ageText) || age < ATTENDEE_MIN_AGE || age > ATTENDEE_MAX_AGE) {
+                    invalidFields.push({ id: `att-${id}-age`, label: label,
+                        message: `อายุของที่นั่ง ${id} ต้องอยู่ระหว่าง ${ATTENDEE_MIN_AGE}–${ATTENDEE_MAX_AGE} ปี` });
+                } else if (ATTENDEE_TITLES.includes(a.title)) {
+                    const isChildTitle = CHILD_TITLES.includes(a.title);
+                    if (isChildTitle !== (age < CHILD_AGE_LIMIT)) {
+                        const message = isChildTitle
+                            ? `ที่นั่ง ${id}: คำนำหน้า ด.ช./ด.ญ. ใช้กับอายุต่ำกว่า ${CHILD_AGE_LIMIT} ปี`
+                            : `ที่นั่ง ${id}: อายุต่ำกว่า ${CHILD_AGE_LIMIT} ปี กรุณาใช้คำนำหน้า ด.ช. หรือ ด.ญ.`;
+                        invalidFields.push({ id: `att-${id}-title`, label: label, message: message });
+                        invalidFields.push({ id: `att-${id}-age`, label: label, message: message });
+                    }
+                }
+                const first = cleanPersonName(a.firstName);
+                const last = cleanPersonName(a.lastName);
+                if (first && last) {
+                    const key = (first + ' ' + last).toLowerCase();
+                    if (attendeeSeen[key]) {
+                        const message = `ชื่อ ${first} ${last} ซ้ำกันในที่นั่ง ${attendeeSeen[key]} และ ${id} กรุณากรอกชื่อของผู้นั่งแต่ละที่นั่ง`;
+                        invalidFields.push({ id: `att-${id}-firstName`, label: label, message: message });
+                        invalidFields.push({ id: `att-${id}-lastName`, label: label, message: message });
+                    } else {
+                        attendeeSeen[key] = id;
+                    }
+                }
+            });
             // เทียบเป็นข้อความได้ เพราะรูปแบบ YYYY-MM-DD และ HH:MM เรียงตามเวลาอยู่แล้ว
             const now = new Date();
             const today = localDateString(now);
@@ -2490,6 +2717,10 @@ function hideBookingLoading() {
                 invalidFields.push({ id: 'discountCodeInput', label: 'โค้ดส่วนลด',
                     message: 'กรุณากด "ใช้โค้ด" เพื่อตรวจสอบโค้ดส่วนลด หรือลบโค้ดออกก่อนยืนยันการจอง' });
             }
+            if (!document.getElementById('pdpaConsent').checked) {
+                invalidFields.push({ id: 'pdpaBox', label: 'ยอมรับนโยบายความเป็นส่วนตัว',
+                    message: 'กรุณาอ่านและติ๊กยอมรับนโยบายความเป็นส่วนตัวก่อนยืนยันการจอง' });
+            }
 
             if (invalidFields.length) {
                 invalidFields.forEach(f => document.getElementById(f.id).classList.add('field-invalid'));
@@ -2498,12 +2729,13 @@ function hideBookingLoading() {
                 // หน้าต่างแจ้งเตือนจะคืนโฟกัสกลับมาที่ช่องนี้เมื่อกดตกลง
                 const first = document.getElementById(invalidFields[0].id);
                 first.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                if (first.tagName === 'INPUT') first.focus({ preventScroll: true });
+                if (first.tagName === 'INPUT' || first.tagName === 'SELECT') first.focus({ preventScroll: true });
 
-                alert(invalidFields.length === 1
+                // ช่องของที่นั่งเดียวกันอาจผิดหลายช่อง จึงรวมชื่อหัวข้อที่ซ้ำกัน
+                const labels = Array.from(new Set(invalidFields.map(f => f.label)));
+                alert(labels.length === 1
                     ? invalidFields[0].message
-                    : 'กรุณาตรวจสอบข้อมูลในช่องที่มีกรอบสีแดง: ' +
-                      invalidFields.map(f => f.label).join(', '));
+                    : 'กรุณาตรวจสอบข้อมูลในช่องที่มีกรอบสีแดง: ' + labels.join(', '));
                 return;
             }
             if (!webAppUrl || !webAppUrl.includes('/exec')) {
@@ -2559,6 +2791,17 @@ function hideBookingLoading() {
                     transferTime: transferTime,
                     custNote: note,
                     seats: seatArray,
+                    attendees: seatArray.map(id => {
+                        const a = attendeeData[id] || {};
+                        return {
+                            seat: id,
+                            title: a.title || '',
+                            firstName: cleanPersonName(a.firstName),
+                            lastName: cleanPersonName(a.lastName),
+                            age: String(a.age || '').trim()
+                        };
+                    }),
+                    pdpaConsent: true,
                     discountCode: discountCode,
                     totalPrice: totalAmt,
                     slipBase64: uploadedSlipData,
@@ -2670,6 +2913,10 @@ function enterBooking() {
             document.getElementById('landingPage').classList.remove('hidden');
     document.getElementById('bookingFlow').classList.add('hidden');
             selectedSeats.clear();
+            attendeeData = {};
+            selfSeatId = '';
+            renderedAttendeeSeats = null;
+            document.getElementById('pdpaConsent').checked = false;
             uploadedSlipData = null;
             uploadedSlipFile = null;
             document.getElementById('bookingForm').reset();
@@ -2855,8 +3102,120 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('keydown', function(event) {
         if (event.key === 'Escape') {
             closeQRModal();
+            closePrivacyModal();
         }
     });
+</script>
+
+<!-- นโยบายความเป็นส่วนตัว (เปิดจากลิงก์ในช่องติ๊กยินยอม PDPA) -->
+<div
+    id="privacyModal"
+    class="hidden fixed inset-0 z-[9999]
+           bg-black/80 backdrop-blur-sm
+           items-center justify-center
+           p-4"
+    onclick="closePrivacyModal()"
+>
+    <div
+        class="relative bg-posterCard
+               w-full max-w-lg
+               max-h-[90dvh] overflow-y-auto
+               rounded-2xl border-2 border-posterGold
+               shadow-2xl p-5 sm:p-7 text-left"
+        onclick="event.stopPropagation()"
+        role="dialog"
+        aria-labelledby="privacyModalTitle"
+    >
+        <button
+            type="button"
+            onclick="closePrivacyModal()"
+            class="absolute top-3 right-3
+                   w-10 h-10 rounded-full
+                   bg-posterBurgundy text-white
+                   text-xl font-bold
+                   flex items-center justify-center
+                   shadow hover:bg-posterBurgundyDark"
+            aria-label="ปิดหน้าต่างนโยบายความเป็นส่วนตัว"
+        >
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <h2 id="privacyModalTitle" class="font-kanit font-bold text-lg sm:text-xl text-posterGreen pr-12 mb-4">
+            การเก็บและใช้ข้อมูลส่วนบุคคล<br>
+            <span class="text-sm text-posterMuted font-semibold">MAHAMIT CONCERT #2</span>
+        </h2>
+
+        <div class="space-y-4 text-sm text-posterDark leading-relaxed">
+            <div>
+                <h3 class="font-bold text-posterBurgundy mb-1">ข้อมูลที่เก็บ</h3>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li>ข้อมูลผู้จอง: ชื่อ-นามสกุล เบอร์โทรศัพท์ อีเมล และสลิปการโอนเงิน</li>
+                    <li>ข้อมูลผู้เข้าร่วมงาน: คำนำหน้า ชื่อ-นามสกุล และอายุของผู้นั่งแต่ละที่นั่ง</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-bold text-posterBurgundy mb-1">วัตถุประสงค์</h3>
+                <ol class="list-decimal pl-5 space-y-1">
+                    <li>ดำเนินการจอง ตรวจสอบการชำระเงิน และส่งบัตรเข้างาน</li>
+                    <li>ติดต่อแจ้งข้อมูลเกี่ยวกับการจองและงานคอนเสิร์ต</li>
+                    <li>ตรวจสอบสิทธิ์การเข้างานในวันงาน</li>
+                    <li>จัดทำประกันอุบัติเหตุให้ผู้เข้าร่วมงาน</li>
+                </ol>
+            </div>
+            <div>
+                <h3 class="font-bold text-posterBurgundy mb-1">การเปิดเผยข้อมูล</h3>
+                <p>ชื่อ-นามสกุลและอายุของผู้เข้าร่วมงานจะส่งให้บริษัทประกันภัยเพื่อทำประกันเท่านั้น ผู้จัดงานจะไม่ขายหรือเปิดเผยข้อมูลให้บุคคลอื่นเพื่อวัตถุประสงค์อื่น</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-posterBurgundy mb-1">ระยะเวลาการเก็บ</h3>
+                <p>เก็บไว้ไม่เกิน 90 วันหลังวันจัดงาน แล้วจะลบหรือทำลาย ยกเว้นกรณีที่กฎหมายกำหนดให้ต้องเก็บไว้นานกว่านั้น</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-posterBurgundy mb-1">สิทธิของเจ้าของข้อมูล</h3>
+                <p>ท่านขอเข้าถึง แก้ไข หรือลบข้อมูลของท่านได้ และถอนความยินยอมได้ แต่หากถอนก่อนวันงาน อาจไม่สามารถทำประกันหรือเข้าร่วมงานได้</p>
+            </div>
+            <div>
+                <h3 class="font-bold text-posterBurgundy mb-1">ติดต่อผู้จัดงาน</h3>
+                <p>
+                    Facebook: <a href="https://www.facebook.com/KriengkraiMahamit/" target="_blank" rel="noopener" class="text-posterGreen font-semibold underline">Kriengkrai Mahamit</a><br>
+                    โทร <a href="tel:0905235223" class="text-posterGreen font-semibold underline">090 523 5223</a>
+                </p>
+            </div>
+        </div>
+
+        <button
+            type="button"
+            onclick="acceptPrivacyFromModal()"
+            class="mt-6 w-full py-3 bg-posterGreen hover:bg-posterGreenDark text-white font-bold font-kanit rounded-xl shadow transition"
+        >
+            อ่านแล้ว ยอมรับ
+        </button>
+    </div>
+</div>
+
+<script>
+    function openPrivacyModal() {
+        const modal = document.getElementById('privacyModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closePrivacyModal() {
+        const modal = document.getElementById('privacyModal');
+        if (!modal || modal.classList.contains('hidden')) return;
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+        document.body.style.overflow = '';
+    }
+
+    // ปุ่ม "อ่านแล้ว ยอมรับ" ในหน้าต่าง = ติ๊กช่องยินยอมให้ด้วย
+    function acceptPrivacyFromModal() {
+        const box = document.getElementById('pdpaConsent');
+        box.checked = true;
+        box.dispatchEvent(new Event('change'));
+        closePrivacyModal();
+    }
 </script>
 
 
