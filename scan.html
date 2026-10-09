@@ -150,7 +150,7 @@
     </section>
 
     <!-- ผลการสแกนเต็มจอ -->
-    <div id="result" class="hidden" onclick="if(event.target===this && this.dataset.tapClose) closeResult()">
+    <div id="result" class="hidden">
         <div class="r-icon" id="rIcon"></div>
         <div class="r-title" id="rTitle"></div>
         <div class="r-seat" id="rSeat"></div>
@@ -201,7 +201,6 @@
         let syncing = false;
         let scanner = null;
         let lastScan = { text: '', at: 0 };
-        let resultTimer = null;
 
         /* ===== เรียก Apps Script ===== */
         // GET ใช้ JSONP เหมือนหน้าจอง (เว็บอยู่บน Vercel คนละโดเมนกับ Apps Script)
@@ -419,7 +418,7 @@
             addPending({ ref, seat, token, method: 'qr' });
             const progress = orderProgress(ref);
             showResult('ok', '✓', 'เข้างานได้', seat, zoneOf(seat),
-                `${holderHtml(info)}ออเดอร์นี้เข้าแล้ว ${progress.done} จาก ${progress.total} ที่นั่ง`, true);
+                `${holderHtml(info)}ออเดอร์นี้เข้าแล้ว ${progress.done} จาก ${progress.total} ที่นั่ง`);
         }
 
         /* ===== เช็คอิน ===== */
@@ -447,7 +446,7 @@
                 mergeServerCheckins(res.checkins);
                 const r = res.results[0];
                 if (r.status === 'ok') {
-                    showResult('ok', '✓', 'เข้างานได้', r.seat, zoneOf(r.seat), 'ตรวจกับระบบแล้ว', true);
+                    showResult('ok', '✓', 'เข้างานได้', r.seat, zoneOf(r.seat), 'ตรวจกับระบบแล้ว');
                     refreshData();
                 } else if (r.status === 'duplicate') {
                     showResult('bad', '!', 'เข้างานไปแล้ว', r.seat, zoneOf(r.seat), `เข้าเมื่อ ${timeText(r.t)} น. โดย ${escapeHtml(r.by)}`);
@@ -504,7 +503,7 @@
             if (!confirm(`เช็คอินที่นั่ง ${seat} ของ ${who} ?\n(ใช้เมื่อลูกค้าไม่มี QR ควรตรวจบัตรประชาชนหรือเบอร์โทรก่อน)`)) return;
             addPending({ ref, seat, token: '', method: 'manual' });
             renderSearch();
-            showResult('ok', '✓', 'เข้างานได้', seat, zoneOf(seat), holderHtml(info) + '(ค้นหาชื่อ)', true);
+            showResult('ok', '✓', 'เข้างานได้', seat, zoneOf(seat), holderHtml(info) + '(ค้นหาชื่อ)');
         }
 
         /* ===== แสดงผล ===== */
@@ -530,10 +529,9 @@
             if (navigator.vibrate) navigator.vibrate(ok ? 80 : [120, 80, 120]);
         }
 
-        // ผลเขียว ปิดเองใน 2.5 วินาที ส่วนผลอื่นต้องแตะ "สแกนต่อ" เพื่อให้ทีมงานเห็นแน่ๆ
-        function showResult(type, icon, title, seat, zone, detailHtml, autoClose) {
+        // ผลทุกแบบ (รวมสีเขียว) ค้างไว้จนทีมงานกด "สแกนต่อ" ให้มีเวลาอ่านชื่อและถามลูกค้า
+        function showResult(type, icon, title, seat, zone, detailHtml) {
             const el = document.getElementById('result');
-            clearTimeout(resultTimer);
             el.className = type;
             document.getElementById('rIcon').textContent = icon;
             document.getElementById('rTitle').textContent = title;
@@ -544,13 +542,10 @@
             document.getElementById('rZoneWrap').classList.toggle('hidden', !zone);
             document.getElementById('rDetail').innerHTML = detailHtml || '';
             document.getElementById('rNext').classList.toggle('hidden', type === 'wait');
-            el.dataset.tapClose = type === 'ok' ? '1' : '';
             if (type !== 'wait') beep(type === 'ok');
-            if (autoClose) resultTimer = setTimeout(closeResult, 2500);
         }
 
         function closeResult() {
-            clearTimeout(resultTimer);
             document.getElementById('result').classList.add('hidden');
             lastScan.at = Date.now(); // กันกล้องอ่าน QR เดิมซ้ำทันทีหลังปิด
         }
