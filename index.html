@@ -151,6 +151,99 @@ select {
 }
 
 
+/* =========================================
+   พิมพ์ / บันทึกเป็น PDF (ใบรับรายการจอง ขั้นที่ 3)
+   พิมพ์เฉพาะการ์ดใบจอง ให้จบใน 1 หน้า A4 พื้นขาว
+========================================= */
+@page {
+    size: A4;
+    margin: 12mm;
+}
+
+@media print {
+    html,
+    body {
+        background: #FFFFFF !important;
+        background-image: none !important;
+    }
+
+    /* ซ่อนทุกอย่างยกเว้นการ์ดใบจอง: หัวเว็บ หน้าแรก หน้าต่างต่างๆ แถบขั้นตอน ขั้นที่ 1-2 และปุ่ม */
+    body > *:not(#bookingFlow),
+    #bookingFlow > *:not(#step3Container),
+    #step3Container .print-hide {
+        display: none !important;
+    }
+
+    #bookingFlow {
+        max-width: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #step3Container {
+        max-width: none !important;
+        margin: 0 !important;
+    }
+
+    /* พิมพ์สีพื้นหลัง (หัวการ์ดสีเขียว) แม้ผู้ใช้ไม่ได้เปิด "พิมพ์กราฟิกพื้นหลัง"
+       ไม่อย่างนั้นตัวหนังสือสีอ่อนบนหัวการ์ดจะหายไปบนกระดาษขาว */
+    #step3Container,
+    #step3Container * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        box-shadow: none !important;
+    }
+
+    #step3Container > div {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        border-width: 1.5px !important;
+    }
+
+    /* กระชับระยะให้พอดี 1 หน้า */
+    #step3Container .bg-posterGreen {
+        padding: 18px 20px !important;
+    }
+
+    #step3Container .bg-posterGreen > .w-16 {
+        width: 44px !important;
+        height: 44px !important;
+        font-size: 20px !important;
+        margin-bottom: 4px !important;
+    }
+
+    #step3Container h2 {
+        font-size: 24px !important;
+    }
+
+    #step3Container .p-6 {
+        padding: 18px 20px !important;
+    }
+
+    a {
+        text-decoration: none !important;
+    }
+}
+
+/* กฎมือถือด้านบนตั้ง appearance: none ให้ input ทุกชนิด ทำให้ช่องติ๊กหายไป
+   คืนหน้าตาปกติให้ช่องติ๊ก (ใช้ชื่อผู้จอง / ยินยอม PDPA) */
+input[type="checkbox"] {
+    -webkit-appearance: checkbox;
+    appearance: auto;
+}
+
+@media screen and (max-width: 768px) {
+    /* ช่องเลือก (คำนำหน้า) ไม่มีลูกศรเพราะ appearance: none จึงวาดลูกศรเอง */
+    #bookingForm select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236E6A5F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        background-size: 12px 8px;
+        padding-right: 36px !important;
+    }
+}
+
+
 /* Mobile Cart - เฉพาะแถบสรุปที่นั่ง */
 @media (max-width: 640px) {
     #cartSummaryBtn {
@@ -1638,6 +1731,12 @@ select {
                                 <!-- Badges -->
                             </div>
                         </div>
+
+                        <!-- ชื่อผู้เข้าร่วมงานรายที่นั่ง ให้ลูกค้าตรวจทานชื่อที่กรอก -->
+                        <div class="mt-4 pt-3 border-t border-posterGreen/20">
+                            <span class="text-xs text-posterMuted block mb-1">ชื่อผู้เข้าร่วมงาน:</span>
+                            <div id="ticketAttendees" class="text-xs space-y-1"></div>
+                        </div>
                     </div>
 
                     <!-- Instructions -->
@@ -1651,7 +1750,7 @@ select {
                             หรือโทร <a href="tel:0905235223" class="font-bold text-posterGreen underline">090 523 5223</a></p>
                     </div>
 
-                    <div class="flex flex-col sm:flex-row gap-3 pt-2">
+                    <div class="print-hide flex flex-col sm:flex-row gap-3 pt-2">
                         <button onclick="window.print()" class="flex-1 py-3 bg-posterGreen hover:bg-posterGreenDark text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs">
                             <i class="fa-solid fa-print"></i>
                             <span>พิมพ์ / บันทึกเป็น PDF</span>
@@ -1792,6 +1891,7 @@ async function retrySeatStatus() {
         // ชื่อผู้นั่งที่กรอกไว้ จำตามรหัสที่นั่ง: ย้อนไปเปลี่ยนที่นั่งแล้วชื่อของที่นั่งเดิมไม่หาย
         let attendeeData = {};             // { A01: { title, firstName, lastName, age } }
         let selfSeatId = '';               // ที่นั่งที่ติ๊ก "ใช้ชื่อผู้จอง"
+        let selfSeatTitleAuto = false;     // คำนำหน้าในที่นั่งที่ติ๊ก มาจากชื่อผู้จอง (ไม่ใช่ลูกค้าเลือกเอง)
         let renderedAttendeeSeats = null;  // ชุดที่นั่งที่สร้างช่องกรอกไว้ล่าสุด
         let webAppUrl = localStorage.getItem('mm_web_app_url') || 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
 
@@ -2336,11 +2436,13 @@ if (qrImg) {
                                 ใช้ชื่อผู้จอง
                             </label>
                         </div>
+                        <!-- มือถือ: คำนำหน้า | อายุ / ชื่อ | นามสกุล (ลำดับในโค้ด = ลำดับปุ่ม "ถัดไป" บนคีย์บอร์ด)
+                             คอมพิวเตอร์: แถวเดียว คำนำหน้า | ชื่อ | นามสกุล | อายุ (ใช้ sm:order-*) -->
                         <div class="grid grid-cols-2 sm:grid-cols-[7.5rem_1fr_1fr_5rem] gap-2">
-                            <select id="att-${id}-title" data-field="title" aria-label="คำนำหน้าชื่อ ที่นั่ง ${id}" class="${inputClass}">${options}</select>
-                            <input type="text" id="att-${id}-firstName" data-field="firstName" maxlength="50" autocomplete="off" placeholder="ชื่อ" aria-label="ชื่อ ที่นั่ง ${id}" value="${escapeAttr(a.firstName)}" class="${inputClass}">
-                            <input type="text" id="att-${id}-lastName" data-field="lastName" maxlength="50" autocomplete="off" placeholder="นามสกุล" aria-label="นามสกุล ที่นั่ง ${id}" value="${escapeAttr(a.lastName)}" class="${inputClass}">
-                            <input type="text" id="att-${id}-age" data-field="age" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="อายุ (ปี)" aria-label="อายุ ที่นั่ง ${id}" value="${escapeAttr(a.age)}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)" class="${inputClass}">
+                            <select id="att-${id}-title" data-field="title" aria-label="คำนำหน้าชื่อ ที่นั่ง ${id}" class="sm:order-1 ${inputClass}">${options}</select>
+                            <input type="text" id="att-${id}-age" data-field="age" inputmode="numeric" maxlength="3" autocomplete="off" placeholder="อายุ (ปี)" aria-label="อายุ ที่นั่ง ${id}" value="${escapeAttr(a.age)}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 3)" class="sm:order-4 ${inputClass}">
+                            <input type="text" id="att-${id}-firstName" data-field="firstName" maxlength="50" autocomplete="off" placeholder="ชื่อ" aria-label="ชื่อ ที่นั่ง ${id}" value="${escapeAttr(a.firstName)}" class="sm:order-2 ${inputClass}">
+                            <input type="text" id="att-${id}-lastName" data-field="lastName" maxlength="50" autocomplete="off" placeholder="นามสกุล" aria-label="นามสกุล ที่นั่ง ${id}" value="${escapeAttr(a.lastName)}" class="sm:order-3 ${inputClass}">
                         </div>
                     </div>`;
             }).join('');
@@ -2360,16 +2462,26 @@ if (qrImg) {
         // ติ๊ก "ใช้ชื่อผู้จอง" = เติมชื่อผู้จองลงที่นั่งนั้น (ติ๊กได้ทีละที่นั่ง)
         function setSelfSeat(seat) {
             const previous = selfSeatId;
+            // เอาติ๊กออก หรือย้ายไปติ๊กที่นั่งอื่น: ล้างชื่อที่เติมไว้ในที่นั่งเดิม ไม่อย่างนั้นชื่อจะค้างหรือซ้ำกัน
+            if (previous && previous !== seat) clearAutoFilledName(previous);
             selfSeatId = seat;
-            // ย้ายไปติ๊กที่นั่งอื่น: ล้างชื่อที่เติมไว้ในที่นั่งเดิม ไม่อย่างนั้นชื่อจะซ้ำกัน
-            if (previous && seat && previous !== seat) {
-                attendeeData[previous] = {};
-                fillAttendeeRow(previous);
-            }
             if (seat) copyBookerNameToSelfSeat();
             document.querySelectorAll('#attendeeList .attendee-self').forEach(box => {
                 box.checked = box.closest('[data-seat]').dataset.seat === seat;
             });
+        }
+
+        // ล้างเฉพาะสิ่งที่ระบบเติมจากชื่อผู้จอง อายุและคำนำหน้าที่ลูกค้าเลือกเองคงไว้
+        function clearAutoFilledName(seat) {
+            const a = attendeeData[seat] || {};
+            attendeeData[seat] = {
+                title: selfSeatTitleAuto ? '' : (a.title || ''),
+                firstName: '',
+                lastName: '',
+                age: a.age || ''
+            };
+            selfSeatTitleAuto = false;
+            fillAttendeeRow(seat);
         }
 
         function copyBookerNameToSelfSeat() {
@@ -2377,6 +2489,7 @@ if (qrImg) {
             const parsed = splitBookerName(document.getElementById('custName').value);
             const old = attendeeData[selfSeatId] || {};
             // ชื่อผู้จองไม่มีคำนำหน้า: ใช้คำนำหน้าที่เลือกไว้เดิม (อายุต้องกรอกเอง คงค่าเดิมไว้)
+            if (parsed.title) selfSeatTitleAuto = true;
             attendeeData[selfSeatId] = {
                 title: parsed.title || old.title || '',
                 firstName: parsed.firstName,
@@ -2399,9 +2512,12 @@ if (qrImg) {
             if (!field) return;
             target.classList.remove('field-invalid');
             (attendeeData[seat] = attendeeData[seat] || {})[field] = target.value;
-            // แก้ชื่อในที่นั่งนี้เอง จึงไม่ใช่ชื่อผู้จองอีกต่อไป เลิกเติมชื่อให้อัตโนมัติ
+            // เลือกคำนำหน้าเอง: เอาติ๊กออกทีหลังก็ไม่ล้างคำนำหน้านี้
+            if (seat === selfSeatId && field === 'title') selfSeatTitleAuto = false;
+            // แก้ชื่อในที่นั่งนี้เอง จึงไม่ใช่ชื่อผู้จองอีกต่อไป เลิกเติมชื่อให้อัตโนมัติ (ไม่ล้างสิ่งที่พิมพ์)
             if (seat === selfSeatId && (field === 'firstName' || field === 'lastName') && event.type === 'input') {
                 selfSeatId = '';
+                selfSeatTitleAuto = false;
                 row.querySelector('.attendee-self').checked = false;
             }
         }
@@ -2859,6 +2975,25 @@ function hideBookingLoading() {
                     ticketBadgesContainer.appendChild(badge);
                 });
 
+                const ticketAttendees = document.getElementById('ticketAttendees');
+                ticketAttendees.innerHTML = '';
+                seatArray.forEach(id => {
+                    const a = attendeeData[id] || {};
+                    const row = document.createElement('div');
+                    row.className = 'flex flex-wrap gap-x-2';
+                    const seat = document.createElement('span');
+                    seat.className = 'font-bold text-posterBurgundy w-10';
+                    seat.textContent = id;
+                    const name = document.createElement('span');
+                    name.className = 'font-bold text-posterDark';
+                    name.textContent = (a.title || '') + cleanPersonName(a.firstName) + ' ' + cleanPersonName(a.lastName);
+                    const age = document.createElement('span');
+                    age.className = 'text-posterMuted';
+                    age.textContent = a.age ? `· ${String(a.age).trim()} ปี` : '';
+                    row.append(seat, name, age);
+                    ticketAttendees.appendChild(row);
+                });
+
                 // หน้านี้เป็นใบรับรายการจอง (ยังไม่ใช่บัตรเข้างาน) จึงไม่มี QR Code
                 // ลูกค้าจะได้รับอีเมลยืนยันหลังผู้จัดงานตรวจสอบการชำระเงินแล้ว
                 document.getElementById('ticketCustEmail').textContent = email;
@@ -2915,6 +3050,7 @@ function enterBooking() {
             selectedSeats.clear();
             attendeeData = {};
             selfSeatId = '';
+            selfSeatTitleAuto = false;
             renderedAttendeeSeats = null;
             document.getElementById('pdpaConsent').checked = false;
             uploadedSlipData = null;
