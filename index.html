@@ -286,9 +286,11 @@ input[type="checkbox"] {
     }
 
     /* เผื่อพื้นที่ด้านล่าง ไม่ให้แถบลอยทับปุ่ม */
-    body {
-        padding-bottom: 90px;
-    }
+
+body:has(#cartSummaryBtn:not(.hidden)) {
+    padding-bottom: 90px;
+}
+
 }
 
 .cart-summary-main {
