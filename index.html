@@ -1026,9 +1026,25 @@ input[type="checkbox"] {
     }
 }
 
+
+/* ให้แถบเครดิตติดขอบล่างบนมือถือ */
+@media (max-width: 767px) {
+    .mobile-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        z-index: 50;
+    }
+}
+
+        
+
     </style>
 </head>
-<body class="min-h-full flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
+
+<body class="min-h-screen flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
 
     <!-- Navigation Header -->
     <header class="bg-posterGreen text-white shadow-md sticky top-0 z-40 border-b-2 border-posterGold/40">
