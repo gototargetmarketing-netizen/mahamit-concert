@@ -1589,7 +1589,164 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     font-size: 15px;
   }
 }
+/* ===== TICKET PRICE: COMPACT & ELEGANT ===== */
 
+#ticketPriceGuide {
+  max-width: 1000px;
+  margin: 24px auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+#ticketPriceGuide .ticket-price-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+#ticketPriceGuide .ticket-price-card {
+  min-width: 0;
+  min-height: 0;
+  padding: 13px 12px;
+  gap: 8px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(50, 35, 15, 0.10);
+  align-items: flex-start;
+}
+
+#ticketPriceGuide .ticket-color-dot {
+  flex: 0 0 11px;
+  width: 11px;
+  height: 11px;
+  margin-top: 4px;
+}
+
+#ticketPriceGuide .ticket-price-content {
+  min-width: 0;
+}
+
+#ticketPriceGuide .ticket-price-content h3 {
+  margin: 0 0 5px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+#ticketPriceGuide .ticket-price-content p {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+#ticketPriceGuide .ticket-price-content p.ticket-price {
+  margin-top: 3px;
+  font-size: 19px;
+  font-weight: 750;
+  line-height: 1.35;
+  white-space: normal;
+}
+
+#ticketPriceGuide .ticket-price-content p.ticket-price span {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+  #ticketPriceGuide {
+    padding: 20px;
+  }
+
+  #ticketPriceGuide .ticket-price-grid {
+    gap: 10px;
+  }
+
+  #ticketPriceGuide .ticket-price-card {
+    padding: 11px 9px;
+  }
+
+  #ticketPriceGuide .ticket-price-content h3 {
+    font-size: 14px;
+  }
+
+  #ticketPriceGuide .ticket-price-content p.ticket-price {
+    font-size: 17px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  #ticketPriceGuide {
+    width: calc(100% - 24px);
+    padding: 15px 12px;
+    margin: 18px auto;
+  }
+
+  #ticketPriceGuide .ticket-price-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+    margin-top: 15px;
+  }
+
+  #ticketPriceGuide .ticket-price-card {
+    padding: 11px 8px;
+    gap: 7px;
+    border-radius: 10px;
+  }
+
+  #ticketPriceGuide .ticket-color-dot {
+    flex-basis: 9px;
+    width: 9px;
+    height: 9px;
+    margin-top: 4px;
+  }
+
+  #ticketPriceGuide .ticket-price-content h3 {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+
+  #ticketPriceGuide .ticket-price-content p {
+    font-size: 11px;
+  }
+
+  #ticketPriceGuide .ticket-price-content p.ticket-price {
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  #ticketPriceGuide .ticket-price-content p.ticket-price span {
+    font-size: 10px;
+  }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 360px) {
+  #ticketPriceGuide {
+    width: calc(100% - 16px);
+    padding: 12px 8px;
+  }
+
+  #ticketPriceGuide .ticket-price-grid {
+    gap: 7px;
+  }
+
+  #ticketPriceGuide .ticket-price-card {
+    padding: 9px 6px;
+    gap: 6px;
+  }
+
+  #ticketPriceGuide .ticket-price-content h3 {
+    font-size: 11px;
+  }
+
+  #ticketPriceGuide .ticket-price-content p.ticket-price {
+    font-size: 14px;
+  }
+}
         
 
     </style>
