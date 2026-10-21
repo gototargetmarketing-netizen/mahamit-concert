@@ -1471,99 +1471,40 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 <!-- ปุ่มเข้าสู่ระบบจอง -->
 
 
+
 <!-- =====================================
-     MAHAMIT SINGER SLIDESHOW
+     SINGER PAIR 1 : SING1 + SING2
 ===================================== -->
-<section id="singerSlideshowSection"
-         class="bg-posterCream px-4 pt-6 pb-8 sm:pt-10 sm:pb-10">
+<section class="singer-pair-section">
 
-    <div class="max-w-5xl mx-auto">
+    <div class="singer-pair-heading">
+        <span>MAHAMIT CONCERT #2</span>
+        <h2>พบกับศิลปินและบทเพลงแห่งความทรงจำ</h2>
+    </div>
 
-        <!-- หัวข้อสไลด์ -->
-        <div class="text-center mb-5">
-            <span class="inline-flex items-center gap-2
-                         text-posterBurgundy text-xs sm:text-sm
-                         font-semibold tracking-widest mb-2">
-                <i class="fa-solid fa-microphone-lines"></i>
-                MAHAMIT CONCERT #2
-            </span>
+    <div class="singer-pair-grid">
 
-            <h2 class="font-kanit font-bold
-                       text-2xl sm:text-3xl
-                       text-posterGreen">
-                พบกับศิลปินและบทเพลงแห่งความทรงจำ
-            </h2>
-
-            <p class="text-posterMuted text-sm mt-2">
-                มิตรภาพ บทเพลง และเรื่องราวที่ไม่เคยเลือนหาย
-            </p>
+        <div class="singer-pair-card">
+            <img
+                src="./sing1.jpg"
+                alt="โปสเตอร์ศิลปินคนที่ 1"
+                loading="eager"
+            >
         </div>
 
-        <!-- กล่องสไลด์ -->
-        <div class="singer-slider">
-
-            <div class="singer-slide-frame">
-
-                <!-- ภาพที่ 1 -->
-                <img
-                    id="singerSlideImage"
-                    src="./sing1.jpg"
-                    alt="โปสเตอร์ศิลปิน มิตรภาพไม่มีวันดึกดำบรรพ์ #2"
-                    class="singer-slide-image"
-                    loading="eager"
-                >
-
-                <!-- ปุ่มย้อนกลับ -->
-                <button type="button"
-                        id="singerPrevBtn"
-                        class="singer-arrow singer-arrow-left"
-                        aria-label="ภาพก่อนหน้า">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
-
-                <!-- ปุ่มภาพถัดไป -->
-                <button type="button"
-                        id="singerNextBtn"
-                        class="singer-arrow singer-arrow-right"
-                        aria-label="ภาพถัดไป">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
-
-                <!-- เลขลำดับภาพ -->
-                <div class="singer-slide-counter">
-                    <span id="singerCurrentNumber">01</span>
-                    <span class="opacity-60"> / </span>
-                    <span id="singerTotalNumber">02</span>
-                </div>
-
-            </div>
-
-            <!-- จุดเลือกภาพ -->
-            <div class="singer-dots"
-                 id="singerSlideDots"
-                 aria-label="เลือกโปสเตอร์ศิลปิน">
-
-                <button type="button"
-                        class="singer-dot active"
-                        data-slide="0"
-                        aria-label="ดูภาพที่ 1"></button>
-
-                <button type="button"
-                        class="singer-dot"
-                        data-slide="1"
-                        aria-label="ดูภาพที่ 2"></button>
-
-            </div>
-
-            <p class="text-center text-xs text-posterMuted mt-2">
-                <i class="fa-solid fa-hand-pointer mr-1"></i>
-                กดลูกศรเพื่อชมโปสเตอร์ศิลปิน
-            </p>
-
+        <div class="singer-pair-card">
+            <img
+                src="./sing2.jpg"
+                alt="โปสเตอร์ศิลปินคนที่ 2"
+                loading="eager"
+            >
         </div>
+
     </div>
 </section>
-<!-- END MAHAMIT SINGER SLIDESHOW -->
+<!-- END SINGER PAIR 1 -->
+
+
 
     
 <!-- =====================================
@@ -4088,120 +4029,7 @@ iconBg = '#FEE2E2';
 </footer>
 
 
-<script>
-(function () {
-    const image = document.getElementById('singerSlideImage');
-    const prevBtn = document.getElementById('singerPrevBtn');
-    const nextBtn = document.getElementById('singerNextBtn');
-    const currentNumber = document.getElementById('singerCurrentNumber');
-    const dots = Array.from(
-        document.querySelectorAll('#singerSlideDots .singer-dot')
-    );
 
-    if (!image || !prevBtn || !nextBtn || dots.length === 0) return;
-
-    const slides = [
-        {
-            src: './sing1.jpg',
-            alt: 'โปสเตอร์ศิลปิน มิตรภาพไม่มีวันดึกดำบรรพ์ #2'
-        },
-        {
-            src: './sing2.jpg',
-            alt: 'โปสเตอร์ศิลปิน มาหามิตรคอนเสิร์ต #2'
-        }
-    ];
-
-    let currentIndex = 0;
-    let slideTimer = null;
-    const slideInterval = 3000;
-
-    // เตรียมภาพล่วงหน้าให้เปลี่ยนภาพได้ลื่นขึ้น
-    slides.forEach(function (slide) {
-        const preload = new Image();
-        preload.src = slide.src;
-    });
-
-    function showSlide(index) {
-        currentIndex = (index + slides.length) % slides.length;
-
-        image.classList.add('is-changing');
-
-        const newImage = new Image();
-        newImage.onload = function () {
-            image.src = slides[currentIndex].src;
-            image.alt = slides[currentIndex].alt;
-
-            currentNumber.textContent =
-                String(currentIndex + 1).padStart(2, '0');
-
-            dots.forEach(function (dot, i) {
-                dot.classList.toggle('active', i === currentIndex);
-                dot.setAttribute(
-                    'aria-pressed',
-                    i === currentIndex ? 'true' : 'false'
-                );
-            });
-
-            requestAnimationFrame(function () {
-                image.classList.remove('is-changing');
-            });
-        };
-
-        newImage.onerror = function () {
-            image.classList.remove('is-changing');
-            console.error('ไม่สามารถโหลดภาพ:', slides[currentIndex].src);
-        };
-
-        newImage.src = slides[currentIndex].src;
-    }
-
-    function startAutoSlide() {
-        stopAutoSlide();
-
-        slideTimer = setInterval(function () {
-            showSlide(currentIndex + 1);
-        }, slideInterval);
-    }
-
-    function stopAutoSlide() {
-        if (slideTimer !== null) {
-            clearInterval(slideTimer);
-            slideTimer = null;
-        }
-    }
-
-    function goToSlide(index) {
-        showSlide(index);
-        startAutoSlide();
-    }
-
-    prevBtn.addEventListener('click', function () {
-        goToSlide(currentIndex - 1);
-    });
-
-    nextBtn.addEventListener('click', function () {
-        goToSlide(currentIndex + 1);
-    });
-
-    dots.forEach(function (dot, index) {
-        dot.addEventListener('click', function () {
-            goToSlide(index);
-        });
-    });
-
-    // หยุดเลื่อนอัตโนมัติเมื่อผู้ใช้ชี้เมาส์บนสไลด์
-    const slider = image.closest('.singer-slider');
-
-    if (slider) {
-        slider.addEventListener('mouseenter', stopAutoSlide);
-        slider.addEventListener('mouseleave', startAutoSlide);
-    }
-
-    // แสดงภาพแรกและเริ่มเลื่อนอัตโนมัติ
-    showSlide(0);
-    startAutoSlide();
-})();
-</script>
 </body>
 
 
