@@ -1292,6 +1292,291 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 }
 
 
+
+/* ==========================================
+   MAHAMIT TICKET PRICE GUIDE
+   6 COLORS - RESPONSIVE FIX
+   ========================================== */
+
+/* กล่องหลัก */
+#ticketPriceGuide {
+    width: calc(100% - 32px);
+    max-width: 1000px;
+    margin: 28px auto;
+    padding: 24px;
+    box-sizing: border-box;
+    border: 1px solid #E2D0A8;
+    border-radius: 22px;
+    background: #F8F5EE;
+    color: #FFFFFF;
+}
+
+/* หัวข้อ */
+#ticketPriceGuide .ticket-guide-heading {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#ticketPriceGuide .ticket-guide-eyebrow {
+    display: block;
+    color: #8B2626;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-bottom: 7px;
+}
+
+#ticketPriceGuide .ticket-guide-heading h2 {
+    color: #33291E;
+    font-size: clamp(19px, 2vw, 25px);
+    line-height: 1.4;
+    font-weight: 800;
+    margin: 0 0 8px;
+}
+
+#ticketPriceGuide .ticket-guide-heading p {
+    color: #756B5B;
+    font-size: 13px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* 3 ใบต่อแถวบนคอมพิวเตอร์ */
+#ticketPriceGuide .ticket-price-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* รูปแบบการ์ดร่วมกัน */
+#ticketPriceGuide .ticket-price-card {
+    display: flex !important;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 9px;
+    min-width: 0;
+    min-height: 100px;
+    padding: 14px 12px;
+    box-sizing: border-box;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 13px;
+    color: #FFFFFF !important;
+    box-shadow: 0 3px 8px rgba(45, 35, 20, .13);
+    overflow: hidden;
+}
+
+/* สีทั้ง 6 ประเภท */
+#ticketPriceGuide .ticket-red {
+    background: linear-gradient(135deg, #E73551, #B71938) !important;
+}
+
+#ticketPriceGuide .ticket-gold {
+    background: linear-gradient(135deg, #E4A32B, #B87810) !important;
+}
+
+#ticketPriceGuide .ticket-blue {
+    background: linear-gradient(135deg, #3987D2, #205493) !important;
+}
+
+#ticketPriceGuide .ticket-green {
+    background: linear-gradient(135deg, #58A34B, #356D2C) !important;
+}
+
+#ticketPriceGuide .ticket-purple {
+    background: linear-gradient(135deg, #9659C7, #67349A) !important;
+}
+
+#ticketPriceGuide .ticket-orange {
+    background: linear-gradient(135deg, #FF783B, #E94A18) !important;
+}
+
+/* จุดสีด้านหน้าการ์ด */
+#ticketPriceGuide .ticket-color-dot {
+    display: block;
+    flex: 0 0 12px;
+    width: 12px;
+    height: 12px;
+    margin-top: 4px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.95) !important;
+    border: 2px solid rgba(255,255,255,.45);
+    box-sizing: border-box;
+}
+
+/* เนื้อหาการ์ด */
+#ticketPriceGuide .ticket-price-content {
+    flex: 1;
+    min-width: 0;
+    color: #FFFFFF !important;
+}
+
+#ticketPriceGuide .ticket-price-content h3 {
+    margin: 0 0 6px;
+    color: #FFFFFF !important;
+    font-size: 14px;
+    line-height: 1.45;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+#ticketPriceGuide .ticket-price-content p {
+    margin: 0 0 4px;
+    color: rgba(255,255,255,.94) !important;
+    font-size: 12px;
+    line-height: 1.45;
+}
+
+#ticketPriceGuide .ticket-price-content p.ticket-type {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .3px;
+}
+
+#ticketPriceGuide .ticket-price-content p.ticket-price {
+    margin-top: 5px;
+    margin-bottom: 0;
+    color: #FFFFFF !important;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+#ticketPriceGuide .ticket-price-content p.ticket-price span {
+    color: #FFFFFF !important;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+/* หมายเหตุ */
+#ticketPriceGuide .ticket-guide-note {
+    margin: 16px 0 0;
+    color: #756B5B;
+    text-align: center;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* TABLET */
+@media (max-width: 900px) {
+    #ticketPriceGuide {
+        padding: 18px;
+    }
+
+    #ticketPriceGuide .ticket-price-grid {
+        gap: 10px;
+    }
+
+    #ticketPriceGuide .ticket-price-card {
+        min-height: 94px;
+        padding: 12px 10px;
+    }
+
+    #ticketPriceGuide .ticket-price-content h3 {
+        font-size: 13px;
+    }
+
+    #ticketPriceGuide .ticket-price-content p.ticket-price {
+        font-size: 18px;
+    }
+}
+
+/* MOBILE: 2 ใบต่อแถว อ่านง่าย */
+@media (max-width: 600px) {
+    #ticketPriceGuide {
+        width: calc(100% - 24px);
+        margin: 18px auto;
+        padding: 15px 12px;
+        border-radius: 17px;
+    }
+
+    #ticketPriceGuide .ticket-guide-heading {
+        margin-bottom: 14px;
+    }
+
+    #ticketPriceGuide .ticket-guide-heading h2 {
+        font-size: 19px;
+    }
+
+    #ticketPriceGuide .ticket-guide-heading p {
+        font-size: 12px;
+    }
+
+    #ticketPriceGuide .ticket-price-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 9px;
+        margin-top: 14px;
+    }
+
+    #ticketPriceGuide .ticket-price-card {
+        min-height: 96px;
+        padding: 11px 8px;
+        gap: 6px;
+        border-radius: 10px;
+    }
+
+    #ticketPriceGuide .ticket-color-dot {
+        flex-basis: 9px;
+        width: 9px;
+        height: 9px;
+        margin-top: 4px;
+    }
+
+    #ticketPriceGuide .ticket-price-content h3 {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    #ticketPriceGuide .ticket-price-content p {
+        font-size: 11px;
+    }
+
+    #ticketPriceGuide .ticket-price-content p.ticket-type {
+        font-size: 9px;
+    }
+
+    #ticketPriceGuide .ticket-price-content p.ticket-price {
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    #ticketPriceGuide .ticket-price-content p.ticket-price span {
+        font-size: 9px;
+    }
+
+    #ticketPriceGuide .ticket-guide-note {
+        font-size: 10px;
+    }
+}
+
+/* SMALL MOBILE */
+@media (max-width: 360px) {
+    #ticketPriceGuide {
+        width: calc(100% - 16px);
+        padding: 12px 8px;
+    }
+
+    #ticketPriceGuide .ticket-price-grid {
+        gap: 7px;
+    }
+
+    #ticketPriceGuide .ticket-price-card {
+        padding: 9px 6px;
+        gap: 5px;
+    }
+
+    #ticketPriceGuide .ticket-price-content h3 {
+        font-size: 11px;
+    }
+
+    #ticketPriceGuide .ticket-price-content p.ticket-price {
+        font-size: 14px;
+    }
+}
+
+
+        
         
 
     </style>
