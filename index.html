@@ -1132,463 +1132,6 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
-
-/* ========================================
-   MAHAMIT TICKET PRICE GUIDE
-======================================== */
-
-#ticketPriceGuide {
-    --ticket-cream: #F8F5EE;
-    --ticket-green: #425E22;
-    --ticket-gold: #C8A051;
-    --ticket-text: #28251F;
-    --ticket-red-price: #A62626;
-
-    width: 100%;
-    max-width: 1100px;
-    margin: 28px auto;
-    padding: 26px;
-    box-sizing: border-box;
-
-    background: var(--ticket-cream);
-    border: 1px solid rgba(200, 160, 81, 0.45);
-    border-radius: 24px;
-    box-shadow: 0 10px 28px rgba(55, 45, 30, 0.09);
-}
-
-#ticketPriceGuide * {
-    box-sizing: border-box;
-}
-
-#ticketPriceGuide .ticket-guide-heading {
-    text-align: center;
-    margin-bottom: 26px;
-}
-
-#ticketPriceGuide .ticket-guide-eyebrow {
-    display: block;
-    color: #8B2626;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-}
-
-#ticketPriceGuide .ticket-guide-heading h2 {
-    display: inline-block;
-    margin: 0;
-    padding: 10px 26px;
-    border-radius: 999px;
-
-    background: #EDE2C8;
-    color: #30271D;
-
-    font-size: clamp(20px, 2.5vw, 28px);
-    font-weight: 800;
-    line-height: 1.4;
-}
-
-#ticketPriceGuide .ticket-guide-heading p {
-    margin: 12px 0 0;
-    color: #746C5E;
-    font-size: 14px;
-    line-height: 1.6;
-}
-
-/* 3 columns x 2 rows on desktop */
-
-#ticketPriceGuide .ticket-price-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-    align-items: stretch;
-}
-
-#ticketPriceGuide .ticket-price-card {
-    --ticket-accent: #425E22;
-
-    display: flex;
-    align-items: flex-start;
-    gap: 12px;
-
-    min-width: 0;
-    padding: 20px 16px;
-
-    background: #FFFEFA;
-    border: 1px solid rgba(70, 58, 40, 0.07);
-    border-radius: 18px;
-
-    box-shadow: 0 4px 12px rgba(50, 42, 30, 0.07);
-
-    transition:
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-#ticketPriceGuide .ticket-price-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 18px rgba(50, 42, 30, 0.12);
-}
-
-#ticketPriceGuide .ticket-color-dot {
-    flex: 0 0 24px;
-    width: 24px;
-    height: 24px;
-    margin-top: 3px;
-
-    border-radius: 50%;
-    background: var(--ticket-accent);
-}
-
-#ticketPriceGuide .ticket-price-content {
-    min-width: 0;
-    flex: 1;
-}
-
-#ticketPriceGuide .ticket-price-card h3 {
-    margin: 0 0 8px;
-    color: var(--ticket-text);
-
-    font-size: clamp(15px, 1.5vw, 20px);
-    font-weight: 800;
-    line-height: 1.4;
-
-    overflow-wrap: anywhere;
-}
-
-#ticketPriceGuide .ticket-type {
-    margin: -5px 0 7px;
-    color: #756D60;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
-    overflow-wrap: anywhere;
-}
-
-#ticketPriceGuide .ticket-quantity {
-    margin: 0 0 3px;
-    color: #514B42;
-    font-size: 16px;
-    line-height: 1.5;
-}
-
-#ticketPriceGuide .ticket-price {
-    margin: 0;
-    color: var(--ticket-red-price);
-
-    font-size: clamp(20px, 2vw, 26px);
-    font-weight: 900;
-    line-height: 1.4;
-    white-space: nowrap;
-}
-
-#ticketPriceGuide .ticket-price span {
-    font-size: 14px;
-    font-weight: 700;
-}
-
-/* Six category colors */
-
-#ticketPriceGuide .ticket-red {
-    --ticket-accent: #D52E4A;
-}
-
-#ticketPriceGuide .ticket-gold {
-    --ticket-accent: #C58A20;
-}
-
-#ticketPriceGuide .ticket-blue {
-    --ticket-accent: #2870B9;
-}
-
-#ticketPriceGuide .ticket-green {
-    --ticket-accent: #329D75;
-}
-
-#ticketPriceGuide .ticket-purple {
-    --ticket-accent: #8050B5;
-}
-
-#ticketPriceGuide .ticket-orange {
-    --ticket-accent: #F26A2C;
-}
-
-#ticketPriceGuide .ticket-guide-note {
-    margin: 20px 0 0;
-    color: #81786A;
-    font-size: 12px;
-    line-height: 1.7;
-    text-align: center;
-}
-
-/* Tablet and mobile */
-
-@media (max-width: 760px) {
-    #ticketPriceGuide {
-        margin: 22px auto;
-        padding: 18px 14px;
-        border-radius: 18px;
-    }
-
-    #ticketPriceGuide .ticket-price-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-    }
-
-    #ticketPriceGuide .ticket-price-card {
-        gap: 8px;
-        padding: 14px 10px;
-        border-radius: 13px;
-    }
-
-    #ticketPriceGuide .ticket-color-dot {
-        flex-basis: 17px;
-        width: 17px;
-        height: 17px;
-    }
-
-    #ticketPriceGuide .ticket-price-card h3 {
-        font-size: 15px;
-    }
-
-    #ticketPriceGuide .ticket-quantity {
-        font-size: 13px;
-    }
-
-    #ticketPriceGuide .ticket-price {
-        font-size: 19px;
-    }
-
-    #ticketPriceGuide .ticket-price span {
-        font-size: 12px;
-    }
-
-    #ticketPriceGuide .ticket-type {
-        font-size: 10px;
-    }
-}
-
-/* Extra small phones */
-
-@media (max-width: 360px) {
-    #ticketPriceGuide .ticket-price-grid {
-        grid-template-columns: 1fr;
-    }
-
-    #ticketPriceGuide .ticket-price-card {
-        padding: 16px;
-    }
-
-    #ticketPriceGuide .ticket-price-card h3 {
-        font-size: 17px;
-    }
-
-    #ticketPriceGuide .ticket-price {
-        font-size: 22px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    #ticketPriceGuide .ticket-price-card {
-        transition: none;
-    }
-}
-
-
-/* ===== MAHAMIT TICKET PRICE CARDS ===== */
-
-#ticketPriceGuide {
-  width: 100%;
-  max-width: 1100px;
-  margin: 28px auto;
-  padding: 28px;
-  box-sizing: border-box;
-}
-
-#ticketPriceGuide .ticket-price-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  width: 100%;
-  max-width: 100%;
-  margin: 22px auto 0;
-  box-sizing: border-box;
-}
-
-#ticketPriceGuide .ticket-price-card {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  min-width: 0;
-  padding: 16px 14px;
-  border: 1px solid rgba(255,255,255,0.3);
-  border-radius: 13px;
-  color: #fff;
-  box-shadow: 0 3px 8px rgba(50,35,15,0.12);
-  box-sizing: border-box;
-}
-
-/* สีการ์ดทั้ง 6 ประเภท */
-#ticketPriceGuide .ticket-price-card:nth-child(1) {
-  background: linear-gradient(135deg, #e83b55, #b51f3b);
-}
-
-#ticketPriceGuide .ticket-price-card:nth-child(2) {
-  background: linear-gradient(135deg, #dfa12d, #b77913);
-}
-
-#ticketPriceGuide .ticket-price-card:nth-child(3) {
-  background: linear-gradient(135deg, #3987d3, #20599d);
-}
-
-#ticketPriceGuide .ticket-price-card:nth-child(4) {
-  background: linear-gradient(135deg, #65a44b, #426d32);
-}
-
-#ticketPriceGuide .ticket-price-card:nth-child(5) {
-  background: linear-gradient(135deg, #9860c8, #65369a);
-}
-
-#ticketPriceGuide .ticket-price-card:nth-child(6) {
-  background: linear-gradient(135deg, #ff843c, #e95822);
-}
-
-/* จุดสีหน้าชื่อบัตร */
-#ticketPriceGuide .ticket-color-dot {
-  flex: 0 0 13px;
-  width: 13px;
-  height: 13px;
-  margin-top: 4px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.9);
-  box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
-}
-
-/* เนื้อหาภายในการ์ด */
-#ticketPriceGuide .ticket-price-content {
-  flex: 1;
-  min-width: 0;
-}
-
-#ticketPriceGuide .ticket-price-content h3 {
-  margin: 0 0 7px;
-  color: #fff;
-  font-size: clamp(13px, 1.25vw, 17px);
-  font-weight: 800;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
-}
-
-#ticketPriceGuide .ticket-price-content p {
-  margin: 0 0 5px;
-  color: rgba(255,255,255,0.95);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-#ticketPriceGuide .ticket-price-content p.ticket-price {
-  margin: 2px 0 0;
-  color: #fff;
-  font-size: clamp(17px, 1.6vw, 22px);
-  font-weight: 800;
-  line-height: 1.3;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
-
-#ticketPriceGuide .ticket-price-content p.ticket-price span {
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-/* แท็บเล็ต */
-@media (max-width: 900px) {
-  #ticketPriceGuide {
-    padding: 22px;
-  }
-
-  #ticketPriceGuide .ticket-price-grid {
-    gap: 11px;
-  }
-
-  #ticketPriceGuide .ticket-price-card {
-    padding: 13px 11px;
-    gap: 9px;
-  }
-}
-
-/* มือถือ: 2 ใบต่อแถว */
-@media (max-width: 600px) {
-  #ticketPriceGuide {
-    width: calc(100% - 24px);
-    margin: 20px auto;
-    padding: 16px 12px;
-    border-radius: 20px;
-  }
-
-  #ticketPriceGuide .ticket-price-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 16px;
-  }
-
-  #ticketPriceGuide .ticket-price-card {
-    padding: 12px 9px;
-    gap: 8px;
-    border-radius: 11px;
-  }
-
-  #ticketPriceGuide .ticket-color-dot {
-    flex-basis: 10px;
-    width: 10px;
-    height: 10px;
-    margin-top: 4px;
-  }
-
-  #ticketPriceGuide .ticket-price-content h3 {
-    font-size: 13px;
-    line-height: 1.45;
-  }
-
-  #ticketPriceGuide .ticket-price-content p {
-    font-size: 12px;
-  }
-
-  #ticketPriceGuide .ticket-price-content p.ticket-price {
-    font-size: 17px;
-    line-height: 1.4;
-  }
-
-  #ticketPriceGuide .ticket-price-content p.ticket-price span {
-    font-size: 11px;
-  }
-}
-
-/* มือถือจอเล็กมาก */
-@media (max-width: 360px) {
-  #ticketPriceGuide {
-    width: calc(100% - 16px);
-    padding: 12px 8px;
-  }
-
-  #ticketPriceGuide .ticket-price-grid {
-    gap: 7px;
-  }
-
-  #ticketPriceGuide .ticket-price-card {
-    padding: 10px 7px;
-    gap: 6px;
-  }
-
-  #ticketPriceGuide .ticket-price-content h3 {
-    font-size: 12px;
-  }
-
-  #ticketPriceGuide .ticket-price-content p.ticket-price {
-    font-size: 15px;
-  }
-}
 /* ===== TICKET PRICE: COMPACT & ELEGANT ===== */
 
 #ticketPriceGuide {
@@ -1747,6 +1290,8 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     font-size: 14px;
   }
 }
+
+
         
 
     </style>
@@ -1911,95 +1456,14 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 </div>
 
                 <div class="pt-1 flex flex-wrap justify-center md:justify-start gap-3 text-xs">
-
-<!-- ========================================
-     MAHAMIT TICKET PRICE GUIDE
-     6 TICKET CATEGORIES
-======================================== -->
-
-<section id="ticketPriceGuide">
-
-    <div class="ticket-guide-heading">
-        <span class="ticket-guide-eyebrow">MAHAMIT CONCERT #2</span>
-        <h2>รายละเอียดที่นั่งและราคาบัตร</h2>
-        <p>เลือกบัตรที่ใช่ แล้วมาร่วมสร้างความทรงจำไปด้วยกัน</p>
-    </div>
-
-     <div id="ticketPricing" class="ticket-price-grid"> 
-
-        <!-- 1. มิตรชิดเวที -->
-        <article class="ticket-price-card ticket-red">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรชิดเวที</h3>
-                <p class="ticket-quantity">103 ที่นั่ง</p>
-                <p class="ticket-price">1,990 <span>บาท</span></p>
+                    <span class="bg-posterBurgundy text-white px-3.5 py-2 rounded-lg font-medium flex items-center gap-2 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-300"></span> Zone A (VIP): 2,500 บาท
+                    </span>
+                    <span class="bg-posterGreen text-white px-3.5 py-2 rounded-lg font-medium flex items-center gap-2 shadow-xs">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-300"></span> Zone B (Regular): 1,900 บาท
+                    </span>
+                </div>
             </div>
-        </article>
-
-        <!-- 2. มิตรล้อมวง -->
-        <article class="ticket-price-card ticket-gold">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรล้อมวง</h3>
-                <p class="ticket-quantity">230 ที่นั่ง</p>
-                <p class="ticket-price">1,690 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 3. มิตรใต้แสงดาว -->
-        <article class="ticket-price-card ticket-blue">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรใต้แสงดาว</h3>
-                <p class="ticket-quantity">89 ที่นั่ง</p>
-                <p class="ticket-price">1,390 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 4. มิตรร่วมโต๊ะ -->
-        <article class="ticket-price-card ticket-green">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรร่วมโต๊ะ</h3>
-                <p class="ticket-quantity">150 ที่นั่ง</p>
-                <p class="ticket-price">1,390 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 5. มิตรชมวิว -->
-        <article class="ticket-price-card ticket-purple">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรชมวิว</h3>
-                <p class="ticket-type">STAND SEAT</p>
-                <p class="ticket-quantity">188 ที่นั่ง</p>
-                <p class="ticket-price">1,190 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 6. มิตรยอดไม้ -->
-        <article class="ticket-price-card ticket-orange">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรยอดไม้</h3>
-                <p class="ticket-type">TREEHOUSE SEAT</p>
-                <p class="ticket-quantity">2 ที่นั่ง</p>
-                <p class="ticket-price">2,290 <span>บาท</span></p>
-            </div>
-        </article>
-
-    </div>
-
-    <p class="ticket-guide-note">
-        * จำนวนที่นั่งเป็นข้อมูลอ้างอิงจากรายการบัตร
-        กรุณาตรวจสอบที่นั่งว่างในระบบก่อนจอง
-    </p>
-
-</section>
-
-<!-- END MAHAMIT TICKET PRICE GUIDE -->
-
 
             <!-- Right Poster Display Container -->
             <div class="relative group w-full flex justify-center md:w-auto md:justify-end">
@@ -2112,6 +1576,102 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 <!-- END MAHAMIT ARTIST GALLERY -->
 
+
+
+<!-- ========================================
+     MAHAMIT TICKET PRICE GUIDE
+     6 TICKET CATEGORIES
+======================================== -->
+
+<section id="ticketPriceGuide">
+
+    <div class="ticket-guide-heading">
+        <span class="ticket-guide-eyebrow">MAHAMIT CONCERT #2</span>
+        <h2>รายละเอียดที่นั่งและราคาบัตร</h2>
+        <p>เลือกบัตรที่ใช่ แล้วมาร่วมสร้างความทรงจำไปด้วยกัน</p>
+    </div>
+
+    <div class="ticket-price-grid">
+
+        <!-- 1. มิตรชิดเวที -->
+        <article class="ticket-price-card ticket-red">
+            <div class="ticket-color-dot"></div>
+            <div class="ticket-price-content">
+                <h3>มิตรชิดเวที</h3>
+                <p class="ticket-quantity">103 ที่นั่ง</p>
+                <p class="ticket-price">1,990 <span>บาท</span></p>
+            </div>
+        </article>
+
+        <!-- 2. มิตรล้อมวง -->
+        <article class="ticket-price-card ticket-gold">
+            <div class="ticket-color-dot"></div>
+            <div class="ticket-price-content">
+                <h3>มิตรล้อมวง</h3>
+                <p class="ticket-quantity">230 ที่นั่ง</p>
+                <p class="ticket-price">1,690 <span>บาท</span></p>
+            </div>
+        </article>
+
+        <!-- 3. มิตรใต้แสงดาว -->
+        <article class="ticket-price-card ticket-blue">
+            <div class="ticket-color-dot"></div>
+            <div class="ticket-price-content">
+                <h3>มิตรใต้แสงดาว</h3>
+                <p class="ticket-quantity">89 ที่นั่ง</p>
+                <p class="ticket-price">1,390 <span>บาท</span></p>
+            </div>
+        </article>
+
+        <!-- 4. มิตรร่วมโต๊ะ -->
+        <article class="ticket-price-card ticket-green">
+            <div class="ticket-color-dot"></div>
+            <div class="ticket-price-content">
+                <h3>มิตรร่วมโต๊ะ</h3>
+                <p class="ticket-quantity">150 ที่นั่ง</p>
+                <p class="ticket-price">1,390 <span>บาท</span></p>
+            </div>
+        </article>
+
+        <!-- 5. มิตรชมวิว -->
+        <article class="ticket-price-card ticket-purple">
+            <div class="ticket-color-dot"></div>
+            <div class="ticket-price-content">
+                <h3>มิตรชมวิว</h3>
+                <p class="ticket-type">STAND SEAT</p>
+                <p class="ticket-quantity">188 ที่นั่ง</p>
+                <p class="ticket-price">1,190 <span>บาท</span></p>
+            </div>
+        </article>
+
+        <!-- 6. มิตรยอดไม้ -->
+        <article class="ticket-price-card ticket-orange">
+            <div class="ticket-color-dot"></div>
+            <div class="ticket-price-content">
+                <h3>มิตรยอดไม้</h3>
+                <p class="ticket-type">TREEHOUSE SEAT</p>
+                <p class="ticket-quantity">2 ที่นั่ง</p>
+                <p class="ticket-price">2,290 <span>บาท</span></p>
+            </div>
+        </article>
+
+    </div>
+
+    <p class="ticket-guide-note">
+        * จำนวนที่นั่งเป็นข้อมูลอ้างอิงจากรายการบัตร
+        กรุณาตรวจสอบที่นั่งว่างในระบบก่อนจอง
+    </p>
+
+</section>
+
+<!-- END MAHAMIT TICKET PRICE GUIDE -->
+
+
+
+
+
+
+    
 
     
 <!-- ปุ่มเข้าสู่ระบบจอง -->
