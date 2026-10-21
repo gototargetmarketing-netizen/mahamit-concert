@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="th"> 
-<head>    
+<html lang="th">
+<head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์</title>
 
 <meta name="description" content="จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดับดารรภ์ #2 เลือกที่นั่งและจองบัตรออนไลน์ได้แล้ววันนี้">
@@ -1029,244 +1029,107 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 }
 
 
+/* =========================================
+   MAHAMIT ARTIST GALLERY
+   SAME STYLE FOR ALL SIX POSTERS
+========================================= */
 
-/* =====================================
-   MAHAMIT SINGER SLIDESHOW STYLE
-===================================== */
-
-.singer-slider {
+#mahamitArtistGallery {
     width: 100%;
-    max-width: 430px;
+    max-width: 1360px;
     margin: 0 auto;
-    padding: 10px;
-    background: #F8F5EE;
-    border: 1px solid #C8A051;
-    border-radius: 18px;
-    box-shadow: 0 8px 24px rgba(35, 32, 29, 0.14);
+    padding: 16px 20px 36px;
 }
 
-.singer-slide-frame {
-    position: relative;
+#mahamitArtistGallery .singer-pair-section {
     width: 100%;
-    overflow: hidden;
-    border-radius: 11px;
-    background: #425E22;
-    border: 1px solid #E5DEC9;
-    aspect-ratio: 1024 / 1448;
-}
-
-.singer-slide-image {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    opacity: 1;
-    transition: opacity 0.35s ease;
-}
-
-.singer-slide-image.is-changing {
-    opacity: 0.35;
-}
-
-.singer-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 42px;
-    height: 42px;
-    border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.65);
-    background: rgba(35, 32, 29, 0.72);
-    color: #FFF7DF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2;
-    transition: background 0.2s, transform 0.2s;
-}
-
-.singer-arrow:hover {
-    background: #425E22;
-}
-
-.singer-arrow-left {
-    left: 10px;
-}
-
-.singer-arrow-right {
-    right: 10px;
-}
-
-.singer-slide-counter {
-    position: absolute;
-    right: 12px;
-    bottom: 12px;
-    padding: 6px 12px;
-    border-radius: 20px;
-    color: #FFF7DF;
-    background: rgba(35, 32, 29, 0.78);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 1px;
-}
-
-.singer-dots {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    padding-top: 16px;
-}
-
-.singer-dot {
-    width: 10px;
-    height: 10px;
+    margin: 0 auto 32px;
     padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: #C9C1AE;
-    cursor: pointer;
-    transition: all 0.25s ease;
 }
 
-.singer-dot.active {
-    width: 30px;
-    border-radius: 20px;
-    background: #425E22;
-    box-shadow: 0 0 0 2px rgba(200,160,81,0.25);
-}
-
-@media (max-width: 600px) {
-    .singer-slider {
-        max-width: 360px;
-        padding: 7px;
-        border-radius: 14px;
-    }
-
-    .singer-arrow {
-        width: 36px;
-        height: 36px;
-        font-size: 13px;
-    }
-
-    .singer-arrow-left {
-        left: 7px;
-    }
-
-    .singer-arrow-right {
-        right: 7px;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .singer-slide-image,
-    .singer-arrow,
-    .singer-dot {
-        transition: none;
-    }
-}
-
-
-
-
-
-/* =====================================
-   SINGER PAIR CARDS
-===================================== */
-
-.singer-pair-section {
-    width: 100%;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 12px 16px 28px;
-}
-
-.singer-pair-heading {
+#mahamitArtistGallery .singer-pair-heading {
     text-align: center;
     margin-bottom: 18px;
 }
 
-.singer-pair-heading > span {
-    display: inline-block;
+#mahamitArtistGallery .singer-pair-heading span {
+    display: block;
+    margin-bottom: 6px;
     color: #8B2626;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 2px;
-    margin-bottom: 6px;
 }
 
-.singer-pair-heading h2 {
+#mahamitArtistGallery .singer-pair-heading h2 {
+    margin: 0;
     color: #425E22;
     font-family: 'Kanit', sans-serif;
-    font-size: 22px;
+    font-size: clamp(18px, 2.2vw, 26px);
     font-weight: 700;
     line-height: 1.5;
-    margin: 0;
 }
 
-.singer-pair-grid {
+#mahamitArtistGallery .singer-pair-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 16px;
     align-items: start;
+    gap: 20px;
 }
 
-.singer-pair-card {
+#mahamitArtistGallery .singer-pair-card {
     min-width: 0;
+    padding: 10px;
     overflow: hidden;
-    padding: 8px;
     background: #F8F5EE;
-    border: 1px solid #C8A051;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(35, 32, 29, 0.12);
-    transition: transform 0.25s ease,
-                box-shadow 0.25s ease;
+    border: 1.5px solid #C8A051;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(35, 32, 29, 0.10);
+    box-sizing: border-box;
 }
 
-.singer-pair-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 24px rgba(35, 32, 29, 0.16);
-}
-
-.singer-pair-card img {
+#mahamitArtistGallery .singer-pair-card img {
     display: block;
     width: 100%;
     height: auto;
     aspect-ratio: 1024 / 1448;
     object-fit: contain;
-    border-radius: 8px;
-    background: #425E22;
+    border-radius: 12px;
+    background: #EFE9DC;
 }
 
+/* Tablet and mobile */
 @media (max-width: 600px) {
-    .singer-pair-section {
-        padding: 8px 12px 22px;
+    #mahamitArtistGallery {
+        padding: 12px 10px 24px;
     }
 
-    .singer-pair-grid {
-        gap: 9px;
+    #mahamitArtistGallery .singer-pair-section {
+        margin-bottom: 24px;
     }
 
-    .singer-pair-card {
+    #mahamitArtistGallery .singer-pair-grid {
+        gap: 10px;
+    }
+
+    #mahamitArtistGallery .singer-pair-card {
         padding: 5px;
-        border-radius: 10px;
+        border-radius: 11px;
     }
 
-    .singer-pair-heading h2 {
-        font-size: 18px;
+    #mahamitArtistGallery .singer-pair-card img {
+        border-radius: 7px;
     }
 
-    .singer-pair-card img {
-        border-radius: 6px;
+    #mahamitArtistGallery .singer-pair-heading {
+        margin-bottom: 12px;
+    }
+
+    #mahamitArtistGallery .singer-pair-heading span {
+        font-size: 10px;
     }
 }
 
-@media (prefers-reduced-motion: reduce) {
-    .singer-pair-card {
-        transition: none;
-    }
-}
 
         
 
@@ -1468,111 +1331,93 @@ body:has(#cartSummaryBtn:not(.hidden)) {
         </div>
     </section>
 
+
+<!-- =========================================
+     MAHAMIT CONCERT #2 - ARTIST POSTERS
+     3 PAIRS / NO SLIDESHOW
+========================================= -->
+
+<section id="mahamitArtistGallery">
+
+    <!-- คู่ที่ 1 -->
+    <div class="singer-pair-section">
+
+        <div class="singer-pair-heading">
+            <span>MAHAMIT CONCERT #2</span>
+            <h2>พบกับศิลปินและบทเพลงแห่งความทรงจำ</h2>
+        </div>
+
+        <div class="singer-pair-grid">
+            <div class="singer-pair-card">
+                <img src="./sing1.jpg"
+                     alt="โปสเตอร์ศิลปินคนที่ 1"
+                     loading="eager">
+            </div>
+
+            <div class="singer-pair-card">
+                <img src="./sing2.jpg"
+                     alt="โปสเตอร์ศิลปินคนที่ 2"
+                     loading="eager">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- คู่ที่ 2 -->
+    <div class="singer-pair-section">
+
+        <div class="singer-pair-heading">
+            <span>MAHAMIT CONCERT #2</span>
+            <h2>ศิลปินและบทเพลงที่คิดถึง</h2>
+        </div>
+
+        <div class="singer-pair-grid">
+            <div class="singer-pair-card">
+                <img src="./sing3.jpg"
+                     alt="โปสเตอร์ศิลปินคนที่ 3"
+                     loading="lazy">
+            </div>
+
+            <div class="singer-pair-card">
+                <img src="./sing4.jpg"
+                     alt="โปสเตอร์ศิลปินคนที่ 4"
+                     loading="lazy">
+            </div>
+        </div>
+
+    </div>
+
+    <!-- คู่ที่ 3 -->
+    <div class="singer-pair-section">
+
+        <div class="singer-pair-heading">
+            <span>MAHAMIT CONCERT #2</span>
+            <h2>ร่วมสร้างความทรงจำไปด้วยกัน</h2>
+        </div>
+
+        <div class="singer-pair-grid">
+            <div class="singer-pair-card">
+                <img src="./sing5.jpg"
+                     alt="โปสเตอร์ศิลปินคนที่ 5"
+                     loading="lazy">
+            </div>
+
+            <div class="singer-pair-card">
+                <img src="./sing6.jpg"
+                     alt="โปสเตอร์ศิลปินคนที่ 6"
+                     loading="lazy">
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- END MAHAMIT ARTIST GALLERY -->
+
+
+    
 <!-- ปุ่มเข้าสู่ระบบจอง -->
-
-
-
-<!-- =====================================
-     SINGER PAIR 1 : SING1 + SING2
-===================================== -->
-<section class="singer-pair-section">
-
-    <div class="singer-pair-heading">
-        <span>MAHAMIT CONCERT #2</span>
-        <h2>พบกับศิลปินและบทเพลงแห่งความทรงจำ</h2>
-    </div>
-
-    <div class="singer-pair-grid">
-
-        <div class="singer-pair-card">
-            <img
-                src="./sing1.jpg"
-                alt="โปสเตอร์ศิลปินคนที่ 1"
-                loading="eager"
-            >
-        </div>
-
-        <div class="singer-pair-card">
-            <img
-                src="./sing2.jpg"
-                alt="โปสเตอร์ศิลปินคนที่ 2"
-                loading="eager"
-            >
-        </div>
-
-    </div>
-</section>
-<!-- END SINGER PAIR 1 -->
-
-
-
-    
-<!-- =====================================
-     SINGER PAIR 2 : SING3 + SING4
-===================================== -->
-<section class="singer-pair-section">
-
-    <div class="singer-pair-heading">
-        <span>MAHAMIT CONCERT #2</span>
-        <h2>ศิลปินและบทเพลงแห่งความทรงจำ</h2>
-    </div>
-
-    <div class="singer-pair-grid">
-
-        <div class="singer-pair-card">
-            <img
-                src="./sing3.jpg"
-                alt="โปสเตอร์ศิลปินคนที่ 3"
-                loading="lazy"
-            >
-        </div>
-
-        <div class="singer-pair-card">
-            <img
-                src="./sing4.jpg"
-                alt="โปสเตอร์ศิลปินคนที่ 4"
-                loading="lazy"
-            >
-        </div>
-
-    </div>
-</section>
-
-
-<!-- =====================================
-     SINGER PAIR 3 : SING5 + SING6
-===================================== -->
-<section class="singer-pair-section">
-
-    <div class="singer-pair-heading">
-        <span>MAHAMIT CONCERT #2</span>
-        <h2>เรื่องราวดี ๆ ที่อยากชวนมาสัมผัส</h2>
-    </div>
-
-    <div class="singer-pair-grid">
-
-        <div class="singer-pair-card">
-            <img
-                src="./sing5.jpg"
-                alt="โปสเตอร์ศิลปินคนที่ 5"
-                loading="lazy"
-            >
-        </div>
-
-        <div class="singer-pair-card">
-            <img
-                src="./sing6.jpg"
-                alt="โปสเตอร์ศิลปินคนที่ 6"
-                loading="lazy"
-            >
-        </div>
-
-    </div>
-</section>
-<!-- END SINGER PAIR SECTIONS -->
-
-
-    
 <section class="bg-posterCream px-4 py-8 sm:py-12 text-center">
 
     <div class="max-w-xl mx-auto">
@@ -4028,9 +3873,6 @@ iconBg = '#FEE2E2';
     </p>
 </footer>
 
-
-
-</body>
 
 
 
