@@ -1396,6 +1396,152 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
+/* ==========================================
+   MAHAMIT CONCERT - RESPONSIVE TICKET PRICING
+   ปรับขนาดให้สมส่วนทั้งคอม แท็บเล็ต และมือถือ
+========================================== */
+
+#ticketPricing {
+    width: calc(100% - 32px) !important;
+    max-width: 1080px !important;
+    min-width: 0 !important;
+    margin: 28px auto !important;
+    padding: 26px !important;
+    box-sizing: border-box !important;
+}
+
+/* หัวข้อ */
+#ticketPricing h2 {
+    font-size: clamp(20px, 2.2vw, 30px) !important;
+    line-height: 1.4 !important;
+    margin-bottom: 14px !important;
+    overflow-wrap: anywhere;
+}
+
+/* ข้อความอธิบาย */
+#ticketPricing p {
+    overflow-wrap: anywhere;
+}
+
+/* Grid การ์ดบัตร */
+#ticketPricing .ticket-pricing-grid {
+    display: grid !important;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+    width: 100% !important;
+    min-width: 0 !important;
+}
+
+/* การ์ดแต่ละใบ */
+#ticketPricing .ticket-pricing-card {
+    min-width: 0 !important;
+    padding: 18px !important;
+    box-sizing: border-box !important;
+    border-radius: 18px !important;
+    overflow-wrap: anywhere;
+}
+
+/* ชื่อประเภทบัตร */
+#ticketPricing .ticket-pricing-card h3 {
+    font-size: clamp(15px, 1.4vw, 20px) !important;
+    line-height: 1.4 !important;
+    overflow-wrap: anywhere;
+}
+
+/* จำนวนที่นั่ง */
+#ticketPricing .ticket-pricing-card .ticket-quantity {
+    font-size: clamp(14px, 1.2vw, 18px) !important;
+    line-height: 1.5 !important;
+}
+
+/* ราคา */
+#ticketPricing .ticket-pricing-card .ticket-price {
+    font-size: clamp(20px, 1.8vw, 27px) !important;
+    line-height: 1.4 !important;
+    white-space: normal !important;
+}
+
+/* แท็บเล็ต */
+@media (max-width: 900px) {
+    #ticketPricing {
+        width: calc(100% - 28px) !important;
+        padding: 22px !important;
+    }
+
+    #ticketPricing .ticket-pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card {
+        padding: 16px !important;
+    }
+}
+
+/* มือถือ */
+@media (max-width: 600px) {
+    #ticketPricing {
+        width: calc(100% - 24px) !important;
+        max-width: 440px !important;
+        margin: 20px auto !important;
+        padding: 16px !important;
+        border-radius: 22px !important;
+    }
+
+    #ticketPricing h2 {
+        font-size: 21px !important;
+        line-height: 1.35 !important;
+        margin-bottom: 10px !important;
+    }
+
+    #ticketPricing .ticket-pricing-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card {
+        padding: 12px 9px !important;
+        border-radius: 14px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card h3 {
+        font-size: 15px !important;
+        line-height: 1.4 !important;
+    }
+
+    #ticketPricing .ticket-pricing-card .ticket-quantity {
+        font-size: 13px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card .ticket-price {
+        font-size: 19px !important;
+        line-height: 1.4 !important;
+    }
+}
+
+/* มือถือจอเล็กมาก */
+@media (max-width: 360px) {
+    #ticketPricing {
+        padding: 12px !important;
+    }
+
+    #ticketPricing .ticket-pricing-grid {
+        gap: 8px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card {
+        padding: 10px 7px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card h3 {
+        font-size: 13px !important;
+    }
+
+    #ticketPricing .ticket-pricing-card .ticket-price {
+        font-size: 17px !important;
+    }
+}
+
 
 
         
@@ -1576,7 +1722,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
         <p>เลือกบัตรที่ใช่ แล้วมาร่วมสร้างความทรงจำไปด้วยกัน</p>
     </div>
 
-    <div class="ticket-price-grid">
+     <div id="ticketPricing" class="ticket-price-grid"> 
 
         <!-- 1. มิตรชิดเวที -->
         <article class="ticket-price-card ticket-red">
