@@ -1576,6 +1576,58 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 }
 
 
+
+/* ลดความสูงการ์ดบัตรให้พอดีกับเนื้อหา */
+.ticket-price-card {
+  min-height: 0 !important;
+  height: auto !important;
+  padding: 16px 12px !important;
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* กล่องข้อความในการ์ด */
+.ticket-price-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+/* ชื่อบัตร */
+.ticket-price-card h3 {
+  margin: 0 !important;
+  line-height: 1.4;
+}
+
+/* ราคา */
+.ticket-price-card .ticket-price {
+  margin: 0 !important;
+  line-height: 1.3;
+}
+
+/* ปรับการ์ดให้เตี้ยลงบนมือถือ */
+@media (max-width: 768px) {
+  .ticket-price-card {
+    padding: 12px 8px !important;
+  }
+
+  .ticket-price-content {
+    gap: 6px;
+  }
+}
+
+
+
+
+
         
         
 
