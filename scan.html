@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
     <!-- html5-qrcode (Apache-2.0) ใช้กล้องมือถือสแกน QR ได้ทั้ง iPhone และ Android -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <!-- ข้อมูลผังที่นั่ง (โซน ชื่อ สี ลำดับ) ไฟล์เดียวกับหน้าจอง สร้างจาก seat-layout/build.py -->
+    <script src="./seats-config.js"></script>
     <style>
         :root {
             --green: #10271d;
@@ -94,9 +96,8 @@
         .r-icon { font-size: 72px; line-height: 1; }
         .r-title { font-size: 30px; font-weight: 800; margin-top: 8px; }
         .r-seat { font-size: 64px; font-weight: 800; line-height: 1.1; margin-top: 14px; }
-        .r-zone { display: inline-block; margin-top: 8px; background: #fff; color: var(--text); border-radius: 999px; padding: 4px 18px; font-size: 22px; font-weight: 600; }
-        .r-zone.A { color: var(--bad); }
-        .r-zone.B { color: var(--ok); }
+        /* ป้ายโซนใช้สีโซนจริง (ใส่สีในสคริปต์) ขอบขาวกันกลืนกับพื้นหลังเขียว/แดงของผลสแกน */
+        .r-zone { display: inline-block; margin-top: 8px; background: #fff; color: var(--text); border: 2px solid #fff; border-radius: 999px; padding: 4px 18px; font-size: 22px; font-weight: 600; }
         .r-detail { font-size: 18px; margin-top: 14px; line-height: 1.6; opacity: .95; }
         .r-detail .r-name { display: block; font-size: 26px; font-weight: 700; line-height: 1.3; }
         .r-detail .r-booker { display: block; font-size: 14px; opacity: .85; }
@@ -165,8 +166,8 @@
         const DEFAULT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
         // ต้องตรงกับ QR_PREFIX ใน code.gs
         const QR_PREFIX = 'MK2';
-        // โซนตามแถว ต้องตรงกับ ROW_CONFIG ใน index.html
-        const ZONE_A_ROWS = 'ABCDEFG';
+        // ข้อมูลผังจาก seats-config.js ถ้าโหลดไม่ได้ ยังสแกนได้ปกติ แค่ไม่แสดงชื่อโซน
+        const SEAT_CONFIG = window.SEAT_CONFIG || null;
         const REFRESH_MS = 30000;   // โหลดรายชื่อใหม่ทุก 30 วินาที
         const SYNC_MS = 5000;       // ส่งรายการที่รอส่งทุก 5 วินาที
         const SAME_QR_IGNORE_MS = 4000; // กล้องเห็น QR เดิมซ้ำ ภายในเวลานี้ไม่นับใหม่
@@ -318,8 +319,19 @@
             return p ? { t: p.scannedAt, by: session ? session.name : '', pending: true } : null;
         }
 
+        // โซนของที่นั่ง { name, color, textColor } (ไม่พบ = null)
         function zoneOf(seat) {
-            return ZONE_A_ROWS.includes(String(seat).charAt(0)) ? 'A' : 'B';
+            const info = SEAT_CONFIG && SEAT_CONFIG.byId[seat];
+            return info ? SEAT_CONFIG.zoneByKey[info.zone] : null;
+        }
+
+        // เรียงที่นั่งตามลำดับในผัง (A–W แล้ว AA–BI) แทนเรียงตามตัวอักษร
+        function seatOrder(seat) {
+            if (!seatOrder.index) {
+                seatOrder.index = {};
+                (SEAT_CONFIG ? SEAT_CONFIG.seats : []).forEach((s, i) => { seatOrder.index[s.id] = i; });
+            }
+            return seatOrder.index[seat] === undefined ? 1e9 : seatOrder.index[seat];
         }
 
         function timeText(iso) {
@@ -537,8 +549,9 @@
             document.getElementById('rTitle').textContent = title;
             document.getElementById('rSeat').textContent = seat ? seat : '';
             const zoneEl = document.getElementById('rZone');
-            zoneEl.textContent = zone ? 'โซน ' + zone : '';
-            zoneEl.className = 'r-zone ' + (zone || '');
+            zoneEl.textContent = zone ? zone.name : '';
+            zoneEl.style.background = zone ? zone.color : '';
+            zoneEl.style.color = zone ? zone.textColor : '';
             document.getElementById('rZoneWrap').classList.toggle('hidden', !zone);
             document.getElementById('rDetail').innerHTML = detailHtml || '';
             document.getElementById('rNext').classList.toggle('hidden', type === 'wait');
@@ -614,13 +627,13 @@
                     <div class="order-name">${escapeHtml(o.name)}</div>
                     <div class="order-meta">${escapeHtml(o.phone)} · ${escapeHtml(o.ref)}</div>
                     <div class="seat-buttons">
-                        ${o.seats.sort((x, y) => x.s.localeCompare(y.s)).map(info => {
+                        ${o.seats.sort((x, y) => seatOrder(x.s) - seatOrder(y.s) || x.s.localeCompare(y.s)).map(info => {
                             const seat = info.s;
                             const holder = info.a ? `<small class="holder">${escapeHtml(info.a)}</small>` : '';
                             const c = checkinOf(o.ref + '|' + seat);
                             return c
                                 ? `<button class="seat-btn done" type="button" disabled>${escapeHtml(seat)}${holder}<small>เข้าแล้ว ${timeText(c.t)}</small></button>`
-                                : `<button class="seat-btn" type="button" onclick="manualCheckin('${escapeHtml(o.ref)}','${escapeHtml(seat)}')">${escapeHtml(seat)}${holder}<small>โซน ${zoneOf(seat)}</small></button>`;
+                                : `<button class="seat-btn" type="button" onclick="manualCheckin('${escapeHtml(o.ref)}','${escapeHtml(seat)}')">${escapeHtml(seat)}${holder}<small>${zoneOf(seat) ? escapeHtml(zoneOf(seat).name) : ''}</small></button>`;
                         }).join('')}
                     </div>
                 </div>`).join('');
