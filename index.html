@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="th"> 
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -28,6 +28,8 @@
     
     <!-- Load Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ข้อมูลผังที่นั่ง 565 ที่ (โซน ราคา ตำแหน่ง) สร้างจาก seat-layout/build.py ต้องอัปไฟล์นี้ขึ้นเว็บด้วย -->
+    <script src="./seats-config.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -1583,6 +1585,290 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     box-sizing: border-box;
 }
 
+/* ==========================================
+   ตารางราคา 4 โซน ตามผัง 565 ที่นั่ง (24 ต.ค. 2569)
+   การ์ดสร้างจาก SEAT_CONFIG.zones (seats-config.js) สีพื้นตรงกับสีโซนในผังที่นั่ง
+   ========================================== */
+@media (min-width: 901px) {
+    /* 4 โซนเรียงแถวเดียวบนคอมพิวเตอร์ (ถ้าใช้ 3 คอลัมน์ ใบที่ 4 จะตกลงไปอยู่เดี่ยวๆ) */
+    #ticketPriceGuide .ticket-price-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+    }
+}
+
+/* ไล่เงาอ่อนๆ ทับสีโซน ให้หน้าตาเหมือนการ์ดเดิม */
+#ticketPriceGuide .ticket-zone-card {
+    background-image: linear-gradient(135deg, rgba(255,255,255,.12), rgba(0,0,0,.14));
+}
+
+/* โซนสีอ่อน (มิตรรู้ใจ สีครีม) ตัวหนังสือสีขาวอ่านไม่ออก จึงใช้สีเข้มแทน */
+#ticketPriceGuide .ticket-price-card.ticket-light,
+#ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content,
+#ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content h3,
+#ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content p,
+#ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content p.ticket-price,
+#ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content p.ticket-price span {
+    color: #3B2F22 !important;
+}
+
+#ticketPriceGuide .ticket-price-card.ticket-light {
+    border-color: rgba(59, 47, 34, .18);
+}
+
+#ticketPriceGuide .ticket-price-card.ticket-light .ticket-color-dot {
+    background: #3B2F22 !important;
+    border-color: rgba(59, 47, 34, .3);
+}
+
+/* =========================================
+   ผังที่นั่ง 565 ที่ วาดตามตำแหน่งจริงจาก seats-config.js
+   ผืนผังขนาดจริง 1440×1400 px แล้วย่อ/ขยายด้วย transform: scale (ปุ่มซูม)
+========================================= */
+.seat-map-viewport {
+    position: relative;
+    overflow: auto;
+    border: 1px solid #E5DEC9;
+    border-radius: 14px;
+    background: #FFFFFF;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    /* ปิดการซูมเมื่อแตะ 2 ครั้ง (iPhone) ตอนแตะเลือกที่นั่งเร็วๆ ยังเลื่อนและซูมด้วย 2 นิ้วได้ */
+    touch-action: manipulation;
+}
+
+.seat-map-sizer {
+    position: relative;
+}
+
+.seat-map-canvas {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1440px;
+    height: 1400px;
+    transform-origin: 0 0;
+}
+
+.seat-map-canvas > * {
+    position: absolute;
+    box-sizing: border-box;
+}
+
+.smap-seat {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 6px;
+    background: var(--zone-bg);
+    color: var(--zone-fg);
+    font: 700 15px/34px 'Kanit', sans-serif;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+    transition: filter .12s, box-shadow .12s;
+}
+
+.smap-seat:hover {
+    filter: brightness(1.12);
+}
+
+.smap-seat.is-selected {
+    background: #FBBF24;
+    color: #23201D;
+    box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 6px #D97706;
+    z-index: 2;
+}
+
+.smap-seat.is-sold {
+    background: #E5E7EB;
+    color: #C4C8CD;
+    box-shadow: none;
+    filter: none;
+    cursor: not-allowed;
+}
+
+/* ✕ ทับที่นั่งที่จองแล้ว สีเทาอ่อนอย่างเดียวกลืนกับโซนสีครีม (มิตรรู้ใจ) */
+.smap-seat.is-sold::after,
+.smap-swatch-sold::after {
+    content: '✕';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8A8F96;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.smap-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    color: #FFFFFF;
+    font-family: 'Kanit', sans-serif;
+    font-weight: 700;
+    border-radius: 10px;
+}
+
+.smap-stage {
+    background: #23201D;
+    border-bottom: 6px solid #C8A051;
+    font-size: 60px;
+    letter-spacing: 6px;
+}
+
+.smap-stage i {
+    color: #C8A051;
+    font-size: 44px;
+}
+
+.smap-control {
+    background: #000000;
+    border-radius: 6px;
+    font-size: 28px;
+}
+
+.smap-marker {
+    border-radius: 50%;
+}
+
+.smap-pole,
+.smap-swatch-pole {
+    background: #FFE600;
+    border-radius: 50%;
+}
+
+.smap-tree,
+.smap-swatch-tree {
+    background: #3A8A0A;
+    border-radius: 50%;
+}
+
+.smap-blocked {
+    width: 34px;
+    height: 34px;
+    border: 2px dashed #C9C2B2;
+    border-radius: 6px;
+    color: #B5AD9C;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.smap-label {
+    width: 48px;
+    text-align: center;
+    font: 700 22px/28px 'Kanit', sans-serif;
+    color: #23201D;
+}
+
+.smap-zoom-btn {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid #E5DEC9;
+    border-radius: 9px;
+    background: #EFE9DC;
+    color: #23201D;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.smap-zoom-btn:hover {
+    background: #E5DEC9;
+}
+
+/* โซนและราคาเหนือผัง: แถบเม็ดยาสีขาว + จุดสีโซน */
+.smap-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.smap-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 11px 5px 9px;
+    border: 1px solid #EEE7D6;
+    border-radius: 999px;
+    background: #FFFFFF;
+    color: #23201D;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.smap-chip b {
+    color: #6E6A5F;
+    font-weight: 500;
+}
+
+.smap-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+/* สัญลักษณ์ใต้ผัง */
+.smap-status {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px 14px;
+    margin-top: 10px;
+    color: #8A8578;
+    font-size: 11.5px;
+}
+
+.smap-status span {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.smap-status .smap-swatch {
+    width: 11px;
+    height: 11px;
+    border-radius: 3px;
+}
+
+.smap-status .smap-swatch-pole,
+.smap-status .smap-swatch-tree {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.smap-swatch {
+    display: inline-block;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.smap-swatch-selected {
+    background: #FBBF24;
+    box-shadow: inset 0 0 0 1.5px #D97706;
+}
+
+.smap-swatch-sold {
+    position: relative;
+    background: #E5E7EB;
+    border: 1px solid #D1D5DB;
+}
+
+.smap-swatch-sold::after {
+    font-size: 8px;
+}
+
+
 
         
 
@@ -1867,7 +2153,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 <!-- ========================================
      MAHAMIT TICKET PRICE GUIDE
-     6 TICKET CATEGORIES
+     4 โซน ตามผัง 565 ที่นั่ง
 ======================================== -->
 
 <section id="ticketPriceGuide">
@@ -1878,71 +2164,8 @@ body:has(#cartSummaryBtn:not(.hidden)) {
         <p>เลือกบัตรที่ใช่ แล้วมาร่วมสร้างความทรงจำไปด้วยกัน</p>
     </div>
 
-    <div class="ticket-price-grid">
-
-        <!-- 1. มิตรชิดเวที -->
-        <article class="ticket-price-card ticket-red">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรชิดเวที 103 ที่นั่ง</h3>
-               
-                <p class="ticket-price">1,990 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 2. มิตรล้อมวง -->
-        <article class="ticket-price-card ticket-gold">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรล้อมวง 230 ที่นั่ง</h3>
-            
-                <p class="ticket-price">1,690 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 3. มิตรใต้แสงดาว -->
-        <article class="ticket-price-card ticket-blue">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรใต้แสงดาว 89 ที่นั่ง</h3>
-            
-                <p class="ticket-price">1,390 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 4. มิตรร่วมโต๊ะ -->
-        <article class="ticket-price-card ticket-green">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรร่วมโต๊ะ 150 ที่นั่ง</h3>
-                
-                <p class="ticket-price">1,390 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 5. มิตรชมวิว -->
-        <article class="ticket-price-card ticket-purple">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรชมวิว 188 ที่นั่ง</h3>
-                
-               
-                <p class="ticket-price">1,190 <span>บาท</span></p>
-            </div>
-        </article>
-
-        <!-- 6. มิตรยอดไม้ -->
-        <article class="ticket-price-card ticket-orange">
-            <div class="ticket-color-dot"></div>
-            <div class="ticket-price-content">
-                <h3>มิตรยอดไม้ 2 ที่นั่ง</h3>
-            
-            
-                <p class="ticket-price">2,290 <span>บาท</span></p>
-            </div>
-        </article>
-
-    </div>
+    <!-- การ์ดราคาสร้างจาก SEAT_CONFIG.zones (renderTicketPriceGuide) แก้ราคา/ชื่อโซนที่ seat-layout/seats.json -->
+    <div class="ticket-price-grid" id="ticketPriceGrid"></div>
 
     <p class="ticket-guide-note">
         * จำนวนที่นั่งเป็นข้อมูลอ้างอิงจากรายการบัตร
@@ -2051,94 +2274,42 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     </div>
 </div>
             
-            <!-- Controls & Legend Bar -->
-            <div class="bg-posterCard p-4 rounded-xl shadow-vintage border border-posterPaper flex flex-wrap items-center justify-between gap-4">
-                <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm font-medium">
+            <!-- ผังที่นั่ง: วาดตามตำแหน่งจริงจาก seats-config.js (buildSeatMap) ย่อ/ขยายได้
+                 ไม่มีปุ่มเลือกที่นั่งอัตโนมัติและปุ่มล้างที่นั่ง (ผู้ใช้ขอเอาออก 24 ต.ค. 2569)
+                 ลูกค้ายกเลิกได้โดยแตะที่นั่งซ้ำ หรือกด ✕ ที่ป้ายที่นั่งในแถบสรุปด้านล่าง -->
+            <div class="bg-posterCard rounded-2xl shadow-vintage-lg border border-posterPaper p-3 sm:p-5">
+                <!-- โซนและราคา (renderSeatLegend) จุดสีเล็กแทนสี่เหลี่ยมสีทึบ ไม่ให้สีแย่งความสนใจจากผัง -->
+                <div id="seatZoneChips" class="smap-chips mb-3"></div>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <p class="text-xs text-posterMuted flex-1 min-w-[180px]">
+                        <i class="fa-solid fa-hand-pointer text-posterGreen mr-1"></i>
+                        <span id="seatMapHint">แตะที่นั่งเพื่อเลือกหรือยกเลิก</span>
+                    </p>
                     <div class="flex items-center gap-1.5">
-                        <span class="w-4 h-4 rounded-sm bg-posterBurgundy border border-posterBurgundyDark shadow-xs inline-block"></span>
-                        <span>Zone A (2,500฿)</span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-4 h-4 rounded-sm bg-posterGreen border border-posterGreenDark shadow-xs inline-block"></span>
-                        <span>Zone B (1,900฿)</span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-4 h-4 rounded-sm bg-amber-400 border border-amber-600 shadow-xs inline-block"></span>
-                        <span class="font-bold text-posterDark">กำลังเลือก</span>
-                    </div>
-                    <div class="flex items-center gap-1.5">
-                        <span class="w-4 h-4 rounded-sm bg-gray-300 border border-gray-400 opacity-60 inline-block"></span>
-                        <span class="text-posterMuted">SOLD OUT</span>
+                        <button type="button" onclick="zoomSeatMap(-1)" class="smap-zoom-btn" aria-label="ย่อผัง"><i class="fa-solid fa-minus"></i></button>
+                        <button type="button" onclick="zoomSeatMap(1)" class="smap-zoom-btn" aria-label="ขยายผัง"><i class="fa-solid fa-plus"></i></button>
+                        <button type="button" onclick="fitSeatMap()" class="smap-zoom-btn"><i class="fa-solid fa-expand mr-1"></i>ดูทั้งผัง</button>
                     </div>
                 </div>
 
-                <!-- Quick Selection Controls -->
-                <div class="flex items-center gap-2">
-                    <span class="text-xs text-posterMuted hidden sm:inline">เลือกเร็ว:</span>
-                    <button onclick="autoSelectSeats(1)" class="px-2.5 py-1 bg-posterCream hover:bg-posterPaper text-posterDark text-xs font-semibold rounded border border-posterPaper transition">1 ที่</button>
-                    <button onclick="autoSelectSeats(2)" class="px-2.5 py-1 bg-posterCream hover:bg-posterPaper text-posterDark text-xs font-semibold rounded border border-posterPaper transition">2 ที่ติดกัน</button>
-                    <button onclick="autoSelectSeats(4)" class="px-2.5 py-1 bg-posterCream hover:bg-posterPaper text-posterDark text-xs font-semibold rounded border border-posterPaper transition">4 ที่ติดกัน</button>
-                    <button onclick="clearSelectedSeats()" class="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-posterBurgundy text-xs font-semibold rounded border border-red-200 transition">
-                        <i class="fa-solid fa-rotate-left mr-1"></i>ล้างที่นั่ง
-                    </button>
-                </div>
-            </div>
-
-            <!-- Seat Map Viewport Card -->
-            <div class="bg-posterCard rounded-2xl shadow-vintage-lg border border-posterPaper p-4 sm:p-6 overflow-hidden">
-                
-                <!-- Stage Display Area -->
-                <div class="max-w-2xl mx-auto mb-8">
-                    <div class="relative bg-posterDark text-amber-100 py-3 rounded-b-2xl shadow-md text-center font-kanit font-bold tracking-widest text-sm sm:text-base border-b-2 border-posterGold/50">
-                        <i class="fa-solid fa-microphone-lines text-posterGold mr-2"></i>
-                        เวทีการแสดงหลัก (STAGE)
-                    </div>
-                    <p class="text-[11px] text-center text-posterMuted mt-1.5">หน้าเวที / VIP Zone อยู่ด้านหน้า</p>
-                </div>
-
-                <!-- Scrollable Seat Grid Container -->
-                <div class="overflow-x-auto seat-scroll pb-4">
-                    <div class="min-w-[760px] mx-auto space-y-2 select-none">
-                        
-                        <!-- Zone A Label -->
-                        <div class="flex items-center justify-center my-3">
-                            <span class="bg-posterBurgundy text-white px-4 py-1 rounded-full text-xs font-bold font-kanit shadow-xs">
-                                ZONE A - VIP (2,500 THB) - แถว A ถึง G
-                            </span>
-                        </div>
-
-                        <!-- Rows Grid Rendered by JS -->
-                        <div id="seatGridContainer" class="space-y-1.5">
-                            <!-- JS seat grid output -->
-                        </div>
-
-                        <!-- Sound Control / Aisle Divider -->
-                        <div class="py-4 my-2 flex items-center justify-center">
-                            <div class="border-t border-dashed border-posterPaper w-full"></div>
-                            <span class="px-3 bg-posterPaper text-posterDark text-[11px] font-semibold rounded-md whitespace-nowrap mx-2">
-                                <i class="fa-solid fa-sliders mr-1 text-posterGreen"></i> ทางเดิน / โต๊ะควบคุมเสียง (Console)
-                            </span>
-                            <div class="border-t border-dashed border-posterPaper w-full"></div>
-                        </div>
-
-                        <!-- Zone B Label -->
-                        <div class="flex items-center justify-center my-3">
-                            <span class="bg-posterGreen text-white px-4 py-1 rounded-full text-xs font-bold font-kanit shadow-xs">
-                                ZONE B - REGULAR (1,900 THB) - แถว H ถึง T
-                            </span>
-                        </div>
-
+                <div id="seatMapViewport" class="seat-map-viewport seat-scroll">
+                    <div id="seatMapSizer" class="seat-map-sizer">
+                        <div id="seatMapCanvas" class="seat-map-canvas"></div>
                     </div>
                 </div>
+
+                <!-- สัญลักษณ์ประกอบ ตัวเล็กสีเทาใต้ผัง (ข้อมูลรอง) -->
+                <div id="seatStatusLegend" class="smap-status"></div>
 
                 <!-- Venue Info Bar -->
                 <div class="mt-4 pt-4 border-t border-posterPaper flex flex-wrap items-center justify-between text-xs text-posterMuted gap-2">
                     <div>
                         <i class="fa-solid fa-circle-info text-posterGreen mr-1"></i>
-                        คลิกที่กล่องเพื่อเลือกหรือยกเลิกที่นั่ง (เลือกได้สูงสุด 10 ที่นั่งต่อการจอง)
+                        เลือกได้สูงสุด 10 ที่นั่งต่อการจอง
                     </div>
                     <div id="seatStatsText">
-                        ความจุทั้งหมด: 500 ที่นั่ง
+                        ความจุทั้งหมด: 565 ที่นั่ง
                     </div>
                 </div>
             </div>
@@ -2151,7 +2322,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                         <span id="selectedCountBadge" class="bg-posterBurgundy text-white text-xs font-bold px-2.5 py-0.5 rounded-full">0 ที่นั่ง</span>
                     </div>
                     <div id="selectedSeatBadges" class="flex flex-wrap gap-1.5 max-h-20 overflow-y-auto pt-1">
-                        <span class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง กรุณาคลิกเลือกที่นั่งบนผังด้านบน</span>
+                        <span class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง กรุณาแตะเลือกที่นั่งบนผังด้านบน</span>
                     </div>
                 </div>
 
@@ -2188,7 +2359,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
                     <form id="bookingForm" onsubmit="event.preventDefault();" class="space-y-4">
                         <div>
-                            <label class="block text-xs font-semibold text-posterDark mb-1">ชื่อ - นามสกุล ผู้จอง</label>
+                            <label class="block text-xs font-semibold text-posterDark mb-1">ชื่อ - นามสกุล ผู้จอง *</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                     <i class="fa-solid fa-user text-xs"></i>
@@ -2481,7 +2652,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                     <div class="text-xs text-posterMuted space-y-1 bg-posterCream/60 p-4 rounded-xl border border-posterPaper">
                         <p class="font-bold text-posterDark"><i class="fa-solid fa-circle-info text-posterGreen mr-1"></i> คำแนะนำเพิ่มเติม:</p>
                         <p>1. ผู้จัดงานจะตรวจสอบการชำระเงินและส่งอีเมลยืนยันไปที่ <span id="ticketCustEmail" class="font-bold text-posterDark break-all">อีเมลของท่าน</span> ภายใน 24 ชม.</p>
-                        <p>2. กรุณาแคปหน้าจอนี้หรือจดเลขอ้างอิงการจองไว้ สำหรับติดต่อผู้จัดงาน</p>
+                        <p>2. กดปุ่ม "บันทึกใบจอง" ด้านล่าง หรือจดเลขอ้างอิงการจองไว้ สำหรับติดต่อผู้จัดงาน</p>
                         <p>3. วันงาน กรุณาแสดงอีเมลยืนยันแก่เจ้าหน้าที่ ณ จุดลงทะเบียน</p>
                         <p>4. หากไม่ได้รับอีเมลภายใน 24 ชม. กรุณาตรวจสอบในกล่องจดหมายขยะ (Spam) หรือติดต่อผู้จัดงาน
                             ทาง Facebook: <a href="https://www.facebook.com/KriengkraiMahamit/" target="_blank" rel="noopener noreferrer" class="font-bold text-posterGreen underline">Kriengkrai Mahamit</a>
@@ -2489,9 +2660,11 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                     </div>
 
                     <div class="print-hide flex flex-col sm:flex-row gap-3 pt-2">
-                        <button onclick="window.print()" class="flex-1 py-3 bg-posterGreen hover:bg-posterGreenDark text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs">
-                            <i class="fa-solid fa-print"></i>
-                            <span>พิมพ์ / บันทึกเป็น PDF</span>
+                        <!-- เปลี่ยนจากพิมพ์/PDF เป็นบันทึกรูป (ยกมาจากโรงหนัง) ลูกค้าส่วนใหญ่จองผ่านมือถือ บันทึกรูปง่ายกว่า PDF มาก
+                             CSS @media print ยังอยู่ ถ้ากด Ctrl+P เองก็ยังได้ใบจองพื้นขาว 1 หน้า -->
+                        <button id="btnSaveBookingImage" onclick="saveBookingImage()" class="flex-1 py-3 bg-posterGreen hover:bg-posterGreenDark text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs">
+                            <i class="fa-solid fa-image"></i>
+                            <span>บันทึกใบจอง</span>
                         </button>
                         <button onclick="resetToHome()" class="flex-1 py-3 bg-posterPaper hover:bg-posterPaper/80 text-posterDark font-bold rounded-xl text-sm transition flex items-center justify-center gap-2">
                             <i class="fa-solid fa-house"></i>
@@ -2510,31 +2683,46 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
     <!-- Application Logic Script -->
     <script>
-        /* ROW & SEATING CONFIGURATION (500 seats total) */
-        // Zone A: Rows A to G (7 rows * 25 seats = 175 seats @ 2,500 THB)
-        // Zone B: Rows H to T (13 rows * 25 seats = 325 seats @ 1,900 THB)
-        const ROW_CONFIG = [
-            { row: 'A', zone: 'A', price: 2500 },
-            { row: 'B', zone: 'A', price: 2500 },
-            { row: 'C', zone: 'A', price: 2500 },
-            { row: 'D', zone: 'A', price: 2500 },
-            { row: 'E', zone: 'A', price: 2500 },
-            { row: 'F', zone: 'A', price: 2500 },
-            { row: 'G', zone: 'A', price: 2500 },
-            { row: 'H', zone: 'B', price: 1900 },
-            { row: 'I', zone: 'B', price: 1900 },
-            { row: 'J', zone: 'B', price: 1900 },
-            { row: 'K', zone: 'B', price: 1900 },
-            { row: 'L', zone: 'B', price: 1900 },
-            { row: 'M', zone: 'B', price: 1900 },
-            { row: 'N', zone: 'B', price: 1900 },
-            { row: 'O', zone: 'B', price: 1900 },
-            { row: 'P', zone: 'B', price: 1900 },
-            { row: 'Q', zone: 'B', price: 1900 },
-            { row: 'R', zone: 'B', price: 1900 },
-            { row: 'S', zone: 'B', price: 1900 },
-            { row: 'T', zone: 'B', price: 1900 }
-        ];
+        /* ผังที่นั่ง 565 ที่ 4 โซน: ข้อมูลทั้งหมดอยู่ใน seats-config.js (window.SEAT_CONFIG)
+           แก้ผัง/ราคา/ชื่อโซน ที่ seat-layout/seats.json แล้วรัน seat-layout/build.py (สร้าง seats-config.js และส่วนราคาใน code.gs ให้ตรงกัน) */
+        const SEAT_CONFIG = window.SEAT_CONFIG || null;
+
+        // ที่นั่งที่เลือก เรียงตามลำดับในผัง (A–W แล้ว AA–BI) แทนเรียงตามตัวอักษร
+        // ไม่อย่างนั้น AE01 (ฝั่งเฉียง) จะมาก่อน D05 ในสรุป ใบจอง และชีต
+        function sortedSelectedSeats() {
+            const order = seatOrderIndex();
+            return Array.from(selectedSeats).sort((a, b) =>
+                (order[a] === undefined ? 1e9 : order[a]) - (order[b] === undefined ? 1e9 : order[b]) || (a < b ? -1 : 1));
+        }
+        function seatOrderIndex() {
+            if (!seatOrderIndex.cache) {
+                seatOrderIndex.cache = {};
+                (SEAT_CONFIG ? SEAT_CONFIG.seats : []).forEach((s, i) => { seatOrderIndex.cache[s.id] = i; });
+            }
+            return seatOrderIndex.cache;
+        }
+
+        // โซนของที่นั่ง เช่น zoneOfSeat('A01') → { key, name, price, color, textColor }
+        function zoneOfSeat(id) {
+            const seat = seatMapData[id];
+            return seat && SEAT_CONFIG ? SEAT_CONFIG.zoneByKey[seat.zone] : null;
+        }
+
+        // ตารางราคาหน้าแรก (การ์ดละ 1 โซน)
+        function renderTicketPriceGuide() {
+            const grid = document.getElementById('ticketPriceGrid');
+            if (!grid || !SEAT_CONFIG) return;
+            grid.innerHTML = SEAT_CONFIG.zones.map(zone => `
+                <article class="ticket-price-card ticket-zone-card${zone.textColor !== '#FFFFFF' ? ' ticket-light' : ''}" style="background-color: ${zone.color}">
+                    <div class="ticket-color-dot"></div>
+                    <div class="ticket-price-content">
+                        <h3>${zone.name}</h3>
+                        <p>${zone.seats} ที่นั่ง${zone.note ? ' · ' + zone.note : ''}</p>
+                        <p class="ticket-price">${zone.price.toLocaleString()} <span>บาท</span></p>
+                    </div>
+                </article>`).join('');
+        }
+        renderTicketPriceGuide();
 
 
 
@@ -2638,6 +2826,8 @@ async function retrySeatStatus() {
         // ไม่ต้องรอรูปภาพ ฟอนต์ และไอคอนทั้งหน้าโหลดเสร็จก่อน
         document.addEventListener('DOMContentLoaded', async function() {
             initSeatData();
+            if (!SEAT_CONFIG) return;   // ไม่มี seats-config.js: แจ้งเตือนไว้แล้วใน initSeatData
+            renderSeatLegend();
             renderSeatGrid();
             updateSummaryUI();
 
@@ -2661,20 +2851,26 @@ await refreshSeatStatus(true);
         });
 
         function initSeatData() {
-            // Seat status starts available and is then populated from Google Sheets.
-            ROW_CONFIG.forEach(cfg => {
-                for (let num = 1; num <= 25; num++) {
-                    const seatId = `${cfg.row}${num < 10 ? '0' + num : num}`;
-                    seatMapData[seatId] = {
-                        id: seatId,
-                        row: cfg.row,
-                        num: num,
-                        zone: cfg.zone,
-                        price: cfg.price,
-                        isSold: false
-                    };
-                }
+            // ทุกที่นั่งเริ่มเป็นว่าง แล้วค่อยอัปเดตสถานะจาก Google Sheets
+            if (!SEAT_CONFIG) {
+                setSeatLoadNotice('error', 'โหลดผังที่นั่งไม่สำเร็จ',
+                    'ไม่พบข้อมูลผังที่นั่ง (seats-config.js) กรุณารีเฟรชหน้าเว็บ หรือแจ้งผู้จัดงาน');
+                return;
+            }
+            SEAT_CONFIG.seats.forEach(s => {
+                seatMapData[s.id] = {
+                    id: s.id,
+                    row: s.row,
+                    num: s.num,
+                    zone: s.zone,
+                    price: s.price,
+                    x: s.x,
+                    y: s.y,
+                    isSold: false
+                };
             });
+            const stats = document.getElementById('seatStatsText');
+            if (stats) stats.textContent = `ความจุทั้งหมด: ${SEAT_CONFIG.seats.length} ที่นั่ง`;
         }
 
         // JSONP is used for Apps Script GET calls because the booking site is hosted on Vercel.
@@ -2727,8 +2923,10 @@ await refreshSeatStatus(true);
                 updateSummaryUI();
                 const stats = document.getElementById('seatStatsText');
                 if (stats) {
-                    const soldCount = occupied.size;
-                    stats.textContent = `จองแล้ว ${soldCount} / ${Object.keys(seatMapData).length} ที่นั่ง |`;
+                    // นับเฉพาะที่นั่งในผัง (รายการจากชีตอาจมีรหัสที่ไม่อยู่ในผัง เช่น ข้อมูลทดสอบเก่า)
+                    const ids = Object.keys(seatMapData);
+                    const soldCount = ids.filter(id => seatMapData[id].isSold).length;
+                    stats.textContent = `จองแล้ว ${soldCount} / ${ids.length} ที่นั่ง`;
                 }
 
 const notice = document.getElementById('seatLoadNotice');
@@ -2752,67 +2950,165 @@ if (showMessage) {
             }
         }
 
+        /* ===== ผังที่นั่ง ===== */
+        // ผืนผังตัดขอบว่างของผังต้นฉบับ (1500×1500) ออก ต้องตรงกับขนาด .seat-map-canvas ใน CSS
+        const SEAT_MAP_ORIGIN = { x: 40, y: 50 };
+        const SEAT_MAP_SIZE = { w: 1440, h: 1400 };
+        const SEAT_BOX = 34;
+        // ซูมต่ำกว่านี้ ที่นั่งเล็กเกินกว่าจะใช้นิ้วกดแม่น: แตะที่ผังจะขยายตรงจุดนั้นแทนการเลือกที่นั่ง
+        const SEAT_MAP_TAP_MIN = 0.55;
+        const SEAT_MAP_TAP_ZOOM = 0.8;
+        const SEAT_MAP_ZOOM_STEPS = [0.5, 0.65, 0.8, 1, 1.2];
+        let seatMapScale = 1;
+        let seatMapFit = 1;
+        let seatMapLaidOut = false;   // คำนวณขนาด "ดูทั้งผัง" ครั้งแรกแล้วหรือยัง
+        const seatButtons = {};
+
+        // โซน+ราคาเหนือผัง และสัญลักษณ์ประกอบใต้ผัง
+        function renderSeatLegend() {
+            const chips = document.getElementById('seatZoneChips');
+            if (chips) {
+                chips.innerHTML = SEAT_CONFIG.zones.map(zone =>
+                    `<span class="smap-chip" title="${zone.seats} ที่นั่ง${zone.note ? ' · ' + zone.note : ''}"><span class="smap-dot" style="background:${zone.color}"></span>${zone.name} <b>${zone.price.toLocaleString()}</b></span>`).join('');
+            }
+            const status = document.getElementById('seatStatusLegend');
+            if (status) {
+                status.innerHTML = [
+                    ['smap-swatch smap-swatch-selected', 'กำลังเลือก'],
+                    ['smap-swatch smap-swatch-sold', 'จองแล้ว'],
+                    ['smap-swatch smap-swatch-pole', 'เสาไฟ'],
+                    ['smap-swatch smap-swatch-tree', 'ต้นไม้']
+                ].map(([cls, label]) => `<span><i class="${cls}"></i>${label}</span>`).join('');
+            }
+        }
+
+        // วาดผังครั้งเดียว (เวที, CONTROL, เสาไฟ, ต้นไม้, ป้ายแถว, ที่นั่ง) ต่อไปแค่เปลี่ยนสถานะปุ่ม
+        function buildSeatMap() {
+            const canvas = document.getElementById('seatMapCanvas');
+            const viewport = document.getElementById('seatMapViewport');
+            if (!canvas || !viewport || !SEAT_CONFIG) return;
+            const ox = SEAT_MAP_ORIGIN.x, oy = SEAT_MAP_ORIGIN.y;
+            const box = (b, cls, html) =>
+                `<div class="${cls}" style="left:${b.x - ox}px;top:${b.y - oy}px;width:${b.w}px;height:${b.h}px">${html}</div>`;
+            const parts = [
+                box(SEAT_CONFIG.stage, 'smap-box smap-stage', '<i class="fa-solid fa-microphone-lines"></i>STAGE'),
+                box(SEAT_CONFIG.control, 'smap-box smap-control', 'CONTROL')
+            ];
+            SEAT_CONFIG.markers.forEach(m => parts.push(
+                `<div class="smap-marker smap-${m.type}" title="${m.type === 'pole' ? 'เสาไฟ' : 'ต้นไม้'}" style="left:${m.x - m.r - ox}px;top:${m.y - m.r - oy}px;width:${m.r * 2}px;height:${m.r * 2}px"></div>`));
+            SEAT_CONFIG.blocked.forEach(b => parts.push(
+                `<div class="smap-blocked" title="${b.id} ไม่เปิดขาย (${b.reason})" style="left:${b.x - SEAT_BOX / 2 - ox}px;top:${b.y - SEAT_BOX / 2 - oy}px">✕</div>`));
+            SEAT_CONFIG.rowLabels.forEach(l => parts.push(
+                `<div class="smap-label" style="left:${l.x - 24 - ox}px;top:${l.y - 14 - oy}px;${l.angle ? `transform:rotate(${l.angle}deg)` : ''}">${l.row}</div>`));
+            canvas.innerHTML = parts.join('');
+
+            SEAT_CONFIG.seats.forEach(s => {
+                const zone = SEAT_CONFIG.zoneByKey[s.zone];
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'smap-seat';
+                btn.dataset.seat = s.id;
+                btn.textContent = s.num;
+                btn.style.left = (s.x - SEAT_BOX / 2 - ox) + 'px';
+                btn.style.top = (s.y - SEAT_BOX / 2 - oy) + 'px';
+                btn.style.setProperty('--zone-bg', zone.color);
+                btn.style.setProperty('--zone-fg', zone.textColor);
+                if (s.angle) btn.style.transform = `rotate(${s.angle}deg)`;
+                canvas.appendChild(btn);
+                seatButtons[s.id] = btn;
+            });
+
+            canvas.addEventListener('click', event => {
+                const btn = event.target.closest('.smap-seat');
+                if (btn && !btn.disabled) toggleSeatSelection(btn.dataset.seat);
+            });
+            // ตอนดูทั้งผังบนมือถือ (ที่นั่งเล็กมาก) แตะตรงไหนก็ขยายตรงนั้นก่อน ไม่เลือกที่นั่งผิดตัว
+            viewport.addEventListener('click', event => {
+                ensureSeatMapLayout();
+                if (seatMapScale >= SEAT_MAP_TAP_MIN) return;
+                event.preventDefault();
+                event.stopPropagation();
+                const rect = canvas.getBoundingClientRect();
+                setSeatMapScale(SEAT_MAP_TAP_ZOOM,
+                    (event.clientX - rect.left) / seatMapScale,
+                    (event.clientY - rect.top) / seatMapScale);
+            }, true);
+            window.addEventListener('resize', refreshSeatMapLayout);
+        }
+
+        // คำนวณขนาด "ดูทั้งผัง" ใหม่ (ตอนเปิดหน้าเลือกที่นั่งและตอนหมุนจอ/ปรับขนาดหน้าต่าง)
+        // ต้องเรียกตอนผังมองเห็นอยู่ ถ้าซ่อนอยู่ความกว้างจะเป็น 0
+        function refreshSeatMapLayout() {
+            const viewport = document.getElementById('seatMapViewport');
+            if (!viewport || !viewport.clientWidth) return;
+            // ครั้งแรกเริ่มที่ดูทั้งผังเสมอ ครั้งต่อไป (หมุนจอ/ปรับหน้าต่าง) คงระดับซูมเดิมถ้าขยายไว้
+            const wasFit = !seatMapLaidOut || seatMapScale <= seatMapFit + 0.001;
+            seatMapFit = Math.min(1.2, (viewport.clientWidth - 2) / SEAT_MAP_SIZE.w);
+            seatMapLaidOut = true;
+            setSeatMapScale(wasFit || seatMapScale < seatMapFit ? seatMapFit : seatMapScale);
+        }
+
+        // ย่อ/ขยายผัง โดยให้จุด (cx, cy) บนผังอยู่กลางกรอบ (ไม่ส่ง = คงจุดกลางเดิม)
+        function setSeatMapScale(scale, cx, cy) {
+            const viewport = document.getElementById('seatMapViewport');
+            const sizer = document.getElementById('seatMapSizer');
+            const canvas = document.getElementById('seatMapCanvas');
+            if (!viewport || !sizer || !canvas) return;
+            if (cx === undefined) {
+                cx = (viewport.scrollLeft + viewport.clientWidth / 2) / seatMapScale;
+                cy = (viewport.scrollTop + viewport.clientHeight / 2) / seatMapScale;
+            }
+            seatMapScale = Math.max(seatMapFit, Math.min(1.2, scale));
+            const zoomed = seatMapScale > seatMapFit + 0.001;
+            // ดูทั้งผัง: ไม่จำกัดความสูง ผังแสดงครบโดยเลื่อนหน้าเว็บตามปกติ / ขยายแล้ว: เลื่อนดูในกรอบ
+            viewport.style.maxHeight = zoomed ? '75vh' : 'none';
+            sizer.style.width = Math.round(SEAT_MAP_SIZE.w * seatMapScale) + 'px';
+            sizer.style.height = Math.round(SEAT_MAP_SIZE.h * seatMapScale) + 'px';
+            canvas.style.transform = `scale(${seatMapScale})`;
+            viewport.scrollLeft = cx * seatMapScale - viewport.clientWidth / 2;
+            viewport.scrollTop = cy * seatMapScale - viewport.clientHeight / 2;
+            const hint = document.getElementById('seatMapHint');
+            if (hint) {
+                hint.textContent = seatMapScale < SEAT_MAP_TAP_MIN
+                    ? 'แตะที่ผังตรงบริเวณที่ต้องการเพื่อขยาย แล้วแตะเลือกที่นั่ง'
+                    : (zoomed ? 'แตะที่นั่งเพื่อเลือกหรือยกเลิก · เลื่อนผังเพื่อดูส่วนอื่น' : 'แตะที่นั่งเพื่อเลือกหรือยกเลิก');
+            }
+        }
+
+        // ผังต้องคำนวณขนาดก่อนซูม (กันกรณีกดปุ่มเร็วกว่าการวัดขนาดครั้งแรกหลังเปิดหน้า)
+        function ensureSeatMapLayout() {
+            if (!seatMapLaidOut) refreshSeatMapLayout();
+        }
+
+        function zoomSeatMap(direction) {
+            ensureSeatMapLayout();
+            const steps = SEAT_MAP_ZOOM_STEPS.filter(z => z > seatMapFit + 0.01);
+            const next = direction > 0
+                ? steps.find(z => z > seatMapScale + 0.01)
+                : steps.slice().reverse().find(z => z < seatMapScale - 0.01);
+            setSeatMapScale(next !== undefined ? next : (direction > 0 ? seatMapScale : seatMapFit));
+        }
+
+        function fitSeatMap() {
+            ensureSeatMapLayout();
+            setSeatMapScale(seatMapFit);
+        }
+
+        // อัปเดตสถานะที่นั่งบนผัง (ว่าง / เลือกอยู่ / จองแล้ว) ชื่อเดิม renderSeatGrid เพราะถูกเรียกจากหลายจุด
         function renderSeatGrid() {
-            const container = document.getElementById('seatGridContainer');
-            if (!container) return;
-            container.innerHTML = '';
-
-            ROW_CONFIG.forEach(cfg => {
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'flex items-center justify-center gap-1 sm:gap-1.5';
-
-                // Row Label Left
-                const labelLeft = document.createElement('span');
-                labelLeft.className = 'w-6 text-center font-kanit font-bold text-xs text-posterMuted';
-                labelLeft.textContent = cfg.row;
-                rowDiv.appendChild(labelLeft);
-
-                // Seats 1 to 25 with aisle gaps
-                for (let num = 1; num <= 25; num++) {
-                    if (num === 7 || num === 20) {
-                        const aisle = document.createElement('div');
-                        aisle.className = 'w-3 sm:w-5';
-                        rowDiv.appendChild(aisle);
-                    }
-
-                    const seatId = `${cfg.row}${num < 10 ? '0' + num : num}`;
-                    const seat = seatMapData[seatId];
-                    
-                    const btn = document.createElement('button');
-                    btn.id = `seat-${seatId}`;
-                    btn.type = 'button';
-                    btn.onclick = () => toggleSeatSelection(seatId);
-
-                    let bgClass = '';
-                    if (seat.isSold) {
-                        bgClass = 'bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed opacity-60';
-                        btn.disabled = true;
-                        btn.title = `${seatId} - SOLD OUT`;
-                    } else if (selectedSeats.has(seatId)) {
-                        bgClass = 'bg-amber-400 border-amber-600 text-posterDark font-bold ring-2 ring-amber-300 scale-105 z-10';
-                        btn.title = `${seatId} - เลือกอยู่ (${seat.price.toLocaleString()}฿)`;
-                    } else {
-                        if (seat.zone === 'A') {
-                            bgClass = 'bg-posterBurgundy hover:bg-posterBurgundyDark border-posterBurgundyDark text-white hover:scale-105';
-                        } else {
-                            bgClass = 'bg-posterGreen hover:bg-posterGreenDark border-posterGreenDark text-white hover:scale-105';
-                        }
-                        btn.title = `${seatId} - โซน ${seat.zone} (${seat.price.toLocaleString()}฿)`;
-                    }
-
-                    btn.className = `w-6 h-6 sm:w-7 sm:h-7 rounded text-[10px] sm:text-xs font-semibold border shadow-xs transition-all duration-150 flex items-center justify-center ${bgClass}`;
-                    btn.textContent = num;
-
-                    rowDiv.appendChild(btn);
-                }
-
-                // Row Label Right
-                const labelRight = document.createElement('span');
-                labelRight.className = 'w-6 text-center font-kanit font-bold text-xs text-posterMuted';
-                labelRight.textContent = cfg.row;
-                rowDiv.appendChild(labelRight);
-
-                container.appendChild(rowDiv);
+            if (!SEAT_CONFIG) return;
+            if (!Object.keys(seatButtons).length) buildSeatMap();
+            Object.keys(seatButtons).forEach(id => {
+                const btn = seatButtons[id];
+                const seat = seatMapData[id];
+                const zone = SEAT_CONFIG.zoneByKey[seat.zone];
+                const selected = selectedSeats.has(id) && !seat.isSold;
+                btn.classList.toggle('is-sold', seat.isSold);
+                btn.classList.toggle('is-selected', selected);
+                btn.disabled = seat.isSold;
+                btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
+                btn.title = `${id} · ${zone.name} · ` +
+                    (seat.isSold ? 'จองแล้ว' : `${seat.price.toLocaleString()} บาท${selected ? ' (เลือกอยู่)' : ''}`);
             });
         }
 
@@ -2831,50 +3127,6 @@ if (showMessage) {
                 selectedSeats.add(seatId);
             }
 
-            renderSeatGrid();
-            updateSummaryUI();
-        }
-
-        // Auto Select Adjacent Seats Helper
-        function autoSelectSeats(count) {
-            selectedSeats.clear();
-
-            for (const cfg of ROW_CONFIG) {
-                let consecutive = [];
-                for (let num = 1; num <= 25; num++) {
-                    const seatId = `${cfg.row}${num < 10 ? '0' + num : num}`;
-                    const seat = seatMapData[seatId];
-
-                    if (!seat.isSold) {
-                        consecutive.push(seatId);
-                        if (consecutive.length === count) {
-                            consecutive.forEach(id => selectedSeats.add(id));
-                            renderSeatGrid();
-                            updateSummaryUI();
-                            return;
-                        }
-                    } else {
-                        consecutive = [];
-                    }
-                }
-            }
-
-            // Fallback: Pick any available seats
-            let picked = 0;
-            for (const id in seatMapData) {
-                if (!seatMapData[id].isSold) {
-                    selectedSeats.add(id);
-                    picked++;
-                    if (picked === count) break;
-                }
-            }
-
-            renderSeatGrid();
-            updateSummaryUI();
-        }
-
-        function clearSelectedSeats() {
-            selectedSeats.clear();
             renderSeatGrid();
             updateSummaryUI();
         }
@@ -2951,7 +3203,7 @@ if (showMessage) {
                 const result = await callAppsScriptJSONP({
                     action: 'checkDiscount',
                     code: code,
-                    seats: Array.from(selectedSeats).sort().join(',')
+                    seats: sortedSelectedSeats().join(',')
                 }, 30000);
                 if (!result || result.success !== true) {
                     throw new Error((result && result.message) || 'ตรวจสอบโค้ดไม่สำเร็จ');
@@ -3011,7 +3263,7 @@ if (showMessage) {
         }
 
         function updateSummaryUI() {
-            const seatArray = Array.from(selectedSeats).sort();
+            const seatArray = sortedSelectedSeats();
             const count = seatArray.length;
             let totalPrice = 0;
 
@@ -3021,20 +3273,25 @@ if (showMessage) {
             if (summaryList) summaryList.innerHTML = '';
 
             if (count === 0) {
-                if (badgeContainer) badgeContainer.innerHTML = '<span class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง กรุณาคลิกเลือกที่นั่งบนผังด้านบน</span>';
+                if (badgeContainer) badgeContainer.innerHTML = '<span class="text-xs text-posterMuted italic">ยังไม่ได้เลือกที่นั่ง กรุณาแตะเลือกที่นั่งบนผังด้านบน</span>';
                 if (summaryList) summaryList.innerHTML = '<span class="text-xs text-posterMuted italic">ไม่มีรายการที่นั่ง</span>';
             } else {
                 seatArray.forEach(id => {
                     const seat = seatMapData[id];
                     totalPrice += seat.price;
 
-                    // Badge in step 1
+                    const zone = zoneOfSeat(id);
+
+                    // Badge in step 1 (สีตามโซน)
                     if (badgeContainer) {
                         const badge = document.createElement('span');
-                        badge.className = `inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold shadow-xs ${seat.zone === 'A' ? 'bg-red-100 text-posterBurgundy border border-red-200' : 'bg-emerald-100 text-posterGreen border border-emerald-200'}`;
+                        badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold shadow-xs';
+                        badge.style.background = zone.color;
+                        badge.style.color = zone.textColor;
+                        badge.title = `${id} · ${zone.name}`;
                         badge.innerHTML = `
-                            ${id} (${seat.zone})
-                            <i class="fa-solid fa-xmark text-[10px] cursor-pointer hover:text-red-700 ml-1" onclick="toggleSeatSelection('${id}')"></i>
+                            ${id}
+                            <i class="fa-solid fa-xmark text-[10px] cursor-pointer opacity-80 hover:opacity-100 ml-1" onclick="toggleSeatSelection('${id}')"></i>
                         `;
                         badgeContainer.appendChild(badge);
                     }
@@ -3044,7 +3301,7 @@ if (showMessage) {
                         const item = document.createElement('div');
                         item.className = 'flex justify-between items-center py-1 border-b border-posterPaper/50';
                         item.innerHTML = `
-                            <span class="font-bold text-posterDark">ที่นั่ง ${id} (Zone ${seat.zone})</span>
+                            <span class="font-bold text-posterDark">ที่นั่ง ${id} <span class="font-normal text-posterMuted">· ${zone.name}</span></span>
                             <span class="font-mono text-posterBurgundy font-semibold">${seat.price.toLocaleString()} ฿</span>
                         `;
                         summaryList.appendChild(item);
@@ -3062,8 +3319,7 @@ const seatNumbersEl =
 if (seatNumbersEl) {
     seatNumbersEl.textContent = count > 0
         ? 'ที่นั่ง: ' + seatArray
-            .map(id => `${id} (${seatMapData[id].zone})`)
-            .join(', ')
+            .join(', ')   // แค่รหัสที่นั่ง ถ้าต่อชื่อโซนด้วย เลือก 10 ที่แล้วแถบลอยบนมือถือยาวจนบังจอ
         : '';
 }
             
@@ -3075,7 +3331,8 @@ if (seatNumbersEl) {
             // Toggle Sticky Cart Header Button
             const cartHeaderBtn = document.getElementById('cartSummaryBtn');
             if (cartHeaderBtn) {
-                if (count > 0) {
+                // ขั้นที่ 3 (ใบจอง) ไม่ต้องแสดง จองเสร็จแล้ว กดไปก็ไม่มีอะไรให้ทำ
+                if (count > 0 && currentStep !== 3) {
                     cartHeaderBtn.classList.remove('hidden');
                     cartHeaderBtn.classList.add('flex');
                 } else {
@@ -3148,7 +3405,7 @@ if (qrImg) {
         function renderAttendeeFields() {
             const list = document.getElementById('attendeeList');
             if (!list) return;
-            const seats = Array.from(selectedSeats).sort();
+            const seats = sortedSelectedSeats();
             const key = seats.join(',');
             if (key === renderedAttendeeSeats) return;
             renderedAttendeeSeats = key;
@@ -3162,13 +3419,14 @@ if (qrImg) {
             const inputClass = 'w-full px-3 py-2.5 border border-posterPaper rounded-lg text-sm bg-white focus:ring-2 focus:ring-posterGreen focus:border-posterGreen outline-none';
             list.innerHTML = seats.map(id => {
                 const a = attendeeData[id] || {};
-                const zone = seatMapData[id] ? seatMapData[id].zone : '';
+                const zoneInfo = zoneOfSeat(id);
+                const zone = zoneInfo ? zoneInfo.name : '';
                 const options = '<option value="">คำนำหน้า</option>' + ATTENDEE_TITLES.map(t =>
                     `<option value="${t}"${a.title === t ? ' selected' : ''}>${t}</option>`).join('');
                 return `
                     <div class="rounded-xl border border-posterPaper bg-posterCream/40 p-3 space-y-2" data-seat="${id}">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="font-bold text-sm text-posterDark">ที่นั่ง ${id}${zone ? ` <span class="text-[11px] font-normal text-posterMuted">(Zone ${zone})</span>` : ''}</span>
+                            <span class="font-bold text-sm text-posterDark">ที่นั่ง ${id}${zone ? ` <span class="text-[11px] font-normal text-posterMuted">(${zone})</span>` : ''}</span>
                             <label class="flex items-center gap-1.5 text-xs text-posterMuted cursor-pointer select-none">
                                 <input type="checkbox" class="attendee-self w-4 h-4 accent-posterGreen"${selfSeatId === id ? ' checked' : ''}>
                                 ใช้ชื่อผู้จอง
@@ -3283,6 +3541,14 @@ if (hero) {
 
             // Show current step
             document.getElementById(`step${step}Container`).classList.remove('hidden');
+            const cartBtn = document.getElementById('cartSummaryBtn');
+            if (cartBtn) {
+                const showCart = step !== 3 && selectedSeats.size > 0;
+                cartBtn.classList.toggle('hidden', !showCart);
+                cartBtn.classList.toggle('flex', showCart);
+            }
+            // ผังเพิ่งมองเห็น จึงวัดความกว้างเพื่อคำนวณขนาด "ดูทั้งผัง" ได้
+            if (step === 1) requestAnimationFrame(refreshSeatMapLayout);
 
             // Update Progress Bar
             const progressBar = document.getElementById('progressBar');
@@ -3494,7 +3760,7 @@ function hideBookingLoading() {
             }
             // ผู้นั่งทุกที่นั่ง: คำนำหน้า ชื่อ นามสกุล อายุ ครบ ถูกรูปแบบ และชื่อไม่ซ้ำกันในการจองนี้
             const attendeeSeen = {};
-            Array.from(selectedSeats).sort().forEach(id => {
+            sortedSelectedSeats().forEach(id => {
                 const a = attendeeData[id] || {};
                 const label = 'ชื่อผู้นั่งที่ ' + id;
                 if (!ATTENDEE_TITLES.includes(a.title)) {
@@ -3618,7 +3884,7 @@ function hideBookingLoading() {
             try {
                 // ไม่ต้องโหลดสถานะที่นั่งซ้ำก่อนส่ง เพราะ Apps Script ตรวจที่นั่งชนภายใต้ล็อกอยู่แล้ว
                 // และจะตอบกลับข้อความแจ้งถ้าที่นั่งถูกจองไปก่อน (ประหยัดการเรียก Apps Script ไป 1 รอบ)
-                const seatArray = Array.from(selectedSeats).sort();
+                const seatArray = sortedSelectedSeats();
                 let totalAmt = 0;
                 seatArray.forEach(id => totalAmt += seatMapData[id].price);
                 const discountAmt = discountAmountFor(appliedDiscount, seatArray.length, totalAmt);
@@ -3681,7 +3947,9 @@ function hideBookingLoading() {
                     if (bookingResult.success !== true) {
                         const message = bookingResult.message || 'บันทึกการจองไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
                         if (message.includes('ถูกจองไปแล้ว')) {
-                            alert(message);
+                            // ลูกค้าโอนเงินไปแล้ว บอกทางไปต่อให้ชัด (ข้อมูลและสลิปยังอยู่ ไม่ต้องกรอกใหม่)
+                            alert(message + ' ข้อมูลและสลิปที่แนบไว้ยังอยู่ เลือกที่นั่งใหม่ในราคาเดียวกันแล้วกดยืนยันได้เลย ' +
+                                'หากต้องการเปลี่ยนโซนหรือขอคืนเงิน กรุณาติดต่อผู้จัดงาน (Facebook: Kriengkrai Mahamit โทร 090 523 5223)');
                             refreshSeatStatus(false);
                             goToStep(1);
                             return;
@@ -3706,10 +3974,12 @@ function hideBookingLoading() {
                 const ticketBadgesContainer = document.getElementById('ticketSeatsBadges');
                 ticketBadgesContainer.innerHTML = '';
                 seatArray.forEach(id => {
-                    const seat = seatMapData[id];
+                    const zone = zoneOfSeat(id);
                     const badge = document.createElement('span');
-                    badge.className = `inline-block px-2.5 py-1 rounded text-xs font-bold shadow-xs ${seat.zone === 'A' ? 'bg-posterBurgundy text-white' : 'bg-posterGreen text-white'}`;
-                    badge.textContent = `${id} (${seat.zone})`;
+                    badge.className = 'inline-block px-2.5 py-1 rounded text-xs font-bold shadow-xs';
+                    badge.style.background = zone.color;
+                    badge.style.color = zone.textColor;
+                    badge.textContent = `${id} (${zone.name})`;
                     ticketBadgesContainer.appendChild(badge);
                 });
 
@@ -3735,6 +4005,23 @@ function hideBookingLoading() {
                 // หน้านี้เป็นใบรับรายการจอง (ยังไม่ใช่บัตรเข้างาน) จึงไม่มี QR Code
                 // ลูกค้าจะได้รับอีเมลยืนยันหลังผู้จัดงานตรวจสอบการชำระเงินแล้ว
                 document.getElementById('ticketCustEmail').textContent = email;
+                lastBooking = {
+                    orderRef: orderRef,
+                    name: name,
+                    seats: seatArray.slice(),
+                    zones: seatArray.map(id => zoneOfSeat(id)),   // { name, color, textColor } ใช้วาดป้ายที่นั่งในรูปใบจอง
+                    attendees: seatArray.map(id => {
+                        const a = attendeeData[id] || {};
+                        return {
+                            seat: id,
+                            name: (a.title || '') + cleanPersonName(a.firstName) + ' ' + cleanPersonName(a.lastName),
+                            age: a.age ? String(a.age).trim() : ''
+                        };
+                    }),
+                    total: totalAmt,
+                    discountText: discountCode ? `โค้ด ${discountCode} ลด ${discountAmt.toLocaleString()} บาท` : ''
+                };
+                bookingImageBlob = null;
 
                 seatArray.forEach(id => {
                     if (seatMapData[id]) seatMapData[id].isSold = true;
@@ -3743,6 +4030,9 @@ function hideBookingLoading() {
                 if (holdTimerInterval) clearInterval(holdTimerInterval);
                 goToStep(3);
                 refreshSeatStatus(false);
+                // สร้างรูปใบจองรอไว้เลย พอลูกค้ากดปุ่มจะเปิดหน้าแชร์ได้ทันที
+                // (iPhone ไม่ยอมเปิดหน้าแชร์ถ้าหลังกดปุ่มต้องรอสร้างรูปนานเกินไป)
+                prepareBookingImage().catch(err => console.warn('Prepare booking image failed:', err));
 
             } catch (err) {
                 console.error('Booking submission error:', err);
@@ -3781,12 +4071,193 @@ function enterBooking() {
     goToStep(1);
 }
         
+        /* ----------------------------------------------------
+         * บันทึกใบจองเป็นรูปภาพ (ยกมาจากโรงหนัง ปรับเป็นธีมคอนเสิร์ต)
+         * วาดการ์ดสีแยกจากหน้าจอ (ขนาดพอดีจอมือถือ ไม่มีปุ่ม) แล้วถ่ายเป็น PNG ด้วย html2canvas
+         * ---------------------------------------------------- */
+        let lastBooking = null;
+        let bookingImageBlob = null;
+        let bookingImagePromise = null;
+        const HTML2CANVAS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+
+        // โหลดไลบรารีตอนจองสำเร็จเท่านั้น คนที่แค่เข้ามาดูหน้าแรกไม่ต้องโหลดไฟล์นี้
+        function loadHtml2Canvas() {
+            if (window.html2canvas) return Promise.resolve(window.html2canvas);
+            if (loadHtml2Canvas.promise) return loadHtml2Canvas.promise;
+            loadHtml2Canvas.promise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = HTML2CANVAS_URL;
+                script.onload = () => resolve(window.html2canvas);
+                script.onerror = () => { loadHtml2Canvas.promise = null; reject(new Error('โหลดตัวสร้างรูปไม่สำเร็จ')); };
+                document.head.appendChild(script);
+            });
+            return loadHtml2Canvas.promise;
+        }
+
+        // ผู้ใช้ขอไม่ใส่รูป (โลโก้/โปสเตอร์) ในใบจองคอนเสิร์ต ใช้ข้อความล้วน
+        function bookingImageHtml(b) {
+            const green = '#425E22', burgundy = '#8B2626', gold = '#C8A051', dark = '#23201D', muted = '#6E6A5F';
+            const esc = escapeAttr;
+            const badges = b.seats.map((id, i) =>
+                `<span style="display:inline-flex;align-items:center;margin:0 6px 6px 0;padding:0 11px 11px;height:34px;box-sizing:border-box;border-radius:7px;color:#fff;font-size:15px;font-weight:700;
+                    background:${b.zones[i] ? b.zones[i].color : green};color:${b.zones[i] ? b.zones[i].textColor : '#fff'};">${esc(id)}${b.zones[i] ? ' (' + esc(b.zones[i].name) + ')' : ''}</span>`).join('');
+            const attendees = b.attendees.map(a =>
+                `<div style="display:flex;gap:10px;padding:5px 0;font-size:15px;line-height:1.5;">
+                    <span style="width:44px;flex-shrink:0;color:${burgundy};font-weight:700;">${esc(a.seat)}</span>
+                    <span style="flex:1;min-width:0;color:${dark};font-weight:600;word-break:break-word;">${esc(a.name)}${a.age ? `<span style="color:${muted};font-weight:400;"> · ${esc(a.age)} ปี</span>` : ''}</span>
+                </div>`).join('');
+            const info = (label, value, color) =>
+                `<div style="flex:1;min-width:0;">
+                    <div style="font-size:13px;color:${muted};">${label}</div>
+                    <div style="font-size:17px;font-weight:700;color:${color || dark};margin-top:2px;word-break:break-word;">${value}</div>
+                </div>`;
+            return `
+            <div style="width:540px;font-family:'Prompt',sans-serif;background:#F8F5EE;border:3px solid ${gold};border-radius:28px;overflow:hidden;color:${dark};">
+                <div style="background:${green};padding:26px 28px 24px;text-align:center;border-bottom:3px solid ${gold};">
+                    <div style="font-family:'Kanit',sans-serif;font-size:26px;font-weight:700;color:#FEF3C7;line-height:1.35;">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</div>
+                    <div style="font-size:14px;color:#D1FAE5;margin-top:4px;">เสาร์ที่ 16 มกราคม 2570 · KK Market แม่ริม เชียงใหม่</div>
+                    <div style="display:inline-block;margin-top:14px;padding:7px 16px;border-radius:999px;background:#FDE68A;border:1px solid #FCD34D;color:#92400E;font-size:15px;font-weight:700;">
+                        <i class="fa-solid fa-hourglass-half" style="margin-right:6px;"></i>ใบจอง · รอตรวจสอบการชำระเงิน
+                    </div>
+                </div>
+                <div style="padding:24px 28px 26px;">
+                    <div style="background:#EFE9DC;border:2px dashed rgba(66,94,34,.45);border-radius:18px;padding:18px 18px 14px;">
+                        <div style="text-align:center;padding-bottom:14px;border-bottom:1px solid rgba(66,94,34,.25);">
+                            <div style="font-size:13px;color:${muted};">เลขอ้างอิงการจอง (Order Ref)</div>
+                            <div style="font-size:22px;font-weight:700;color:${green};margin-top:2px;">${esc(b.orderRef)}</div>
+                        </div>
+                        <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(66,94,34,.25);">
+                            ${info('ชื่อผู้จองบัตร', esc(b.name))}
+                            ${info('จำนวนที่นั่ง', b.seats.length + ' ที่นั่ง', burgundy)}
+                        </div>
+                        <div style="padding:14px 0 8px;border-bottom:1px solid rgba(66,94,34,.25);">
+                            <div style="font-size:13px;color:${muted};margin-bottom:8px;">หมายเลขที่นั่ง</div>
+                            <div>${badges}</div>
+                        </div>
+                        <div style="padding:12px 0 10px;border-bottom:1px solid rgba(66,94,34,.25);">
+                            <div style="font-size:13px;color:${muted};margin-bottom:4px;">ชื่อผู้เข้าร่วมงาน</div>
+                            ${attendees}
+                        </div>
+                        <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:14px;">
+                            <div style="font-size:16px;font-weight:700;color:${dark};">ยอดชำระ</div>
+                            <div style="text-align:right;">
+                                <div style="font-family:'Kanit',sans-serif;font-size:30px;font-weight:700;color:${green};line-height:1.1;">${Number(b.total).toLocaleString()} บาท</div>
+                                ${b.discountText ? `<div style="font-size:13px;color:${muted};margin-top:4px;">${esc(b.discountText)}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="margin-top:16px;padding:14px 16px;border-radius:14px;background:#FEF3C7;border:1px solid #FCD34D;display:flex;gap:12px;align-items:flex-start;">
+                        <i class="fa-solid fa-circle-info" style="color:#B45309;font-size:20px;padding-top:3px;"></i>
+                        <div style="font-size:14px;line-height:1.7;color:#78350F;">
+                            <b>ใบจองนี้ยังไม่ใช่บัตรเข้างาน</b><br>
+                            ผู้จัดงานจะส่งอีเมลยืนยันพร้อม QR เข้างาน<br>หลังตรวจสอบการชำระเงินแล้ว
+                        </div>
+                    </div>
+                    <div style="text-align:center;font-size:12px;color:${muted};margin-top:16px;">ติดต่อผู้จัดงาน · Facebook: Kriengkrai Mahamit · โทร 090 523 5223</div>
+                </div>
+            </div>`;
+        }
+
+        // สร้างรูปครั้งเดียวต่อการจอง (กดปุ่มซ้ำใช้รูปเดิม)
+        function prepareBookingImage() {
+            if (!lastBooking) return Promise.reject(new Error('ไม่พบข้อมูลการจอง'));
+            if (bookingImageBlob) return Promise.resolve(bookingImageBlob);
+            if (bookingImagePromise) return bookingImagePromise;
+            const booking = lastBooking;
+            bookingImagePromise = Promise.all([loadHtml2Canvas(), document.fonts ? document.fonts.ready : null])
+                .then(([html2canvas]) => {
+                    const holder = document.createElement('div');
+                    // วางไว้นอกจอ ลูกค้าไม่เห็น แต่เบราว์เซอร์ยังจัดหน้าให้ถ่ายรูปได้
+                    holder.style.cssText = 'position:fixed;left:-10000px;top:0;z-index:-1;';
+                    holder.innerHTML = bookingImageHtml(booking);
+                    document.body.appendChild(holder);
+                    return html2canvas(holder.firstElementChild, { scale: 2, backgroundColor: null, useCORS: true, logging: false })
+                        .finally(() => holder.remove());
+                })
+                .then(canvas => new Promise((resolve, reject) =>
+                    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('สร้างรูปไม่สำเร็จ')), 'image/png')))
+                .then(blob => {
+                    // ลูกค้ากดกลับหน้าแรกระหว่างสร้างรูป: ไม่เก็บรูปของการจองเก่า
+                    if (lastBooking === booking) bookingImageBlob = blob;
+                    return blob;
+                })
+                .finally(() => { bookingImagePromise = null; });
+            return bookingImagePromise;
+        }
+
+        async function saveBookingImage() {
+            const btn = document.getElementById('btnSaveBookingImage');
+            const label = btn.querySelector('span');
+            if (!lastBooking) return;
+            const fileName = 'ใบจอง-' + lastBooking.orderRef + '.png';
+            let blob = bookingImageBlob;
+            if (!blob) {
+                btn.disabled = true;
+                label.textContent = 'กำลังสร้างรูป…';
+                try {
+                    blob = await prepareBookingImage();
+                } catch (err) {
+                    console.error('Booking image error:', err);
+                    alert('บันทึกใบจองไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่ หรือแคปหน้าจอนี้ไว้แทน');
+                    return;
+                } finally {
+                    btn.disabled = false;
+                    label.textContent = 'บันทึกใบจอง';
+                }
+            }
+            // แยกตามเครื่อง (ผู้ใช้ขอ 20 ต.ค. 2569) เพราะแต่ละระบบบันทึกรูปลงคลังรูปได้ต่างกัน
+            // • ในแอป LINE/Facebook/IG: หน้าแชร์และการดาวน์โหลดมักใช้ไม่ได้ → แสดงรูปเต็มจอให้กดค้าง
+            // • iPhone/iPad: หน้าแชร์มี "บันทึกรูปภาพ" เข้าแอปรูปภาพตรงๆ (ดาวน์โหลดจะไปอยู่ในแอปไฟล์ ลูกค้าหาไม่เจอ)
+            // • Android: หน้าแชร์ส่วนใหญ่ไม่มีปุ่มบันทึกลงแกลเลอรี → ดาวน์โหลดตรงๆ ไฟล์เข้า Download และขึ้นในแกลเลอรี
+            // • คอมพิวเตอร์: ดาวน์โหลดเป็นไฟล์
+            const ua = navigator.userAgent || '';
+            const inAppBrowser = /\bLine\/|FBAN|FBAV|FB_IAB|Instagram/i.test(ua);
+            const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+            if (inAppBrowser) { showBookingImagePreview(blob); return; }
+            if (isIOS) {
+                const file = new File([blob], fileName, { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({ files: [file], title: 'ใบจอง MAHAMIT CONCERT #2' });
+                    } catch (err) {
+                        // ลูกค้ากดปิดหน้าแชร์เอง ไม่ต้องทำอะไร / เปิดหน้าแชร์ไม่ได้ ให้กดค้างที่รูปแทน
+                        if (!err || err.name !== 'AbortError') showBookingImagePreview(blob);
+                    }
+                } else {
+                    showBookingImagePreview(blob);
+                }
+                return;
+            }
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 1500);
+        }
+
+        // ทางสำรองบนมือถือ (เช่น เปิดเว็บในแอป LINE/Facebook ที่เปิดหน้าแชร์ไม่ได้): แสดงรูปเต็มจอ ให้กดค้างเพื่อบันทึก
+        function showBookingImagePreview(blob) {
+            const url = URL.createObjectURL(blob);
+            const overlay = document.createElement('div');
+            overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px;';
+            overlay.innerHTML = `
+                <p style="color:#FDE68A;font-size:15px;text-align:center;margin:0;">กดค้างที่รูป แล้วเลือก "บันทึกรูปภาพ"</p>
+                <img src="${url}" alt="ใบจอง" style="max-width:100%;max-height:78vh;border-radius:16px;">
+                <button type="button" style="background:#425E22;color:#fff;border:1px solid #C8A051;border-radius:12px;padding:10px 28px;font-weight:700;">ปิด</button>`;
+            overlay.querySelector('button').onclick = () => { overlay.remove(); URL.revokeObjectURL(url); };
+            document.body.appendChild(overlay);
+        }
+
         function resetToHome() {
 
             document.getElementById('landingPage').classList.remove('hidden');
     document.getElementById('bookingFlow').classList.add('hidden');
             selectedSeats.clear();
             attendeeData = {};
+            lastBooking = null;
+            bookingImageBlob = null;
             selfSeatId = '';
             selfSeatTitleAuto = false;
             renderedAttendeeSeats = null;
@@ -4254,10 +4725,10 @@ document.addEventListener('DOMContentLoaded', function () {
             alertText.includes('ยังไม่ได้') ||
             alertText.includes('สูงสุด')
         ) {
-heading = 'กรุณาตรวจสอบข้อมูล';
-iconClasses = 'fa-solid fa-circle-info';
-iconColor = '#DC2626';
-iconBg = '#FEE2E2';
+            heading = 'กรุณาตรวจสอบข้อมูล';
+            iconClass = 'fa-solid fa-circle-info';
+            iconColor = '#DC2626';
+            iconBg = '#FEE2E2';
         }
 
         // ใส่ข้อความลงใน Popup
@@ -4399,8 +4870,6 @@ iconBg = '#FEE2E2';
 </script>
 
 
-</script>
-
 <!-- วาง Footer Credit Bar ตรงนี้ -->
 
 
@@ -4417,11 +4886,6 @@ iconBg = '#FEE2E2';
     </p>
 </footer>
 
-
-
-
-</body>
-</html>
     
     
 </body>
