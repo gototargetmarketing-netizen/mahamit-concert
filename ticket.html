@@ -11,6 +11,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
     <!-- QR Code Generator (MIT) สร้าง QR ในมือถือเอง ไม่ต้องเรียก Apps Script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+    <!-- ข้อมูลผังที่นั่ง (โซน ชื่อ สี) ไฟล์เดียวกับหน้าจอง สร้างจาก seat-layout/build.py -->
+    <script src="./seats-config.js"></script>
     <style>
         :root {
             --green: #10271d;
@@ -78,8 +80,6 @@
             font-weight: 600;
             color: #fff;
         }
-        .zone-A { background: var(--burgundy); }
-        .zone-B { background: var(--green-ok); }
         .holder { font-size: 20px; font-weight: 600; margin: -4px 0 12px; word-break: break-word; }
         .qr { width: min(78vw, 300px); margin: 0 auto; background: #fff; }
         .qr svg { display: block; width: 100%; height: auto; }
@@ -135,8 +135,16 @@
     <script>
         // ต้องตรงกับ QR_PREFIX ใน code.gs (หน้าสแกนอ่านรูปแบบ MK2|เลขอ้างอิง|ที่นั่ง|รหัสลับ)
         const QR_PREFIX = 'MK2';
-        // โซนตามแถว ต้องตรงกับ ROW_CONFIG ใน index.html
-        const ZONE_A_ROWS = 'ABCDEFG';
+        // ข้อมูลผังจาก seats-config.js ถ้าโหลดไม่ได้ บัตรยังเปิดได้ แค่ไม่แสดงป้ายโซน
+        const SEAT_CONFIG = window.SEAT_CONFIG || null;
+        // รหัสที่นั่ง เช่น A01, T13, AA01 ต้องตรงกับ SEAT_ID_PATTERN ใน code.gs
+        const SEAT_ID_PATTERN = SEAT_CONFIG ? SEAT_CONFIG.idPattern : /^[A-Z]{1,2}\d{2}$/;
+
+        // โซนของที่นั่ง { name, color, textColor } (ไม่พบ = null)
+        function zoneOf(seat) {
+            const info = SEAT_CONFIG && SEAT_CONFIG.byId[seat];
+            return info ? SEAT_CONFIG.zoneByKey[info.zone] : null;
+        }
 
         function esc(value) {
             return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -153,7 +161,7 @@
             const seats = (params.get('s') || '').split(',').map((item, i) => {
                 const [seat, token] = item.split('.');
                 return { seat, token, holder: (holders[i] || '').trim() };
-            }).filter(t => /^[A-Z]\d{2}$/.test(t.seat || '') && /^[A-Za-z0-9_-]{16}$/.test(t.token || ''));
+            }).filter(t => SEAT_ID_PATTERN.test(t.seat || '') && /^[A-Za-z0-9_-]{16}$/.test(t.token || ''));
             return { orderRef, name, seats };
         }
 
@@ -221,12 +229,12 @@
                 <p class="tip">แสดง QR ที่จุดลงทะเบียนเพื่อรับริสแบนด์<br>1 QR ต่อ 1 ที่นั่ง · กรุณาเพิ่มความสว่างหน้าจอ</p>`;
 
             const tickets = data.seats.map((t, i) => {
-                const zone = ZONE_A_ROWS.includes(t.seat.charAt(0)) ? 'A' : 'B';
+                const zone = zoneOf(t.seat);
                 const payload = [QR_PREFIX, data.orderRef, t.seat, t.token].join('|');
                 return `
                     <section class="ticket">
                         <div class="seat">ที่นั่ง ${esc(t.seat)}</div>
-                        <div class="zone zone-${zone}">โซน ${zone}</div>
+                        ${zone ? `<div class="zone" style="background:${zone.color};color:${zone.textColor}">${esc(zone.name)}</div>` : ''}
                         ${t.holder ? `<div class="holder">${esc(t.holder)}</div>` : ''}
                         <div class="qr" aria-label="QR ที่นั่ง ${esc(t.seat)}">${qrSvg(payload)}</div>
                         ${data.seats.length > 1 ? `<button class="share" type="button" onclick="shareSeat(${i})">แชร์ที่นั่งนี้ให้เพื่อน</button>` : ''}
