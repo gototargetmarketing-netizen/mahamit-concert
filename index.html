@@ -2966,7 +2966,7 @@ async function retrySeatStatus() {
         let selfSeatId = '';               // ที่นั่งที่ติ๊ก "ใช้ชื่อผู้จอง"
         let selfSeatTitleAuto = false;     // คำนำหน้าในที่นั่งที่ติ๊ก มาจากชื่อผู้จอง (ไม่ใช่ลูกค้าเลือกเอง)
         let renderedAttendeeSeats = null;  // ชุดที่นั่งที่สร้างช่องกรอกไว้ล่าสุด
-        let webAppUrl = localStorage.getItem('mm_web_app_url') || 'https://script.google.com/macros/s/AKfycbyhkmtmGz6rbR0VSiEq63cJjw5nWrnaraxsMh95474atB6iOK8gVjn7UCN8ofGRYwqP3A/exec';
+        let webAppUrl = localStorage.getItem('mm_web_app_url') || 'https://script.google.com/macros/s/AKfycbxd8IeSKLAQMUDemlL4jYJxy0FvcSwTh8NvhEGh9VJT0NJ_4SU3tlwpTkGNd_bv_ihNTg/exec';
 
         // Load authoritative seat status from Google Sheets on page load.
         // ใช้ DOMContentLoaded แทน window.onload เพื่อเริ่มโหลดที่นั่งทันที
