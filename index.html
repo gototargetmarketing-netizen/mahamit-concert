@@ -5,20 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์</title>
 
-<meta name="description" content="จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดับดารรภ์ #2 เลือกที่นั่งและจองบัตรออนไลน์ได้แล้ววันนี้">
+<meta name="description" content="จองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2 เลือกที่นั่งและจองบัตรออนไลน์ได้แล้ววันนี้">
 
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mahamit-concert.vercel.app/">
 <meta property="og:title" content="มิตรภาพไม่มีวันดึกดำบรรพ์ #2">
 <meta property="og:description" content="เปิดจองบัตรแล้ว เลือกที่นั่งและจองบัตรออนไลน์ได้เลย">
-<meta property="og:image" content="https://mahamit-concert.vercel.app/image_3be778.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<!-- รูปตอนแชร์ลิงก์ใน LINE/Facebook: เดิมอ้าง image_3be778.jpg ซึ่งไม่มีไฟล์ (ลิงก์ที่แชร์จึงไม่มีรูป)
+     ใช้โปสเตอร์ที่มีอยู่แล้วแทน ถ้ามีรูปแนวนอน 1200×630 ให้เปลี่ยนชื่อไฟล์และขนาดตรงนี้ (และ twitter:image) -->
+<meta property="og:image" content="https://mahamit-concert.vercel.app/concert-poster.jpg">
+<meta property="og:image:width" content="768">
+<meta property="og:image:height" content="1024">
 
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="มิตรภาพไม่มีวันดับดารรภ์ #2">
+<meta name="twitter:title" content="มิตรภาพไม่มีวันดึกดำบรรพ์ #2">
 <meta name="twitter:description" content="เปิดจองบัตรแล้ว เลือกที่นั่งและจองบัตรออนไลน์ได้เลย">
-<meta name="twitter:image" content="https://mahamit-concert.vercel.app/image_3be778.jpg">
+<meta name="twitter:image" content="https://mahamit-concert.vercel.app/concert-poster.jpg">
     <!-- Load FontAwesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Load Google Fonts -->
@@ -1451,6 +1453,21 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     font-weight: 600;
 }
 
+/* สิทธิ์ Voucher ทุกที่นั่ง */
+#ticketPriceGuide .ticket-guide-voucher {
+    margin: 16px auto 0;
+    width: fit-content;
+    max-width: 100%;
+    padding: 6px 16px;
+    border-radius: 999px;
+    background: #FFF4D6;
+    border: 1px solid #E8C873;
+    color: #6B4E16;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+}
+
 /* หมายเหตุ */
 #ticketPriceGuide .ticket-guide-note {
     margin: 16px 0 0;
@@ -1586,13 +1603,13 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 }
 
 /* ==========================================
-   ตารางราคา 4 โซน ตามผัง 565 ที่นั่ง (24 ต.ค. 2569)
+   ตารางราคา 6 โซน ตามผัง 565 ที่นั่ง (ปรับราคา 25 ต.ค. 2569)
    การ์ดสร้างจาก SEAT_CONFIG.zones (seats-config.js) สีพื้นตรงกับสีโซนในผังที่นั่ง
    ========================================== */
 @media (min-width: 901px) {
-    /* 4 โซนเรียงแถวเดียวบนคอมพิวเตอร์ (ถ้าใช้ 3 คอลัมน์ ใบที่ 4 จะตกลงไปอยู่เดี่ยวๆ) */
+    /* 6 โซนบนคอมพิวเตอร์: 3 ใบต่อแถว 2 แถวพอดี (ถ้าจำนวนโซนเปลี่ยน ปรับเลขนี้ให้ไม่มีใบเหลือเดี่ยว) */
     #ticketPriceGuide .ticket-price-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
     }
 }
 
@@ -1601,7 +1618,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     background-image: linear-gradient(135deg, rgba(255,255,255,.12), rgba(0,0,0,.14));
 }
 
-/* โซนสีอ่อน (มิตรรู้ใจ สีครีม) ตัวหนังสือสีขาวอ่านไม่ออก จึงใช้สีเข้มแทน */
+/* โซนสีอ่อน (มิตรชิดเวที สีทอง / มิตรรู้ใจ สีครีม) ตัวหนังสือสีขาวอ่านไม่ออก จึงใช้สีเข้มแทน */
 #ticketPriceGuide .ticket-price-card.ticket-light,
 #ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content,
 #ticketPriceGuide .ticket-price-card.ticket-light .ticket-price-content h3,
@@ -1678,6 +1695,23 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     color: #23201D;
     box-shadow: 0 0 0 3px #FFFFFF, 0 0 0 6px #D97706;
     z-index: 2;
+}
+
+/* ✓ ที่มุมที่นั่งที่เลือก สีเหลืองของที่นั่งที่เลือกใกล้กับสีทองของโซนมิตรชิดเวที (แถว A–C)
+   ดูแค่สีอาจแยกไม่ออก จึงเพิ่มเครื่องหมายให้เห็นชัด โดยยังเห็นเลขที่นั่งอยู่ */
+.smap-seat.is-selected::after {
+    content: '✓';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #15803D;
+    box-shadow: 0 0 0 2px #FFFFFF;
+    color: #FFFFFF;
+    font: 700 12px/18px sans-serif;
+    text-align: center;
 }
 
 .smap-seat.is-sold {
@@ -1815,6 +1849,52 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     flex-shrink: 0;
 }
 
+/* คำในวงเล็บต่อท้ายชื่อโซน เช่น (อัฒจันทร์) สีอ่อนกว่าชื่อโซน */
+.smap-chip-tag {
+    color: #6E6A5F;
+    font-weight: 500;
+}
+
+/* มือถือ: ป้ายโซนเรียง 2 คอลัมน์ จับคู่ทุกแถว (ถ้าปล่อยให้ตัดบรรทัดเอง มิตรสำราญจะตกไปอยู่แถวเดียว)
+   คอลัมน์กว้างตามป้ายที่ยาวที่สุด และราคาชิดขวาให้ตรงกันเหมือนตาราง */
+@media (max-width: 640px) {
+    .smap-chips {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, max-content));
+    }
+
+    .smap-chip b {
+        margin-left: auto;
+        padding-left: 4px;
+    }
+}
+
+/* จอแคบกว่า 420px (iPhone ทั่วไป 375–393px): ย่อป้ายเล็กน้อยให้ 2 คอลัมน์พอดีจอ */
+@media (max-width: 420px) {
+    .smap-chips {
+        gap: 5px;
+    }
+
+    .smap-chip {
+        gap: 4px;
+        padding: 4px 7px 4px 6px;
+        font-size: 11.5px;
+    }
+
+    .smap-chip b {
+        padding-left: 3px;
+    }
+
+    .smap-dot {
+        width: 9px;
+        height: 9px;
+    }
+
+    .smap-chip-tag {
+        font-size: 10px;
+    }
+}
+
 /* สัญลักษณ์ใต้ผัง */
 .smap-status {
     display: flex;
@@ -1854,8 +1934,22 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 }
 
 .smap-swatch-selected {
+    position: relative;
     background: #FBBF24;
     box-shadow: inset 0 0 0 1.5px #D97706;
+}
+
+/* ✓ ในช่องคำอธิบาย "กำลังเลือก" ให้ตรงกับที่นั่งบนผัง */
+.smap-swatch-selected::after {
+    content: '✓';
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #15803D;
+    font-size: 9px;
+    font-weight: 700;
 }
 
 .smap-swatch-sold {
@@ -1887,7 +1981,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 <div class="flex items-center justify-center">
     <img
         src="./logo.png"
-        alt="เกรียงไกร มหามิตร"
+        alt="เกรียงไกรมาหามิตร"
         class="h-10 sm:h-14 w-auto object-contain"
     >
 </div>
@@ -1990,12 +2084,16 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                       break-words">
                 วันเสาร์ที่ 16 มกราคม 2570
             </p>
+
            <p class="font-kanit font-normal
           text-base sm:text-lg md:text-xl
           text-posterDark leading-snug
           break-words">
   15:00 - 21:30 น.
 </p>
+
+
+            
         </div>
     </div>
 
@@ -2159,7 +2257,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 <!-- ========================================
      MAHAMIT TICKET PRICE GUIDE
-     4 โซน ตามผัง 565 ที่นั่ง
+     6 โซน ตามผัง 565 ที่นั่ง
 ======================================== -->
 
 <section id="ticketPriceGuide">
@@ -2172,6 +2270,9 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
     <!-- การ์ดราคาสร้างจาก SEAT_CONFIG.zones (renderTicketPriceGuide) แก้ราคา/ชื่อโซนที่ seat-layout/seats.json -->
     <div class="ticket-price-grid" id="ticketPriceGrid"></div>
+
+    <!-- สิทธิ์ที่ได้ทุกโซนเท่ากัน จึงเขียนครั้งเดียวใต้การ์ด แทนการใส่ซ้ำในการ์ดทุกใบ -->
+    <p class="ticket-guide-voucher">ทุกที่นั่งรับ Voucher มูลค่า 100 บาท</p>
 
     <p class="ticket-guide-note">
         * จำนวนที่นั่งเป็นข้อมูลอ้างอิงจากรายการบัตร
@@ -2689,7 +2790,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
     <!-- Application Logic Script -->
     <script>
-        /* ผังที่นั่ง 565 ที่ 4 โซน: ข้อมูลทั้งหมดอยู่ใน seats-config.js (window.SEAT_CONFIG)
+        /* ผังที่นั่ง 565 ที่ 6 โซน: ข้อมูลทั้งหมดอยู่ใน seats-config.js (window.SEAT_CONFIG)
            แก้ผัง/ราคา/ชื่อโซน ที่ seat-layout/seats.json แล้วรัน seat-layout/build.py (สร้าง seats-config.js และส่วนราคาใน code.gs ให้ตรงกัน) */
         const SEAT_CONFIG = window.SEAT_CONFIG || null;
 
@@ -2712,6 +2813,13 @@ body:has(#cartSummaryBtn:not(.hidden)) {
         function zoneOfSeat(id) {
             const seat = seatMapData[id];
             return seat && SEAT_CONFIG ? SEAT_CONFIG.zoneByKey[seat.zone] : null;
+        }
+
+        // ชื่อโซนที่แสดงในหน้าจอง โซนที่มี tag ใส่วงเล็บต่อท้าย เช่น "มิตรสำราญ (อัฒจันทร์)"
+        // ลูกค้าจะได้รู้ตั้งแต่ตอนเลือกว่าเป็นอัฒจันทร์ ไม่ใช่เก้าอี้สนาม (tag ตั้งใน seat-layout/seats.json)
+        function zoneLabel(zone) {
+            if (!zone) return '';
+            return zone.tag ? `${zone.name} (${zone.tag})` : zone.name;
         }
 
         // ตารางราคาหน้าแรก (การ์ดละ 1 โซน)
@@ -2914,13 +3022,16 @@ await refreshSeatStatus(true);
             });
         }
 
-        async function refreshSeatStatus(showMessage = false) {
+        // notifyTaken = false: ไม่ต้องแจ้งว่าที่นั่งถูกจองตัดหน้า (ใช้ตอนที่แจ้งลูกค้าไปแล้ว เช่น Apps Script ตอบว่าที่นั่งชน)
+        async function refreshSeatStatus(showMessage = false, notifyTaken = true) {
             try {
                 const result = await callAppsScriptJSONP({ action: 'seats' });
                 if (!result || result.success !== true || !Array.isArray(result.occupiedSeats)) {
                     throw new Error((result && result.message) || 'รูปแบบข้อมูลสถานะที่นั่งไม่ถูกต้อง');
                 }
                 const occupied = new Set(result.occupiedSeats.map(String));
+                // ที่นั่งที่ลูกค้าเลือกไว้แต่มีคนอื่นจองไปก่อน (บรรทัดถัดไปจะเอาออกจากรายการ)
+                const taken = sortedSelectedSeats().filter(id => occupied.has(id));
                 Object.keys(seatMapData).forEach(id => {
                     seatMapData[id].isSold = occupied.has(id);
                     if (seatMapData[id].isSold) selectedSeats.delete(id);
@@ -2940,7 +3051,10 @@ if (notice) {
     notice.classList.add('hidden');
 }
 
-                
+                // ไม่แจ้งระหว่างกำลังส่งการจองหรือหลังจองสำเร็จ เพราะที่นั่งที่เห็นว่าถูกจองคือที่นั่งของลูกค้าเอง
+                if (taken.length && notifyTaken && !isBookingSubmitting && currentStep !== 3) {
+                    notifySeatsTaken(taken);
+                }
                 return true;
             } catch (err) {
                 console.error('Seat status refresh failed:', err);
@@ -2953,6 +3067,30 @@ if (showMessage) {
     );
 }
                 return false;
+            }
+        }
+
+        // ที่นั่งที่เลือกไว้ถูกคนอื่นจองตัดหน้า (หน้าเว็บเช็กทุก 30 วินาที): ต้องบอกลูกค้า
+        // เพราะยอดเงินเปลี่ยน ลูกค้าอาจโอนตามยอดเดิมไปแล้ว ถ้าเอาออกเงียบๆ จะกดยืนยันด้วยยอดที่ไม่ตรงกับสลิป
+        function notifySeatsTaken(taken) {
+            const list = taken.join(', ');
+            const contact = 'Facebook: Kriengkrai Mahamit โทร 090 523 5223';
+            if (selectedSeats.size === 0) {
+                if (currentStep === 2) {
+                    alert(`ที่นั่ง ${list} เพิ่งมีคนอื่นจองไป กรุณาเลือกที่นั่งใหม่ ข้อมูลและสลิปที่กรอกไว้ยังอยู่ ` +
+                        `หากโอนเงินไปแล้ว เลือกที่นั่งใหม่ในราคาเดียวกันแล้วกดยืนยันได้เลย หรือติดต่อผู้จัดงาน (${contact})`);
+                    goToStep(1);
+                } else {
+                    alert(`ที่นั่ง ${list} เพิ่งมีคนอื่นจองไป กรุณาเลือกที่นั่งใหม่`);
+                }
+                return;
+            }
+            if (currentStep === 2) {
+                const total = ((document.getElementById('paymentTotalAmount') || {}).textContent || '').trim();
+                alert(`ที่นั่ง ${list} เพิ่งมีคนอื่นจองไป ระบบนำออกจากรายการของคุณแล้ว ยอดชำระใหม่คือ ${total} ` +
+                    `หากโอนเงินตามยอดเดิมไปแล้ว กด "ย้อนกลับ" เพื่อเลือกที่นั่งแทนในราคาเดียวกัน หรือติดต่อผู้จัดงาน (${contact})`);
+            } else {
+                alert(`ที่นั่ง ${list} เพิ่งมีคนอื่นจองไป ระบบนำออกจากรายการของคุณแล้ว กรุณาเลือกที่นั่งอื่นแทน`);
             }
         }
 
@@ -2975,7 +3113,7 @@ if (showMessage) {
             const chips = document.getElementById('seatZoneChips');
             if (chips) {
                 chips.innerHTML = SEAT_CONFIG.zones.map(zone =>
-                    `<span class="smap-chip" title="${zone.seats} ที่นั่ง${zone.note ? ' · ' + zone.note : ''}"><span class="smap-dot" style="background:${zone.color}"></span>${zone.name} <b>${zone.price.toLocaleString()}</b></span>`).join('');
+                    `<span class="smap-chip" title="${zone.seats} ที่นั่ง${zone.note ? ' · ' + zone.note : ''}"><span class="smap-dot" style="background:${zone.color}"></span><span>${zone.name}${zone.tag ? ` <span class="smap-chip-tag">(${zone.tag})</span>` : ''}</span> <b>${zone.price.toLocaleString()}</b></span>`).join('');
             }
             const status = document.getElementById('seatStatusLegend');
             if (status) {
@@ -3113,7 +3251,7 @@ if (showMessage) {
                 btn.classList.toggle('is-selected', selected);
                 btn.disabled = seat.isSold;
                 btn.setAttribute('aria-pressed', selected ? 'true' : 'false');
-                btn.title = `${id} · ${zone.name} · ` +
+                btn.title = `${id} · ${zoneLabel(zone)} · ` +
                     (seat.isSold ? 'จองแล้ว' : `${seat.price.toLocaleString()} บาท${selected ? ' (เลือกอยู่)' : ''}`);
             });
         }
@@ -3294,7 +3432,7 @@ if (showMessage) {
                         badge.className = 'inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-bold shadow-xs';
                         badge.style.background = zone.color;
                         badge.style.color = zone.textColor;
-                        badge.title = `${id} · ${zone.name}`;
+                        badge.title = `${id} · ${zoneLabel(zone)}`;
                         badge.innerHTML = `
                             ${id}
                             <i class="fa-solid fa-xmark text-[10px] cursor-pointer opacity-80 hover:opacity-100 ml-1" onclick="toggleSeatSelection('${id}')"></i>
@@ -3307,7 +3445,7 @@ if (showMessage) {
                         const item = document.createElement('div');
                         item.className = 'flex justify-between items-center py-1 border-b border-posterPaper/50';
                         item.innerHTML = `
-                            <span class="font-bold text-posterDark">ที่นั่ง ${id} <span class="font-normal text-posterMuted">· ${zone.name}</span></span>
+                            <span class="font-bold text-posterDark">ที่นั่ง ${id} <span class="font-normal text-posterMuted">· ${zoneLabel(zone)}</span></span>
                             <span class="font-mono text-posterBurgundy font-semibold">${seat.price.toLocaleString()} ฿</span>
                         `;
                         summaryList.appendChild(item);
@@ -3426,13 +3564,13 @@ if (qrImg) {
             list.innerHTML = seats.map(id => {
                 const a = attendeeData[id] || {};
                 const zoneInfo = zoneOfSeat(id);
-                const zone = zoneInfo ? zoneInfo.name : '';
+                const zone = zoneLabel(zoneInfo);
                 const options = '<option value="">คำนำหน้า</option>' + ATTENDEE_TITLES.map(t =>
                     `<option value="${t}"${a.title === t ? ' selected' : ''}>${t}</option>`).join('');
                 return `
                     <div class="rounded-xl border border-posterPaper bg-posterCream/40 p-3 space-y-2" data-seat="${id}">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="font-bold text-sm text-posterDark">ที่นั่ง ${id}${zone ? ` <span class="text-[11px] font-normal text-posterMuted">(${zone})</span>` : ''}</span>
+                            <span class="font-bold text-sm text-posterDark">ที่นั่ง ${id}${zone ? ` <span class="text-[11px] font-normal text-posterMuted">· ${zone}</span>` : ''}</span>
                             <label class="flex items-center gap-1.5 text-xs text-posterMuted cursor-pointer select-none">
                                 <input type="checkbox" class="attendee-self w-4 h-4 accent-posterGreen"${selfSeatId === id ? ' checked' : ''}>
                                 ใช้ชื่อผู้จอง
@@ -3564,7 +3702,9 @@ if (hero) {
             } else if (step === 2) {
                 progressBar.style.width = '50%';
                 setStepCircleActive(2);
-                startHoldTimer();
+                // ไม่จับเวลา 20 นาทีแล้ว (25 ต.ค. 2569): ระบบไม่ได้ล็อกที่นั่งจริง การเด้งกลับหน้าเลือกที่นั่ง
+                // ทำให้ลูกค้าที่ไปโอนเงินในแอปธนาคารนานเสียเวลา ที่นั่งชนกันยังกันได้ด้วยการเช็กทุก 30 วินาที
+                // และการตรวจซ้ำที่ Apps Script ตอนกดยืนยัน
             } else if (step === 3) {
                 progressBar.style.width = '100%';
                 setStepCircleActive(3);
@@ -3587,6 +3727,7 @@ if (hero) {
             });
         }
 
+        // ไม่ได้เรียกใช้แล้ว (ดูเหตุผลใน goToStep) เก็บไว้เผื่ออยากกลับมาใช้
         function startHoldTimer() {
             if (holdTimerInterval) clearInterval(holdTimerInterval);
             let totalSeconds = 20 * 60; // 20 นาที (เผื่อเวลากรอกชื่อผู้นั่งทุกที่นั่ง)
@@ -3956,7 +4097,7 @@ function hideBookingLoading() {
                             // ลูกค้าโอนเงินไปแล้ว บอกทางไปต่อให้ชัด (ข้อมูลและสลิปยังอยู่ ไม่ต้องกรอกใหม่)
                             alert(message + ' ข้อมูลและสลิปที่แนบไว้ยังอยู่ เลือกที่นั่งใหม่ในราคาเดียวกันแล้วกดยืนยันได้เลย ' +
                                 'หากต้องการเปลี่ยนโซนหรือขอคืนเงิน กรุณาติดต่อผู้จัดงาน (Facebook: Kriengkrai Mahamit โทร 090 523 5223)');
-                            refreshSeatStatus(false);
+                            refreshSeatStatus(false, false);   // แจ้งไปแล้วข้างบน ไม่ต้องแจ้งซ้ำ
                             goToStep(1);
                             return;
                         }
@@ -3985,7 +4126,7 @@ function hideBookingLoading() {
                     badge.className = 'inline-block px-2.5 py-1 rounded text-xs font-bold shadow-xs';
                     badge.style.background = zone.color;
                     badge.style.color = zone.textColor;
-                    badge.textContent = `${id} (${zone.name})`;
+                    badge.textContent = `${id} · ${zoneLabel(zone)}`;
                     ticketBadgesContainer.appendChild(badge);
                 });
 
@@ -4106,7 +4247,7 @@ function enterBooking() {
             const esc = escapeAttr;
             const badges = b.seats.map((id, i) =>
                 `<span style="display:inline-flex;align-items:center;margin:0 6px 6px 0;padding:0 11px 11px;height:34px;box-sizing:border-box;border-radius:7px;color:#fff;font-size:15px;font-weight:700;
-                    background:${b.zones[i] ? b.zones[i].color : green};color:${b.zones[i] ? b.zones[i].textColor : '#fff'};">${esc(id)}${b.zones[i] ? ' (' + esc(b.zones[i].name) + ')' : ''}</span>`).join('');
+                    background:${b.zones[i] ? b.zones[i].color : green};color:${b.zones[i] ? b.zones[i].textColor : '#fff'};">${esc(id)}${b.zones[i] ? ' · ' + esc(zoneLabel(b.zones[i])) : ''}</span>`).join('');
             const attendees = b.attendees.map(a =>
                 `<div style="display:flex;gap:10px;padding:5px 0;font-size:15px;line-height:1.5;">
                     <span style="width:44px;flex-shrink:0;color:${burgundy};font-weight:700;">${esc(a.seat)}</span>
