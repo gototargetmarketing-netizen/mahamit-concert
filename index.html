@@ -1964,6 +1964,39 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
+
+/* Voucher: Soft Gold Glow Pulse */
+.ticket-guide-voucher {
+    animation: voucherGlowPulse 3s ease-in-out infinite;
+    transform-origin: center;
+}
+
+@keyframes voucherGlowPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 rgba(232, 200, 115, 0);
+        filter: brightness(1);
+        transform: scale(1);
+    }
+
+    50% {
+        box-shadow:
+            0 0 12px rgba(232, 200, 115, 0.45),
+            0 0 24px rgba(232, 200, 115, 0.18);
+        filter: brightness(1.05);
+        transform: scale(1.015);
+    }
+}
+
+/* ปิดแอนิเมชันสำหรับผู้ที่ตั้งค่าลดการเคลื่อนไหว */
+@media (prefers-reduced-motion: reduce) {
+    .ticket-guide-voucher {
+        animation: none;
+    }
+}
+
+
+
+        
         
 
     </style>
