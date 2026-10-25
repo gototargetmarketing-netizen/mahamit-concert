@@ -2499,7 +2499,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
                     <form id="bookingForm" onsubmit="event.preventDefault();" class="space-y-4">
                         <div>
-                            <label class="block text-base font-semibold text-posterDark mb-1">ชื่อ - นามสกุล ผู้จอง *</label>
+                            <label class="block text-xs font-semibold text-posterDark mb-1">ชื่อ - นามสกุล ผู้จอง *</label>
                             <div class="relative">
                                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                     <i class="fa-solid fa-user text-xs"></i>
@@ -2510,7 +2510,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-base font-semibold text-posterDark mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
+                                <label class="block text-xs font-semibold text-posterDark mb-1">เบอร์โทรศัพท์ติดต่อ *</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                         <i class="fa-solid fa-phone text-xs"></i>
@@ -2531,7 +2531,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-base font-semibold text-posterDark mb-1">อีเมล (สำหรับรับอีเมลยืนยันการจอง) *</label>
+                                <label class="block text-xs font-semibold text-posterDark mb-1">อีเมล (สำหรับรับอีเมลยืนยันการจอง) *</label>
                                 <div class="relative">
                                     <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-posterMuted">
                                         <i class="fa-solid fa-envelope text-xs"></i>
@@ -2552,7 +2552,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                         <!-- ชื่อผู้นั่งแต่ละที่นั่ง: สร้างแถวตามที่นั่งที่เลือก (renderAttendeeFields) -->
                         <div class="border-t border-posterPaper pt-4 space-y-3">
                             <div>
-                                <label class="block text-base font-bold text-posterDark uppercase tracking-wider">
+                                <label class="block text-xs font-bold text-posterDark uppercase tracking-wider">
                                     <i class="fa-solid fa-users text-posterGreen mr-1"></i>
                                     ชื่อผู้เข้าร่วมงานแต่ละที่นั่ง *
                                 </label>
@@ -4344,16 +4344,25 @@ function enterBooking() {
             if (bookingImageBlob) return Promise.resolve(bookingImageBlob);
             if (bookingImagePromise) return bookingImagePromise;
             const booking = lastBooking;
-            bookingImagePromise = Promise.all([loadHtml2Canvas(), document.fonts ? document.fonts.ready : null])
+            // กันหมุนไม่รู้จบ: เกินเวลานี้ให้ถือว่าสร้างรูปไม่สำเร็จ ลูกค้าจะเห็นข้อความให้แคปหน้าจอแทน
+            const withTimeout = (promise, ms) => Promise.race([promise,
+                new Promise((_, reject) => setTimeout(() => reject(new Error('สร้างรูปนานเกินไป')), ms))]);
+            // รอฟอนต์ไม่เกิน 3 วินาที (ถ้าฟอนต์ยังโหลดไม่เสร็จ ใช้ฟอนต์สำรองไปก่อนดีกว่าค้าง)
+            const fontsReady = document.fonts ? withTimeout(document.fonts.ready, 3000).catch(() => null) : null;
+            bookingImagePromise = withTimeout(Promise.all([loadHtml2Canvas(), fontsReady])
                 .then(([html2canvas]) => {
                     const holder = document.createElement('div');
                     // วางไว้นอกจอ ลูกค้าไม่เห็น แต่เบราว์เซอร์ยังจัดหน้าให้ถ่ายรูปได้
                     holder.style.cssText = 'position:fixed;left:-10000px;top:0;z-index:-1;';
                     holder.innerHTML = bookingImageHtml(booking);
                     document.body.appendChild(holder);
-                    return html2canvas(holder.firstElementChild, { scale: 2, backgroundColor: null, useCORS: true, logging: false })
-                        .finally(() => holder.remove());
-                })
+                    return html2canvas(holder.firstElementChild, {
+                        scale: 2, backgroundColor: null, useCORS: true, logging: false,
+                        // ข้ามรูป/วิดีโออื่นบนหน้าเว็บ (ใบจองไม่มีรูป): บน iPhone html2canvas รอทุกรูปในหน้าโหลดเสร็จโดยไม่มีเวลาหมด
+                        // รูปนักร้องที่ตั้งให้โหลดเมื่อเลื่อนถึงจะไม่โหลดเลยตอนอยู่หน้าใบจอง ปุ่มจึงหมุนค้าง (พบ 25 ต.ค. 2569)
+                        ignoreElements: el => /^(IMG|PICTURE|VIDEO|IFRAME|CANVAS)$/.test(el.tagName) && !holder.contains(el)
+                    }).finally(() => holder.remove());
+                }), 20000)
                 .then(canvas => new Promise((resolve, reject) =>
                     canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('สร้างรูปไม่สำเร็จ')), 'image/png')))
                 .then(blob => {
