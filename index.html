@@ -2006,255 +2006,13 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 }
 
         
- 
-/* ปิด Popup โปสเตอร์หน้าแรก */
-#mahamitWelcomePopup {
-    display: none !important;
-}
-
-
-
-
-/* ===== MAHAMIT ARTIST SLIDESHOW ===== */
-#artistSlideshow {
-    width: calc(100% - 32px);
-    max-width: 1000px;
-    margin: 24px auto 36px;
-    padding: 16px;
-    box-sizing: border-box;
-}
-
-#artistSlideshow .artist-slide-heading {
-    text-align: center;
-    margin-bottom: 18px;
-}
-
-#artistSlideshow .artist-slide-heading span {
-    display: block;
-    color: #8B2626;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    margin-bottom: 6px;
-}
-
-#artistSlideshow .artist-slide-heading h2 {
-    margin: 0;
-    color: #425E22;
-    font-family: 'Kanit', sans-serif;
-    font-size: clamp(18px, 2.2vw, 26px);
-    font-weight: 700;
-}
-
-#artistSlideshow .artist-slide-frame {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border: 1.5px solid #C8A051;
-    border-radius: 18px;
-    background: #F8F5EE;
-    box-shadow: 0 8px 24px rgba(35,32,29,.12);
-}
-
-#artistSlideshow .artist-slide {
-    display: none;
-    width: 100%;
-    height: auto;
-    max-height: 78vh;
-    object-fit: contain;
-    margin: 0 auto;
-}
-
-#artistSlideshow .artist-slide.active {
-    display: block;
-    animation: artistSlideFade .45s ease;
-}
-
-@keyframes artistSlideFade {
-    from { opacity: .3; }
-    to   { opacity: 1; }
-}
-
-#artistSlideshow .artist-slide-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 42px;
-    height: 42px;
-    border: 1px solid #C8A051;
-    border-radius: 50%;
-    background: rgba(49,82,31,.9);
-    color: #FFFFFF;
-    font-size: 20px;
-    cursor: pointer;
-    z-index: 2;
-}
-
-#artistSlideshow .artist-slide-btn.prev {
-    left: 12px;
-}
-
-#artistSlideshow .artist-slide-btn.next {
-    right: 12px;
-}
-
-#artistSlideshow .artist-slide-dots {
-    display: flex;
-    justify-content: center;
-    gap: 9px;
-    margin-top: 15px;
-}
-
-#artistSlideshow .artist-slide-dot {
-    width: 10px;
-    height: 10px;
-    padding: 0;
-    border: 0;
-    border-radius: 50%;
-    background: #C9C2B2;
-    cursor: pointer;
-}
-
-#artistSlideshow .artist-slide-dot.active {
-    background: #425E22;
-    box-shadow: 0 0 0 3px rgba(66,94,34,.15);
-}
-
-@media (max-width: 600px) {
-    #artistSlideshow {
-        width: calc(100% - 16px);
-        padding: 8px 0;
-        margin: 18px auto 26px;
-    }
-
-    #artistSlideshow .artist-slide-frame {
-        border-radius: 12px;
-    }
-
-    #artistSlideshow .artist-slide {
-        max-height: 70vh;
-    }
-
-    #artistSlideshow .artist-slide-btn {
-        width: 34px;
-        height: 34px;
-        font-size: 16px;
-    }
-
-    #artistSlideshow .artist-slide-btn.prev {
-        left: 7px;
-    }
-
-    #artistSlideshow .artist-slide-btn.next {
-        right: 7px;
-    }
-}
-
-
-
-/* ===== DESKTOP ONLY: ลดพื้นที่ว่างข้างโปสเตอร์ ===== */
-@media (min-width: 601px) {
-    #artistSlideshow {
-        width: min(54vh, calc(100vw - 32px));
-        max-width: none;
-        padding: 0;
-        margin: 24px auto 36px;
-        box-sizing: border-box;
-    }
-
-    #artistSlideshow .artist-slide-frame {
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    #artistSlideshow .artist-slide {
-        width: 100%;
-        max-height: 78vh;
-        object-fit: contain;
-    }
-}
-
-
-
-/* เปลี่ยนโลโก้เป็นโปสเตอร์เฉพาะมือถือ */
-@media (max-width: 600px) {
-    /* ซ่อนโลโก้เดิมใน Header */
-    header .header-logo {
-        display: none !important;
-    }
-
-    /* แสดงโปสเตอร์แทน */
-    header .mobile-poster {
-        display: block !important;
-        width: 100%;
-        max-width: 180px;
-        height: auto;
-        object-fit: contain;
-        margin: 0 auto;
-    }
-}
-
-/* บนคอมพิวเตอร์ใช้โลโก้เดิม */
-@media (min-width: 601px) {
-    header .mobile-poster {
-        display: none !important;
-    }
-}
-
-
-
-        
-
-
-
-
-/* ซ่อนโปสเตอร์บนคอมพิวเตอร์ */
-.mobile-top-poster {
-    display: none !important;
-}
-
-/* แสดงโปสเตอร์เฉพาะมือถือ */
-@media screen and (max-width: 600px) {
-    .mobile-top-poster {
-        display: block !important;
-        width: 100%;
-        max-width: 100%;
-        max-height: 45vh;
-        object-fit: contain;
-        object-position: center;
-        margin: 0 auto;
-        background: #EFE9DC;
-    }
-
-    /* ซ่อนรูปโลโก้เดิมเฉพาะมือถือ */
-    header img[src="./logo.png"] {
-        display: none !important;
-    }
-}
-
-        
         
 
     </style>
 </head>
 
-
-
-
-
-    
 <body class="min-h-screen flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
 
-
-
-<!-- โปสเตอร์ด้านบน แสดงเฉพาะมือถือ -->
-<img
-    src="/concert-poster.png"
-    alt="โปสเตอร์มหามิตรคอนเสิร์ต #2"
-    class="mobile-top-poster"
->
-
-    
     <!-- Navigation Header -->
     <header class="bg-posterGreen text-white shadow-md sticky top-0 z-40 border-b-2 border-posterGold/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
@@ -2454,57 +2212,88 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     </section>
 
 
+<!-- =========================================
+     MAHAMIT CONCERT #2 - ARTIST POSTERS
+     3 PAIRS / NO SLIDESHOW
+========================================= -->
 
-<!-- MAHAMIT ARTIST SLIDESHOW -->
-<section id="artistSlideshow">
+<section id="mahamitArtistGallery">
 
-    <div class="artist-slide-heading">
-        <span>MAHAMIT CONCERT #2</span>
-        <h2>ศิลปินและบทเพลงแห่งความทรงจำ</h2>
+    <!-- คู่ที่ 1 -->
+    <div class="singer-pair-section">
+
+        <div class="singer-pair-heading">
+            <span>MAHAMIT CONCERT #2</span>
+            <h2>พบกับศิลปินและบทเพลงแห่งความทรงจำ</h2>
+        </div>
+
+        <div class="singer-pair-grid">
+            <div class="singer-pair-card">
+                <img src="./sing1.png"
+                     alt="โปสเตอร์ศิลปินคนที่ 1"
+                     loading="eager">
+            </div>
+
+            <div class="singer-pair-card">
+                <img src="./sing2.png"
+                     alt="โปสเตอร์ศิลปินคนที่ 2"
+                     loading="eager">
+            </div>
+        </div>
+
     </div>
 
-    <div class="artist-slide-frame">
-        <img class="artist-slide active"
-             src="./sing1.png"
-             alt="โปสเตอร์ศิลปินคนที่ 1">
+    <!-- คู่ที่ 2 -->
+    <div class="singer-pair-section">
 
-        <img class="artist-slide"
-             src="./sing2.png"
-             alt="โปสเตอร์ศิลปินคนที่ 2">
+        <div class="singer-pair-heading">
+            <span>MAHAMIT CONCERT #2</span>
+            <h2>ศิลปินและบทเพลงที่คิดถึง</h2>
+        </div>
 
-        <img class="artist-slide"
-             src="./sing5.png"
-             alt="โปสเตอร์ศิลปินคนที่ 3">
+        <div class="singer-pair-grid">
+            <div class="singer-pair-card">
+                <img src="./sing5.png"
+                     alt="โปสเตอร์ศิลปินคนที่ 3"
+                     loading="lazy">
+            </div>
 
-        <img class="artist-slide"
-             src="./sing4.png"
-             alt="โปสเตอร์ศิลปินคนที่ 4">
+            <div class="singer-pair-card">
+                <img src="./sing4.png"
+                     alt="โปสเตอร์ศิลปินคนที่ 4"
+                     loading="lazy">
+            </div>
+        </div>
 
-        <img class="artist-slide"
-             src="./sing3.png"
-             alt="โปสเตอร์ศิลปินคนที่ 5">
-
-        <img class="artist-slide"
-             src="./sing6.png"
-             alt="โปสเตอร์ศิลปินคนที่ 6">
-
-        <button type="button"
-                class="artist-slide-btn prev"
-                aria-label="ภาพก่อนหน้า"
-                onclick="changeArtistSlide(-1)">&#10094;</button>
-
-        <button type="button"
-                class="artist-slide-btn next"
-                aria-label="ภาพถัดไป"
-                onclick="changeArtistSlide(1)">&#10095;</button>
     </div>
 
-    <div class="artist-slide-dots" id="artistSlideDots"></div>
+    <!-- คู่ที่ 3 -->
+    <div class="singer-pair-section">
+
+        <div class="singer-pair-heading">
+            <span>MAHAMIT CONCERT #2</span>
+            <h2>ร่วมสร้างความทรงจำไปด้วยกัน</h2>
+        </div>
+
+        <div class="singer-pair-grid">
+            <div class="singer-pair-card">
+                <img src="./sing3.png"
+                     alt="โปสเตอร์ศิลปินคนที่ 5"
+                     loading="lazy">
+            </div>
+
+            <div class="singer-pair-card">
+                <img src="./sing6.png"
+                     alt="โปสเตอร์ศิลปินคนที่ 6"
+                     loading="lazy">
+            </div>
+        </div>
+
+    </div>
 
 </section>
-<!-- END MAHAMIT ARTIST SLIDESHOW -->
 
-
+<!-- END MAHAMIT ARTIST GALLERY -->
 
 
 
@@ -5300,68 +5089,6 @@ document.addEventListener('DOMContentLoaded', function () {
     </p>
 </footer>
 
-
-<script>
-(function () {
-    const gallery = document.getElementById('artistSlideshow');
-    if (!gallery) return;
-
-    const slides = Array.from(
-        gallery.querySelectorAll('.artist-slide')
-    );
-    const dotsContainer = document.getElementById('artistSlideDots');
-
-    if (!slides.length || !dotsContainer) return;
-
-    let currentSlide = 0;
-    let slideTimer;
-
-    slides.forEach(function (_, index) {
-        const dot = document.createElement('button');
-        dot.type = 'button';
-        dot.className = 'artist-slide-dot';
-        dot.setAttribute('aria-label', 'ไปภาพที่ ' + (index + 1));
-        dot.addEventListener('click', function () {
-            showSlide(index);
-            restartTimer();
-        });
-        dotsContainer.appendChild(dot);
-    });
-
-    const dots = Array.from(
-        dotsContainer.querySelectorAll('.artist-slide-dot')
-    );
-
-    function showSlide(index) {
-        currentSlide = (index + slides.length) % slides.length;
-
-        slides.forEach(function (slide, i) {
-            slide.classList.toggle('active', i === currentSlide);
-        });
-
-        dots.forEach(function (dot, i) {
-            dot.classList.toggle('active', i === currentSlide);
-        });
-    }
-
-    window.changeArtistSlide = function (direction) {
-        showSlide(currentSlide + direction);
-        restartTimer();
-    };
-
-    function restartTimer() {
-        clearInterval(slideTimer);
-        slideTimer = setInterval(function () {
-            showSlide(currentSlide + 1);
-        }, 3000);
-    }
-
-    showSlide(0);
-    restartTimer();
-})();
-</script>
-</body>
-</html>
     
     
 </body>
