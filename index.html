@@ -2176,6 +2176,42 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
+/* เปลี่ยนโลโก้เป็นโปสเตอร์เฉพาะมือถือ */
+@media (max-width: 600px) {
+    /* ซ่อนโลโก้เดิมใน Header */
+    header .header-logo {
+        display: none !important;
+    }
+
+    /* แสดงโปสเตอร์แทน */
+    header .mobile-poster {
+        display: block !important;
+        width: 100%;
+        max-width: 180px;
+        height: auto;
+        object-fit: contain;
+        margin: 0 auto;
+    }
+}
+
+/* บนคอมพิวเตอร์ใช้โลโก้เดิม */
+@media (min-width: 601px) {
+    header .mobile-poster {
+        display: none !important;
+    }
+}
+
+
+
+        
+
+
+header .header-logo {
+    display: none !important;
+}
+
+
+        
         
 
     </style>
