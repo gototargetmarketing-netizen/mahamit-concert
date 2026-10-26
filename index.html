@@ -2173,6 +2173,47 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     }
 }
         
+
+
+
+/* ===== CHAIR SOUVENIR IMAGE ===== */
+#chairSouvenir {
+    width: calc(100% - 32px);
+    max-width: 1000px;
+    margin: 28px auto 20px;
+    box-sizing: border-box;
+}
+
+#chairSouvenir .chair-souvenir-inner {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #F7F0E3;
+    border: 1px solid rgba(194, 160, 91, 0.45);
+    box-shadow: 0 5px 16px rgba(65, 49, 25, 0.10);
+}
+
+#chairSouvenir img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    #chairSouvenir {
+        width: calc(100% - 24px);
+        margin: 20px auto 16px;
+    }
+
+    #chairSouvenir .chair-souvenir-inner {
+        border-radius: 12px;
+    }
+}
+
+
+
         
 
     </style>
@@ -2410,6 +2451,21 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
+
+<!-- CHAIR CAMPING SOUVENIR IMAGE -->
+<section id="chairSouvenir">
+    <div class="chair-souvenir-inner">
+        <img
+            src="./chair.jpg"
+            alt="รับของที่ระลึก เก้าอี้สนามแคมป์ปิ้ง MAHAMIT CONCERT #2"
+            loading="lazy"
+        >
+    </div>
+</section>
+<!-- END CHAIR CAMPING SOUVENIR IMAGE -->
+
+
+    
 
 <!-- ========================================
      MAHAMIT TICKET PRICE GUIDE
