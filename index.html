@@ -2206,10 +2206,31 @@ body:has(#cartSummaryBtn:not(.hidden)) {
         
 
 
-header .header-logo {
+
+
+/* ซ่อนโปสเตอร์บนคอมพิวเตอร์ */
+.mobile-top-poster {
     display: none !important;
 }
 
+/* แสดงโปสเตอร์เฉพาะมือถือ */
+@media screen and (max-width: 600px) {
+    .mobile-top-poster {
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        max-height: 45vh;
+        object-fit: contain;
+        object-position: center;
+        margin: 0 auto;
+        background: #EFE9DC;
+    }
+
+    /* ซ่อนรูปโลโก้เดิมเฉพาะมือถือ */
+    header img[src="./logo.png"] {
+        display: none !important;
+    }
+}
 
         
         
@@ -2224,6 +2245,16 @@ header .header-logo {
     
 <body class="min-h-screen flex flex-col bg-posterCream selection:bg-posterGreen selection:text-white">
 
+
+
+<!-- โปสเตอร์ด้านบน แสดงเฉพาะมือถือ -->
+<img
+    src="/concert-poster.png"
+    alt="โปสเตอร์มหามิตรคอนเสิร์ต #2"
+    class="mobile-top-poster"
+>
+
+    
     <!-- Navigation Header -->
     <header class="bg-posterGreen text-white shadow-md sticky top-0 z-40 border-b-2 border-posterGold/40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
