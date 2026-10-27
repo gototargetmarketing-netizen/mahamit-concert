@@ -2396,9 +2396,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 />
                     </div>
                     <div class="mt-2.5 text-center flex justify-between items-center px-1">
-                        <span class="text-[11px] font-kanit font-bold text-posterGreen">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</span>
-                        <span class="text-[10px] text-posterBurgundy font-mono bg-posterCream px-2 py-0.5 rounded border border-posterPaper">16 ม.ค. 2570</span>
-                    </div>
+
                 </div>
             </div>
 
@@ -2484,7 +2482,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     <div class="ticket-price-grid" id="ticketPriceGrid"></div>
 
     <!-- สิทธิ์ที่ได้ทุกโซนเท่ากัน จึงเขียนครั้งเดียวใต้การ์ด แทนการใส่ซ้ำในการ์ดทุกใบ -->
-    <p class="ticket-guide-voucher">ทุกที่นั่งรับ Voucher อาหาร มูลค่า 100 บาท</p>
+    <p class="ticket-guide-voucher">Voucher มูลค่า 100 บาท ใช้ได้ทุกร้านบริเวณงาน</p>
 
 
 <p class="ticket-guide-note">
@@ -2632,9 +2630,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                         <i class="fa-solid fa-circle-info text-posterGreen mr-1"></i>
                         เลือกได้สูงสุด 10 ที่นั่งต่อการจอง
                     </div>
-                    <div id="seatStatsText">
-                        ความจุทั้งหมด: 565 ที่นั่ง
-                    </div>
+                  
                 </div>
             </div>
 
@@ -2803,8 +2799,10 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
                         <!-- Real-time Dynamic PromptPay QR Code Generator -->
                         <div class="bg-white p-4 rounded-xl border border-posterPaper inline-block shadow-inner">
+                           <!-- loading="lazy": รูปอยู่ในขั้นที่ 2 ที่ยังซ่อนอยู่ตอนเปิดหน้าแรก โหลดเมื่อลูกค้าเข้าขั้นที่ 2 (ประหยัด 0.4 MB) -->
                            <img
     id="qrCodeImg"
+    loading="lazy"
     src="./promptpay-qr.png"
     alt="PromptPay QR Code"
     onclick="openQRModal()"
@@ -2816,16 +2814,20 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                             </p>
                         </div>
 
+                        <!-- flex w-fit (ไม่ใช่ inline-flex): ให้ปุ่มขึ้นบรรทัดใหม่ใต้รูปเสมอ บนคอมจอกว้างปุ่มเคยไปอยู่ข้างรูป
+                             เดิมเป็นปุ่มขยาย QR เปลี่ยนเป็นบันทึกรูป (27 ต.ค. 2569) ให้ลูกค้าเปิดแอปธนาคารแล้วเลือกรูปจากคลังรูปมาสแกนได้
+                             การแตะที่รูป QR ด้านบนยังขยายเต็มจอได้ เผื่อคนที่จองจากคอมแล้วใช้มือถือสแกนจากจอ -->
                         <button
     type="button"
-    onclick="openQRModal()"
-    class="mx-auto inline-flex items-center justify-center gap-2
+    id="btnSaveQrImage"
+    onclick="saveQrImage()"
+    class="mx-auto flex w-fit items-center justify-center gap-2
            bg-posterGreen hover:bg-posterGreenDark
            text-white font-bold text-sm
            px-5 py-3 rounded-xl shadow transition"
 >
-    <i class="fa-solid fa-expand"></i>
-    ขยาย QR Code / ดูเต็มหน้าจอ
+    <i class="fa-solid fa-download"></i>
+    <span>บันทึกรูป QR Code</span>
 </button>
 
                         <!-- โค้ดส่วนลด: ตรวจกับ Apps Script แล้วแสดงยอดหลังลดก่อนลูกค้าโอนเงิน -->
@@ -2913,7 +2915,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                     <p class="text-sm sm:text-base text-amber-200 font-semibold">อยู่ระหว่างตรวจสอบการชำระเงิน</p>
                     <p class="text-xs sm:text-sm text-emerald-100">ขอบคุณสำหรับการจองบัตรคอนเสิร์ต มิตรภาพไม่มีวันดึกดำบรรพ์ #2</p>
                     <div class="inline-block bg-white/10 px-4 py-1 rounded-full text-xs text-amber-200 font-mono mt-2 border border-white/20">
-                        Order Ref: <span id="ticketOrderRef">MK-2570-0000</span>
+                        Order Ref: <span id="ticketOrderRef">KK-0000</span>
                     </div>
                 </div>
 
@@ -2979,8 +2981,8 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                         <p>2. กดปุ่ม "บันทึกใบจอง" ด้านล่าง หรือจดเลขอ้างอิงการจองไว้ สำหรับติดต่อผู้จัดงาน</p>
                         <p>3. วันงาน กรุณาแสดงอีเมลยืนยันแก่เจ้าหน้าที่ ณ จุดลงทะเบียน</p>
                         <p>4. หากไม่ได้รับอีเมลภายใน 24 ชม. กรุณาตรวจสอบในกล่องจดหมายขยะ (Spam) หรือติดต่อผู้จัดงาน
-                            ทาง Facebook: <a href="https://www.facebook.com/KriengkraiMahamit/" target="_blank" rel="noopener noreferrer" class="font-bold text-posterGreen underline">Kriengkrai Mahamit</a>
-                            หรือโทร <a href="tel:0905235223" class="font-bold text-posterGreen underline">090 523 5223</a></p>
+                            <!-- เหลือแค่เบอร์โทร ผู้จัดขอเอา Facebook ออกทุกจุด (27 ต.ค. 2569) -->
+                            โทร <a href="tel:0905235223" class="font-bold text-posterGreen underline">090 523 5223</a></p>
                     </div>
 
                     <div class="print-hide flex flex-col sm:flex-row gap-3 pt-2">
@@ -3033,7 +3035,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
         }
 
         // ชื่อโซนที่แสดงในหน้าจอง โซนที่มี tag ใส่วงเล็บต่อท้าย เช่น "มิตรสำราญ (อัฒจันทร์)"
-        // ลูกค้าจะได้รู้ตั้งแต่ตอนเลือกว่าเป็นอัฒจันทร์ ไม่ใช่เก้าอี้สนาม (tag ตั้งใน seat-layout/seats.json)
+        // ลูกค้าจะได้รู้ตั้งแต่ตอนเลือกว่าเป็นอัฒจันทร์ ไม่ใช่เก้าอี้แคมป์ปิ้ง (tag ตั้งใน seat-layout/seats.json)
         function zoneLabel(zone) {
             if (!zone) return '';
             return zone.tag ? `${zone.name} (${zone.tag})` : zone.name;
@@ -3048,7 +3050,8 @@ body:has(#cartSummaryBtn:not(.hidden)) {
                     <div class="ticket-color-dot"></div>
                     <div class="ticket-price-content">
                         <h3>${zone.name}</h3>
-                        <p>${zone.seats} ที่นั่ง${zone.note ? ' · ' + zone.note : ''}</p>
+                        <!-- ไม่แสดงจำนวนที่นั่งบนการ์ด (ผู้จัดขอ 27 ต.ค. 2569) แสดงแค่ประเภทที่นั่งจาก note ใน seats.json -->
+                        <p>${zone.note || ''}</p>
                         <p class="ticket-price">${zone.price.toLocaleString()} <span>บาท</span></p>
                     </div>
                 </article>`).join('');
@@ -3258,9 +3261,7 @@ await refreshSeatStatus(true);
                 const stats = document.getElementById('seatStatsText');
                 if (stats) {
                     // นับเฉพาะที่นั่งในผัง (รายการจากชีตอาจมีรหัสที่ไม่อยู่ในผัง เช่น ข้อมูลทดสอบเก่า)
-                    const ids = Object.keys(seatMapData);
-                    const soldCount = ids.filter(id => seatMapData[id].isSold).length;
-                    stats.textContent = `จองแล้ว ${soldCount} / ${ids.length} ที่นั่ง`;
+
                 }
 
 const notice = document.getElementById('seatLoadNotice');
@@ -3291,7 +3292,7 @@ if (showMessage) {
         // เพราะยอดเงินเปลี่ยน ลูกค้าอาจโอนตามยอดเดิมไปแล้ว ถ้าเอาออกเงียบๆ จะกดยืนยันด้วยยอดที่ไม่ตรงกับสลิป
         function notifySeatsTaken(taken) {
             const list = taken.join(', ');
-            const contact = 'Facebook: Kriengkrai Mahamit โทร 090 523 5223';
+            const contact = 'โทร 090 523 5223';   // ไม่ใส่ Facebook ตามที่ผู้จัดขอ (27 ต.ค. 2569)
             if (selectedSeats.size === 0) {
                 if (currentStep === 2) {
                     alert(`ที่นั่ง ${list} เพิ่งมีคนอื่นจองไป กรุณาเลือกที่นั่งใหม่ ข้อมูลและสลิปที่กรอกไว้ยังอยู่ ` +
@@ -3330,7 +3331,7 @@ if (showMessage) {
             const chips = document.getElementById('seatZoneChips');
             if (chips) {
                 chips.innerHTML = SEAT_CONFIG.zones.map(zone =>
-                    `<span class="smap-chip" title="${zone.seats} ที่นั่ง${zone.note ? ' · ' + zone.note : ''}"><span class="smap-dot" style="background:${zone.color}"></span><span>${zone.name}${zone.tag ? ` <span class="smap-chip-tag">(${zone.tag})</span>` : ''}</span> <b>${zone.price.toLocaleString()}</b></span>`).join('');
+                    `<span class="smap-chip" title="${zone.note || ''}"><span class="smap-dot" style="background:${zone.color}"></span><span>${zone.name}${zone.tag ? ` <span class="smap-chip-tag">(${zone.tag})</span>` : ''}</span> <b>${zone.price.toLocaleString()}</b></span>`).join('');
             }
             const status = document.getElementById('seatStatusLegend');
             if (status) {
@@ -3910,6 +3911,8 @@ if (hero) {
             }
             // ผังเพิ่งมองเห็น จึงวัดความกว้างเพื่อคำนวณขนาด "ดูทั้งผัง" ได้
             if (step === 1) requestAnimationFrame(refreshSeatMapLayout);
+            // โหลดรูป QR เตรียมไว้ให้ปุ่ม "บันทึกรูป QR Code" (iPhone เปิดหน้าแชร์ได้เฉพาะเมื่อมีรูปพร้อมตอนกด)
+            if (step === 2 && typeof prepareQrImage === 'function') prepareQrImage().catch(() => {});
 
             // Update Progress Bar
             const progressBar = document.getElementById('progressBar');
@@ -4255,7 +4258,9 @@ function hideBookingLoading() {
                 const discountCode = appliedDiscount && discountAmt > 0 ? appliedDiscount.code : '';
                 totalAmt -= discountAmt;
 
-                const orderRef = 'MK-2570-' + Date.now().toString().slice(-8) + '-' +
+                // เลขอ้างอิงรูปแบบ KK-เวลา8หลัก-สุ่ม4ตัว (เปลี่ยนจาก MK-2570- เมื่อ 27 ต.ค. 2569 ตามที่ผู้จัดต้องการ)
+                // ถ้าเปลี่ยนรูปแบบอีก ต้องแก้ ORDER_REF_PATTERN ใน code.gs ด้วย ไม่อย่างนั้นลูกค้าจะจองไม่ผ่าน
+                const orderRef = 'KK-' + Date.now().toString().slice(-8) + '-' +
                     Math.random().toString(36).slice(2, 6).toUpperCase();
                 const bookingTime = new Date().toISOString();
 
@@ -4313,7 +4318,7 @@ function hideBookingLoading() {
                         if (message.includes('ถูกจองไปแล้ว')) {
                             // ลูกค้าโอนเงินไปแล้ว บอกทางไปต่อให้ชัด (ข้อมูลและสลิปยังอยู่ ไม่ต้องกรอกใหม่)
                             alert(message + ' ข้อมูลและสลิปที่แนบไว้ยังอยู่ เลือกที่นั่งใหม่ในราคาเดียวกันแล้วกดยืนยันได้เลย ' +
-                                'หากต้องการเปลี่ยนโซนหรือขอคืนเงิน กรุณาติดต่อผู้จัดงาน (Facebook: Kriengkrai Mahamit โทร 090 523 5223)');
+                                'หากต้องการเปลี่ยนโซนหรือขอคืนเงิน กรุณาติดต่อผู้จัดงาน (โทร 090 523 5223)');
                             refreshSeatStatus(false, false);   // แจ้งไปแล้วข้างบน ไม่ต้องแจ้งซ้ำ
                             goToStep(1);
                             return;
@@ -4436,90 +4441,291 @@ function enterBooking() {
 }
         
         /* ----------------------------------------------------
-         * บันทึกใบจองเป็นรูปภาพ (ยกมาจากโรงหนัง ปรับเป็นธีมคอนเสิร์ต)
-         * วาดการ์ดสีแยกจากหน้าจอ (ขนาดพอดีจอมือถือ ไม่มีปุ่ม) แล้วถ่ายเป็น PNG ด้วย html2canvas
+         * บันทึกใบจองเป็นรูปภาพ
+         * วาดใบจองลง canvas เองทีละบรรทัด (เปลี่ยนจาก html2canvas เมื่อ 27 ต.ค. 2569)
+         * เหตุผล: html2canvas ถ่ายรูปจากหน้าเว็บ ถ้า Android ตั้งตัวหนังสือใหญ่ไว้ ตัวหนังสือในรูปจะเลื่อนหลุดกรอบ
+         * (ทีมทดสอบเจอในแอป LINE) วาดเองด้วยขนาด px ตายตัว การตั้งค่าเครื่องจึงไม่มีผล และไม่ต้องโหลดไลบรารีเพิ่ม
+         * หน้าตาเหมือนใบจองแบบเดิม: หัวเขียว ป้ายเหลือง กล่องเส้นประ กล่องหมายเหตุ ไม่มีรูปโลโก้ (ผู้ใช้ขอข้อความล้วน)
          * ---------------------------------------------------- */
         let lastBooking = null;
         let bookingImageBlob = null;
         let bookingImagePromise = null;
-        const HTML2CANVAS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
 
-        // โหลดไลบรารีตอนจองสำเร็จเท่านั้น คนที่แค่เข้ามาดูหน้าแรกไม่ต้องโหลดไฟล์นี้
-        function loadHtml2Canvas() {
-            if (window.html2canvas) return Promise.resolve(window.html2canvas);
-            if (loadHtml2Canvas.promise) return loadHtml2Canvas.promise;
-            loadHtml2Canvas.promise = new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = HTML2CANVAS_URL;
-                script.onload = () => resolve(window.html2canvas);
-                script.onerror = () => { loadHtml2Canvas.promise = null; reject(new Error('โหลดตัวสร้างรูปไม่สำเร็จ')); };
-                document.head.appendChild(script);
-            });
-            return loadHtml2Canvas.promise;
+        const BOOKING_IMG = {
+            width: 540,     // ความกว้างที่ออกแบบ (px) พอดีจอมือถือเมื่อเปิดดูรูป
+            scale: 2,       // วาดจริง 2 เท่า ให้คมบนจอมือถือ
+            green: '#425E22', burgundy: '#8B2626', gold: '#C8A051', dark: '#23201D', muted: '#6E6A5F',
+            line: 'rgba(66,94,34,.25)',
+            body: "'Prompt', sans-serif",
+            head: "'Kanit', sans-serif"
+        };
+
+        // แบ่งข้อความเป็นคำ เพื่อตัดบรรทัดไม่ให้คำภาษาไทยขาดกลางคำ หรือสระ/วรรณยุกต์แยกจากตัวอักษร
+        function splitTextUnits(text) {
+            if (window.Intl && Intl.Segmenter) {
+                return Array.from(new Intl.Segmenter('th', { granularity: 'word' }).segment(text), s => s.segment);
+            }
+            return splitTextChars(text);
+        }
+        // ตัดทีละตัวอักษร (เบราว์เซอร์เก่า หรือคำเดียวยาวเกินบรรทัด) โดยรวมสระบน/ล่างและวรรณยุกต์ไว้กับตัวหน้า
+        function splitTextChars(text) {
+            return String(text).match(/[^ัิ-ฺ็-๎][ัิ-ฺ็-๎]*/g) || [];
         }
 
-        // ผู้ใช้ขอไม่ใส่รูป (โลโก้/โปสเตอร์) ในใบจองคอนเสิร์ต ใช้ข้อความล้วน
-        function bookingImageHtml(b) {
-            const green = '#425E22', burgundy = '#8B2626', gold = '#C8A051', dark = '#23201D', muted = '#6E6A5F';
-            const esc = escapeAttr;
-            const badges = b.seats.map((id, i) =>
-                `<span style="display:inline-flex;align-items:center;margin:0 6px 6px 0;padding:0 11px 11px;height:34px;box-sizing:border-box;border-radius:7px;color:#fff;font-size:15px;font-weight:700;
-                    background:${b.zones[i] ? b.zones[i].color : green};color:${b.zones[i] ? b.zones[i].textColor : '#fff'};">${esc(id)}${b.zones[i] ? ' · ' + esc(zoneLabel(b.zones[i])) : ''}</span>`).join('');
-            const attendees = b.attendees.map(a =>
-                `<div style="display:flex;gap:10px;padding:5px 0;font-size:15px;line-height:1.5;">
-                    <span style="width:44px;flex-shrink:0;color:${burgundy};font-weight:700;">${esc(a.seat)}</span>
-                    <span style="flex:1;min-width:0;color:${dark};font-weight:600;word-break:break-word;">${esc(a.name)}${a.age ? `<span style="color:${muted};font-weight:400;"> · ${esc(a.age)} ปี</span>` : ''}</span>
-                </div>`).join('');
-            const info = (label, value, color) =>
-                `<div style="flex:1;min-width:0;">
-                    <div style="font-size:13px;color:${muted};">${label}</div>
-                    <div style="font-size:17px;font-weight:700;color:${color || dark};margin-top:2px;word-break:break-word;">${value}</div>
-                </div>`;
-            return `
-            <div style="width:540px;font-family:'Prompt',sans-serif;background:#F8F5EE;border:3px solid ${gold};border-radius:28px;overflow:hidden;color:${dark};">
-                <div style="background:${green};padding:26px 28px 24px;text-align:center;border-bottom:3px solid ${gold};">
-                    <div style="font-family:'Kanit',sans-serif;font-size:26px;font-weight:700;color:#FEF3C7;line-height:1.35;">มิตรภาพไม่มีวันดึกดำบรรพ์ #2</div>
-                    <div style="font-size:14px;color:#D1FAE5;margin-top:4px;">เสาร์ที่ 16 มกราคม 2570 · KK Market แม่ริม เชียงใหม่</div>
-                    <div style="display:inline-block;margin-top:14px;padding:7px 16px;border-radius:999px;background:#FDE68A;border:1px solid #FCD34D;color:#92400E;font-size:15px;font-weight:700;">
-                        <i class="fa-solid fa-hourglass-half" style="margin-right:6px;"></i>ใบจอง · รอตรวจสอบการชำระเงิน
-                    </div>
-                </div>
-                <div style="padding:24px 28px 26px;">
-                    <div style="background:#EFE9DC;border:2px dashed rgba(66,94,34,.45);border-radius:18px;padding:18px 18px 14px;">
-                        <div style="text-align:center;padding-bottom:14px;border-bottom:1px solid rgba(66,94,34,.25);">
-                            <div style="font-size:13px;color:${muted};">เลขอ้างอิงการจอง (Order Ref)</div>
-                            <div style="font-size:22px;font-weight:700;color:${green};margin-top:2px;">${esc(b.orderRef)}</div>
-                        </div>
-                        <div style="display:flex;gap:14px;padding:14px 0;border-bottom:1px solid rgba(66,94,34,.25);">
-                            ${info('ชื่อผู้จองบัตร', esc(b.name))}
-                            ${info('จำนวนที่นั่ง', b.seats.length + ' ที่นั่ง', burgundy)}
-                        </div>
-                        <div style="padding:14px 0 8px;border-bottom:1px solid rgba(66,94,34,.25);">
-                            <div style="font-size:13px;color:${muted};margin-bottom:8px;">หมายเลขที่นั่ง</div>
-                            <div>${badges}</div>
-                        </div>
-                        <div style="padding:12px 0 10px;border-bottom:1px solid rgba(66,94,34,.25);">
-                            <div style="font-size:13px;color:${muted};margin-bottom:4px;">ชื่อผู้เข้าร่วมงาน</div>
-                            ${attendees}
-                        </div>
-                        <div style="display:flex;justify-content:space-between;align-items:flex-end;padding-top:14px;">
-                            <div style="font-size:16px;font-weight:700;color:${dark};">ยอดชำระ</div>
-                            <div style="text-align:right;">
-                                <div style="font-family:'Kanit',sans-serif;font-size:30px;font-weight:700;color:${green};line-height:1.1;">${Number(b.total).toLocaleString()} บาท</div>
-                                ${b.discountText ? `<div style="font-size:13px;color:${muted};margin-top:4px;">${esc(b.discountText)}</div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    <div style="margin-top:16px;padding:14px 16px;border-radius:14px;background:#FEF3C7;border:1px solid #FCD34D;display:flex;gap:12px;align-items:flex-start;">
-                        <i class="fa-solid fa-circle-info" style="color:#B45309;font-size:20px;padding-top:3px;"></i>
-                        <div style="font-size:14px;line-height:1.7;color:#78350F;">
-                            <b>ใบจองนี้ยังไม่ใช่บัตรเข้างาน</b><br>
-                            ผู้จัดงานจะส่งอีเมลยืนยันพร้อม QR เข้างาน<br>หลังตรวจสอบการชำระเงินแล้ว
-                        </div>
-                    </div>
-                    <div style="text-align:center;font-size:12px;color:${muted};margin-top:16px;">ติดต่อผู้จัดงาน · Facebook: Kriengkrai Mahamit · โทร 090 523 5223</div>
-                </div>
-            </div>`;
+        function wrapCanvasText(ctx, text, maxWidth) {
+            const lines = [];
+            let line = '';
+            const push = unit => {
+                if (line && ctx.measureText(line + unit).width > maxWidth) {
+                    lines.push(line.trimEnd());
+                    line = unit.trimStart();
+                } else {
+                    line += unit;
+                }
+            };
+            splitTextUnits(String(text || '')).forEach(unit => {
+                if (ctx.measureText(unit).width > maxWidth) splitTextChars(unit).forEach(push);
+                else push(unit);
+            });
+            if (line) lines.push(line);
+            return lines.length ? lines : [''];
+        }
+
+        function roundRectPath(ctx, x, y, w, h, r) {
+            // เขียนเองแทน ctx.roundRect เพราะ iPhone รุ่นเก่า (iOS 15) ยังไม่มีคำสั่งนี้
+            r = Math.min(r, w / 2, h / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        /**
+         * จัดวางใบจองเป็นรายการคำสั่งวาด (ยังไม่วาด) แล้วคืนความสูงรวม
+         * แยกขั้นจัดวางกับขั้นวาด เพราะต้องรู้ความสูงทั้งใบก่อนสร้าง canvas
+         */
+        function layoutBookingImage(ctx, b) {
+            const C = BOOKING_IMG;
+            const W = C.width;
+            const ops = [];
+            const font = (weight, size, family) => `${weight} ${size}px ${family || C.body}`;
+            const measure = (text, f) => { ctx.font = f; return ctx.measureText(text).width; };
+            // วางข้อความหลายบรรทัด: y คือขอบบนของบรรทัดแรก คืนค่าความสูงที่ใช้
+            const textBlock = (text, x, y, maxW, f, color, lh, align) => {
+                ctx.font = f;
+                const lines = wrapCanvasText(ctx, text, maxW);
+                lines.forEach((t, i) => ops.push({ t: 'text', text: t, x, y: y + i * lh, lh, font: f, color, align: align || 'left' }));
+                return lines.length * lh;
+            };
+            const hline = (x, y, w) => ops.push({ t: 'rect', x, y, w, h: 1, fill: C.line });
+
+            let y = 3;                       // ขอบทอง 3px
+            const innerW = W - 6;
+
+            // ---------- หัวสีเขียว ----------
+            const headTop = y;
+            y += 26;
+            // ไม่ใส่ "#2" ต่อท้ายชื่องานในรูปใบจอง (ผู้จัดขอ 27 ต.ค. 2569) ที่อื่นบนหน้าเว็บยังมีตามเดิม
+            y += textBlock('มิตรภาพไม่มีวันดึกดำบรรพ์', W / 2, y, innerW - 56, font(700, 26, C.head), '#FEF3C7', 35, 'center');
+            y += 4;
+            y += textBlock('เสาร์ที่ 16 มกราคม 2570 · KK Market แม่ริม เชียงใหม่', W / 2, y, innerW - 56, font(400, 14), '#D1FAE5', 21, 'center');
+            y += 14;
+            const pillText = 'ใบจอง · รอตรวจสอบการชำระเงิน';
+            const pillFont = font(700, 15);
+            const pillW = Math.min(innerW - 56, measure(pillText, pillFont) + 21 + 34);
+            const pillH = 38;
+            const pillX = (W - pillW) / 2;
+            ops.push({ t: 'rect', x: pillX, y, w: pillW, h: pillH, r: pillH / 2, fill: '#FDE68A', stroke: '#FCD34D', lineWidth: 1 });
+            ops.push({ t: 'hourglass', x: pillX + 17, y: y + (pillH - 15) / 2, color: '#92400E' });
+            ops.push({ t: 'text', text: pillText, x: pillX + 17 + 11 + 6, y, lh: pillH, font: pillFont, color: '#92400E', align: 'left' });
+            y += pillH + 24;
+            ops.unshift({ t: 'rect', x: 0, y: headTop, w: W, h: y - headTop, fill: C.green });
+            ops.push({ t: 'rect', x: 0, y, w: W, h: 3, fill: C.gold });
+            y += 3;
+
+            // ---------- กล่องข้อมูลการจอง (เส้นประ) ----------
+            y += 24;
+            const boxX = 3 + 28, boxW = innerW - 56;
+            const boxTop = y;
+            const boxOpIndex = ops.length;   // กล่องต้องวาดก่อนข้อความข้างใน จึงจองตำแหน่งไว้ก่อน
+            const ix = boxX + 18, iw = boxW - 36;
+            y += 18;
+
+            // เลขอ้างอิง
+            y += textBlock('เลขอ้างอิงการจอง (Order Ref)', ix + iw / 2, y, iw, font(400, 13), C.muted, 20, 'center');
+            y += 2;
+            y += textBlock(b.orderRef, ix + iw / 2, y, iw, font(700, 22), C.green, 33, 'center');
+            y += 14;
+            hline(ix, y, iw); y += 1;
+
+            // ชื่อผู้จอง + จำนวนที่นั่ง
+            y += 14;
+            const colW = (iw - 14) / 2;
+            const col = (x, label, value, color) => {
+                let h = textBlock(label, x, y, colW, font(400, 13), C.muted, 20);
+                h += 2;
+                h += textBlock(value, x, y + h, colW, font(700, 17), color, 26);
+                return h;
+            };
+            y += Math.max(col(ix, 'ชื่อผู้จองบัตร', b.name, C.dark), col(ix + colW + 14, 'จำนวนที่นั่ง', b.seats.length + ' ที่นั่ง', C.burgundy));
+            y += 14;
+            hline(ix, y, iw); y += 1;
+
+            // ป้ายที่นั่ง (สีตามโซน)
+            y += 14;
+            y += textBlock('หมายเลขที่นั่ง', ix, y, iw, font(400, 13), C.muted, 20);
+            y += 8;
+            const badgeFont = font(700, 15);
+            let bx = ix;
+            b.seats.forEach((id, i) => {
+                const zone = b.zones[i];
+                const label = id + (zone ? ' · ' + zoneLabel(zone) : '');
+                const bw = Math.min(iw, measure(label, badgeFont) + 22);
+                if (bx > ix && bx + bw > ix + iw) { bx = ix; y += 34 + 6; }
+                ops.push({ t: 'rect', x: bx, y, w: bw, h: 34, r: 7, fill: zone ? zone.color : C.green });
+                ops.push({ t: 'text', text: label, x: bx + bw / 2, y, lh: 34, font: badgeFont, color: zone ? zone.textColor : '#fff', align: 'center' });
+                bx += bw + 6;
+            });
+            y += 34 + 6;
+            y += 8;
+            hline(ix, y, iw); y += 1;
+
+            // ชื่อผู้เข้าร่วมงาน
+            y += 12;
+            y += textBlock('ชื่อผู้เข้าร่วมงาน', ix, y, iw, font(400, 13), C.muted, 20);
+            y += 4;
+            const nameFont = font(600, 15), ageFont = font(400, 15);
+            const nameX = ix + 44 + 10, nameW = iw - 54;
+            b.attendees.forEach(a => {
+                y += 5;
+                ops.push({ t: 'text', text: a.seat, x: ix, y, lh: 23, font: font(700, 15), color: C.burgundy, align: 'left' });
+                ctx.font = nameFont;
+                const lines = wrapCanvasText(ctx, a.name, nameW);
+                lines.forEach((t, i) => ops.push({ t: 'text', text: t, x: nameX, y: y + i * 23, lh: 23, font: nameFont, color: C.dark, align: 'left' }));
+                let rows = lines.length;
+                if (a.age) {
+                    // อายุต่อท้ายชื่อบรรทัดสุดท้าย ถ้าไม่พอให้ขึ้นบรรทัดใหม่
+                    const ageText = ' · ' + a.age + ' ปี';
+                    const lastW = measure(lines[lines.length - 1], nameFont);
+                    if (lastW + measure(ageText, ageFont) <= nameW) {
+                        ops.push({ t: 'text', text: ageText, x: nameX + lastW, y: y + (rows - 1) * 23, lh: 23, font: ageFont, color: C.muted, align: 'left' });
+                    } else {
+                        ops.push({ t: 'text', text: ageText.trim(), x: nameX, y: y + rows * 23, lh: 23, font: ageFont, color: C.muted, align: 'left' });
+                        rows++;
+                    }
+                }
+                y += rows * 23 + 5;
+            });
+            y += 10;
+            hline(ix, y, iw); y += 1;
+
+            // ยอดชำระ
+            y += 14;
+            const totalText = Number(b.total).toLocaleString() + ' บาท';
+            const totalTop = y;
+            ops.push({ t: 'text', text: totalText, x: ix + iw, y, lh: 36, font: font(700, 30, C.head), color: C.green, align: 'right' });
+            let rightH = 36;
+            if (b.discountText) {
+                rightH += 4;
+                rightH += textBlock(b.discountText, ix + iw, y + rightH, iw * 0.7, font(400, 13), C.muted, 20, 'right');
+            }
+            // "ยอดชำระ" ชิดล่างแนวเดียวกับตัวเลข (เหมือน align-items:flex-end ของแบบเดิม)
+            ops.push({ t: 'text', text: 'ยอดชำระ', x: ix, y: totalTop + 36 - 26, lh: 24, font: font(700, 16), color: C.dark, align: 'left' });
+            y += rightH;
+            y += 14;
+            ops.splice(boxOpIndex, 0, { t: 'rect', x: boxX, y: boxTop, w: boxW, h: y - boxTop, r: 18, fill: '#EFE9DC', stroke: 'rgba(66,94,34,.45)', lineWidth: 2, dash: [7, 5] });
+
+            // ---------- กล่องหมายเหตุ ----------
+            y += 16;
+            const noteTop = y;
+            const noteOpIndex = ops.length;
+            const noteTextX = boxX + 16 + 20 + 12, noteTextW = boxW - 32 - 32;
+            y += 14;
+            ops.push({ t: 'info', x: boxX + 16, y: y + 3, color: '#B45309' });
+            y += textBlock('ใบจองนี้ยังไม่ใช่บัตรเข้างาน', noteTextX, y, noteTextW, font(700, 14), '#78350F', 24);
+            y += textBlock('ผู้จัดงานจะส่งอีเมลยืนยันพร้อม QR เข้างาน', noteTextX, y, noteTextW, font(400, 14), '#78350F', 24);
+            y += textBlock('หลังตรวจสอบการชำระเงินแล้ว', noteTextX, y, noteTextW, font(400, 14), '#78350F', 24);
+            y += 14;
+            ops.splice(noteOpIndex, 0, { t: 'rect', x: boxX, y: noteTop, w: boxW, h: y - noteTop, r: 14, fill: '#FEF3C7', stroke: '#FCD34D', lineWidth: 1 });
+
+            // ---------- ท้ายใบ ----------
+            y += 16;
+            y += textBlock('ติดต่อผู้จัดงาน · โทร 090 523 5223', W / 2, y, boxW, font(400, 12), C.muted, 18, 'center');
+            y += 26 + 3;
+            return { ops, height: Math.ceil(y) };
+        }
+
+        function drawBookingImage(b) {
+            const C = BOOKING_IMG;
+            const measureCtx = document.createElement('canvas').getContext('2d');
+            const { ops, height } = layoutBookingImage(measureCtx, b);
+            const canvas = document.createElement('canvas');
+            canvas.width = C.width * C.scale;
+            canvas.height = height * C.scale;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(C.scale, C.scale);
+
+            // พื้นใบจอง ตัดมุมโค้ง แล้ววาดทุกอย่างข้างในกรอบนี้
+            ctx.save();
+            roundRectPath(ctx, 0, 0, C.width, height, 28);
+            ctx.clip();
+            ctx.fillStyle = '#F8F5EE';
+            ctx.fillRect(0, 0, C.width, height);
+
+            ops.forEach(op => {
+                if (op.t === 'rect') {
+                    if (op.r) roundRectPath(ctx, op.x, op.y, op.w, op.h, op.r);
+                    else { ctx.beginPath(); ctx.rect(op.x, op.y, op.w, op.h); }
+                    ctx.fillStyle = op.fill;
+                    ctx.fill();
+                    if (op.stroke) {
+                        ctx.setLineDash(op.dash || []);
+                        ctx.lineWidth = op.lineWidth || 1;
+                        ctx.strokeStyle = op.stroke;
+                        ctx.stroke();
+                        ctx.setLineDash([]);
+                    }
+                } else if (op.t === 'text') {
+                    ctx.font = op.font;
+                    ctx.fillStyle = op.color;
+                    ctx.textAlign = op.align;
+                    // 'middle' วางกลางความสูงบรรทัด ทุกเบราว์เซอร์ให้ผลตรงกัน
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(op.text, op.x, op.y + op.lh / 2);
+                } else if (op.t === 'hourglass') {
+                    // นาฬิกาทราย (แทนไอคอน Font Awesome ที่ canvas ใช้ไม่ได้)
+                    const { x, y } = op;
+                    ctx.fillStyle = op.color;
+                    ctx.fillRect(x, y, 11, 2);
+                    ctx.fillRect(x, y + 13, 11, 2);
+                    ctx.beginPath();
+                    ctx.moveTo(x + 1.5, y + 2); ctx.lineTo(x + 9.5, y + 2); ctx.lineTo(x + 5.5, y + 7.5);
+                    ctx.lineTo(x + 9.5, y + 13); ctx.lineTo(x + 1.5, y + 13); ctx.lineTo(x + 5.5, y + 7.5);
+                    ctx.closePath();
+                    ctx.fill();
+                } else if (op.t === 'info') {
+                    ctx.fillStyle = op.color;
+                    ctx.beginPath();
+                    ctx.arc(op.x + 10, op.y + 10, 10, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(op.x + 8.8, op.y + 8.5, 2.4, 7);
+                    ctx.beginPath();
+                    ctx.arc(op.x + 10, op.y + 5.6, 1.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+            ctx.restore();
+
+            // ขอบทองรอบใบ
+            roundRectPath(ctx, 1.5, 1.5, C.width - 3, height - 3, 26.5);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = C.gold;
+            ctx.stroke();
+            return canvas;
         }
 
         // สร้างรูปครั้งเดียวต่อการจอง (กดปุ่มซ้ำใช้รูปเดิม)
@@ -4528,27 +4734,19 @@ function enterBooking() {
             if (bookingImageBlob) return Promise.resolve(bookingImageBlob);
             if (bookingImagePromise) return bookingImagePromise;
             const booking = lastBooking;
-            // กันหมุนไม่รู้จบ: เกินเวลานี้ให้ถือว่าสร้างรูปไม่สำเร็จ ลูกค้าจะเห็นข้อความให้แคปหน้าจอแทน
             const withTimeout = (promise, ms) => Promise.race([promise,
                 new Promise((_, reject) => setTimeout(() => reject(new Error('สร้างรูปนานเกินไป')), ms))]);
-            // รอฟอนต์ไม่เกิน 3 วินาที (ถ้าฟอนต์ยังโหลดไม่เสร็จ ใช้ฟอนต์สำรองไปก่อนดีกว่าค้าง)
-            const fontsReady = document.fonts ? withTimeout(document.fonts.ready, 3000).catch(() => null) : null;
-            bookingImagePromise = withTimeout(Promise.all([loadHtml2Canvas(), fontsReady])
-                .then(([html2canvas]) => {
-                    const holder = document.createElement('div');
-                    // วางไว้นอกจอ ลูกค้าไม่เห็น แต่เบราว์เซอร์ยังจัดหน้าให้ถ่ายรูปได้
-                    holder.style.cssText = 'position:fixed;left:-10000px;top:0;z-index:-1;';
-                    holder.innerHTML = bookingImageHtml(booking);
-                    document.body.appendChild(holder);
-                    return html2canvas(holder.firstElementChild, {
-                        scale: 2, backgroundColor: null, useCORS: true, logging: false,
-                        // ข้ามรูป/วิดีโออื่นบนหน้าเว็บ (ใบจองไม่มีรูป): บน iPhone html2canvas รอทุกรูปในหน้าโหลดเสร็จโดยไม่มีเวลาหมด
-                        // รูปนักร้องที่ตั้งให้โหลดเมื่อเลื่อนถึงจะไม่โหลดเลยตอนอยู่หน้าใบจอง ปุ่มจึงหมุนค้าง (พบ 25 ต.ค. 2569)
-                        ignoreElements: el => /^(IMG|PICTURE|VIDEO|IFRAME|CANVAS)$/.test(el.tagName) && !holder.contains(el)
-                    }).finally(() => holder.remove());
-                }), 20000)
+            // canvas ใช้ฟอนต์ได้เมื่อโหลดเสร็จแล้วเท่านั้น จึงสั่งโหลดฟอนต์ที่ใช้ (ทั้งตัวไทยและอังกฤษ) ก่อนวาด
+            // รอไม่เกิน 3 วินาที ถ้ายังไม่เสร็จใช้ฟอนต์สำรองของเครื่องไปก่อน ดีกว่าให้ปุ่มค้าง
+            const sample = 'ใบจองมิตรภาพ KK-0123456789 บาท';
+            const fontsReady = document.fonts && document.fonts.load
+                ? withTimeout(Promise.all(['400 14px Prompt', '600 15px Prompt', '700 15px Prompt', '700 26px Kanit']
+                    .map(f => document.fonts.load(f, sample))), 3000).catch(() => null)
+                : Promise.resolve();
+            bookingImagePromise = withTimeout(fontsReady
+                .then(() => drawBookingImage(booking))
                 .then(canvas => new Promise((resolve, reject) =>
-                    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('สร้างรูปไม่สำเร็จ')), 'image/png')))
+                    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('สร้างรูปไม่สำเร็จ')), 'image/png'))), 20000)
                 .then(blob => {
                     // ลูกค้ากดกลับหน้าแรกระหว่างสร้างรูป: ไม่เก็บรูปของการจองเก่า
                     if (lastBooking === booking) bookingImageBlob = blob;
@@ -4610,13 +4808,21 @@ function enterBooking() {
             setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 1500);
         }
 
+        // ข้อความบนหน้าแสดงรูปเต็มจอ (ใช้ทั้งใบจองและ QR)
+        // Android ในแอป LINE/Facebook มักไม่มีเมนู "บันทึกรูปภาพ" ตอนกดค้าง (ทีมทดสอบเจอ 27 ต.ค. 2569) จึงบอกให้แคปหน้าจอแทน
+        function imagePreviewHint() {
+            return /Android/i.test(navigator.userAgent || '')
+                ? 'กดค้างที่รูปเพื่อบันทึก<br>ถ้าไม่มีเมนูบันทึก ให้แคปหน้าจอนี้ไว้'
+                : 'กดค้างที่รูป แล้วเลือก "บันทึกรูปภาพ"';
+        }
+
         // ทางสำรองบนมือถือ (เช่น เปิดเว็บในแอป LINE/Facebook ที่เปิดหน้าแชร์ไม่ได้): แสดงรูปเต็มจอ ให้กดค้างเพื่อบันทึก
         function showBookingImagePreview(blob) {
             const url = URL.createObjectURL(blob);
             const overlay = document.createElement('div');
             overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px;';
             overlay.innerHTML = `
-                <p style="color:#FDE68A;font-size:15px;text-align:center;margin:0;">กดค้างที่รูป แล้วเลือก "บันทึกรูปภาพ"</p>
+                <p style="color:#FDE68A;font-size:15px;text-align:center;margin:0;line-height:1.6;">${imagePreviewHint()}</p>
                 <img src="${url}" alt="ใบจอง" style="max-width:100%;max-height:78vh;border-radius:16px;">
                 <button type="button" style="background:#425E22;color:#fff;border:1px solid #C8A051;border-radius:12px;padding:10px 28px;font-weight:700;">ปิด</button>`;
             overlay.querySelector('button').onclick = () => { overlay.remove(); URL.revokeObjectURL(url); };
@@ -4756,6 +4962,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         shadow-inner inline-block w-full">
 
                 <img
+                    loading="lazy"
                     src="./promptpay-qr.png"
                     alt="PromptPay QR Code สำหรับชำระเงิน"
                     class="block w-full max-w-[420px]
@@ -4814,6 +5021,91 @@ document.addEventListener('DOMContentLoaded', function () {
         modal.classList.remove('flex');
 
         document.body.style.overflow = '';
+    }
+
+    // ==========================================
+    // ปุ่ม "บันทึกรูป QR Code"
+    // แยกจาก saveBookingImage เพื่อไม่ให้กระทบปุ่มบันทึกใบจองที่ทดสอบผ่านแล้ว แต่ใช้วิธีแยกตามเครื่องแบบเดียวกัน
+    // ==========================================
+    const QR_IMAGE_FILE_NAME = 'QR-ชำระเงิน-MAHAMIT.png';
+    let qrImageBlob = null;
+    let qrImagePromise = null;
+
+    // ใช้ไฟล์ QR ตัวจริง (ไม่ใช่แคปหน้าจอ) รูปจึงคมชัดและสแกนได้แน่นอน
+    function prepareQrImage() {
+        if (qrImageBlob) return Promise.resolve(qrImageBlob);
+        if (qrImagePromise) return qrImagePromise;
+        qrImagePromise = fetch('./promptpay-qr.png')
+            .then(res => {
+                if (!res.ok) throw new Error('โหลดรูป QR ไม่สำเร็จ');
+                return res.blob();
+            })
+            .then(blob => (qrImageBlob = blob))
+            .finally(() => { qrImagePromise = null; });
+        return qrImagePromise;
+    }
+
+    async function saveQrImage() {
+        const btn = document.getElementById('btnSaveQrImage');
+        const label = btn.querySelector('span');
+        let blob = qrImageBlob;
+        if (!blob) {
+            // ปกติรูปโหลดเสร็จตั้งแต่เข้าขั้นที่ 2 จะมาถึงตรงนี้เมื่อเน็ตช้าหรือโหลดไม่สำเร็จ
+            btn.disabled = true;
+            label.textContent = 'กำลังโหลดรูป…';
+            try {
+                blob = await prepareQrImage();
+            } catch (err) {
+                console.error('QR image error:', err);
+                alert('บันทึกรูป QR ไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ตแล้วลองใหม่ หรือแคปหน้าจอ QR นี้ไว้แทน');
+                return;
+            } finally {
+                btn.disabled = false;
+                label.textContent = 'บันทึกรูป QR Code';
+            }
+        }
+        // แยกตามเครื่องเหมือนปุ่มบันทึกใบจอง:
+        // • ในแอป LINE/Facebook/IG: ดาวน์โหลดและหน้าแชร์มักใช้ไม่ได้ → แสดงรูปเต็มจอให้กดค้าง
+        // • iPhone/iPad: หน้าแชร์มี "บันทึกรูปภาพ" เข้าแอปรูปภาพตรงๆ (ดาวน์โหลดจะไปอยู่ในแอปไฟล์ ลูกค้าหาไม่เจอ)
+        // • Android และคอม: ดาวน์โหลดเป็นไฟล์
+        const ua = navigator.userAgent || '';
+        const inAppBrowser = /\bLine\/|FBAN|FBAV|FB_IAB|Instagram/i.test(ua);
+        const isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (inAppBrowser) { showQrImagePreview(blob); return; }
+        if (isIOS) {
+            const file = new File([blob], QR_IMAGE_FILE_NAME, { type: blob.type || 'image/png' });
+            if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                try {
+                    await navigator.share({ files: [file], title: 'QR ชำระเงิน MAHAMIT CONCERT #2' });
+                } catch (err) {
+                    // ลูกค้ากดปิดหน้าแชร์เอง ไม่ต้องทำอะไร / เปิดหน้าแชร์ไม่ได้ ให้กดค้างที่รูปแทน
+                    if (!err || err.name !== 'AbortError') showQrImagePreview(blob);
+                }
+            } else {
+                showQrImagePreview(blob);
+            }
+            return;
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = QR_IMAGE_FILE_NAME;
+        document.body.appendChild(link);
+        link.click();
+        setTimeout(() => { URL.revokeObjectURL(url); link.remove(); }, 1500);
+    }
+
+    // ทางสำรอง: แสดงรูป QR เต็มจอ ให้กดค้างแล้วเลือก "บันทึกรูปภาพ"
+    function showQrImagePreview(blob) {
+        const url = URL.createObjectURL(blob);
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:14px;';
+        overlay.innerHTML = `
+            <p style="color:#FDE68A;font-size:15px;text-align:center;margin:0;line-height:1.6;">${imagePreviewHint()}</p>
+            <img src="${url}" alt="QR Code ชำระเงิน" style="max-width:100%;max-height:78vh;border-radius:16px;background:#fff;">
+            <button type="button" style="background:#425E22;color:#fff;border:1px solid #C8A051;border-radius:12px;padding:10px 28px;font-weight:700;">ปิด</button>`;
+        overlay.querySelector('button').onclick = () => { overlay.remove(); URL.revokeObjectURL(url); };
+        document.body.appendChild(overlay);
     }
 
     // กด ESC เพื่อปิดหน้าต่าง
@@ -4895,7 +5187,6 @@ document.addEventListener('DOMContentLoaded', function () {
             <div>
                 <h3 class="font-bold text-posterBurgundy mb-1">ติดต่อผู้จัดงาน</h3>
                 <p>
-                    Facebook: <a href="https://www.facebook.com/KriengkraiMahamit/" target="_blank" rel="noopener" class="text-posterGreen font-semibold underline">Kriengkrai Mahamit</a><br>
                     โทร <a href="tel:0905235223" class="text-posterGreen font-semibold underline">090 523 5223</a>
                 </p>
             </div>
@@ -5192,7 +5483,9 @@ document.addEventListener('DOMContentLoaded', function () {
         </button>
 
         <!-- โปสเตอร์ -->
+        <!-- loading="lazy": ป๊อปอัปถูกซ่อนด้วย CSS รูป 2 MB นี้จึงไม่ต้องโหลด ถ้าเปิดป๊อปอัปกลับมา รูปจะโหลดเองตามปกติ -->
         <img
+            loading="lazy"
             src="/free.png"
             alt="MAHAMIT CONCERT #2"
             class="mahamit-popup-image"
@@ -5247,15 +5540,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 <footer class="mt-auto w-full bg-[#1C291C] border-t border-[#425E22] px-3 py-2 text-center">
-    <p class="text-[11px] sm:text-xs font-semibold text-[#E4BE43] leading-tight">
-        Facebook: Kriengkrai Mahamit (KK Market)
-    </p>
+    
+
+<p class="text-[11px] sm:text-xs font-normal text-white leading-tight">
+    มิตรผู้ร่วมสนับสนุน
+</p>
+    
+
+    
+<p class="text-[11px] sm:text-xs font-normal text-[#E4BE43] leading-tight">
+    De Kiang Muang Accommodation Partner
+</p>
+
+    
+<p class="text-[11px] sm:text-xs font-normal text-[#E4BE43] leading-tight">
+    MY WAY CNX CAR RENTAL Artist Transportation Partner
+</p>
+
+    
 
     <p class="mt-1 text-[9px] sm:text-[10px] text-white/50 leading-tight">
-        Design &amp; Development by
-        <span class="font-semibold text-[#C8A051]">
-            Gototarget Co., Ltd.
-        </span>
+        Design &amp; Development by Gototarget Co., Ltd.
+
     </p>
 </footer>
 
