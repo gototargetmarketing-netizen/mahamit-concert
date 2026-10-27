@@ -3256,9 +3256,7 @@ await refreshSeatStatus(true);
                 const stats = document.getElementById('seatStatsText');
                 if (stats) {
                     // นับเฉพาะที่นั่งในผัง (รายการจากชีตอาจมีรหัสที่ไม่อยู่ในผัง เช่น ข้อมูลทดสอบเก่า)
-                    const ids = Object.keys(seatMapData);
-                    const soldCount = ids.filter(id => seatMapData[id].isSold).length;
-                    stats.textContent = `จองแล้ว ${soldCount} / ${ids.length} ที่นั่ง`;
+
                 }
 
 const notice = document.getElementById('seatLoadNotice');
