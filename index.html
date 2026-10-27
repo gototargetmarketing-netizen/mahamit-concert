@@ -2214,6 +2214,153 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
+/* =========================================
+   MAHAMIT CONCERT #2 — SUPPORTING PARTNERS
+========================================= */
+
+#mahamitPartners {
+    width: calc(100% - 32px);
+    max-width: 1000px;
+    margin: 28px auto 32px;
+    padding: 28px 24px;
+    box-sizing: border-box;
+
+    background: #F8F5EE;
+    border: 1px solid #E2D0A8;
+    border-radius: 22px;
+    box-shadow: 0 8px 24px rgba(35, 32, 29, 0.06);
+
+    text-align: center;
+}
+
+#mahamitPartners .partner-eyebrow {
+    display: block;
+    margin-bottom: 7px;
+
+    color: #8B2626;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+#mahamitPartners .partner-heading {
+    margin: 0;
+    color: #33291E;
+    font-family: 'Kanit', sans-serif;
+    font-size: clamp(23px, 3vw, 30px);
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+#mahamitPartners .partner-subtitle {
+    margin: 6px 0 24px;
+    color: #756B5B;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+#mahamitPartners .partner-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+#mahamitPartners .partner-card {
+    min-width: 0;
+    padding: 24px 16px;
+    box-sizing: border-box;
+
+    background: #FFFFFF;
+    border: 1px solid #E8DCC2;
+    border-radius: 16px;
+
+    transition: transform 0.2s ease,
+                box-shadow 0.2s ease;
+}
+
+#mahamitPartners .partner-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(35, 32, 29, 0.08);
+}
+
+#mahamitPartners .partner-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+    background: #425E22;
+    color: #F8F5EE;
+    font-size: 17px;
+}
+
+#mahamitPartners .partner-name {
+    margin: 0 0 8px;
+    color: #425E22;
+    font-family: 'Kanit', sans-serif;
+    font-size: clamp(17px, 2vw, 21px);
+    font-weight: 700;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#mahamitPartners .partner-role {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+
+    background: #F6EBDD;
+    color: #8B2626;
+
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+    #mahamitPartners {
+        width: calc(100% - 24px);
+        margin: 20px auto 24px;
+        padding: 22px 14px;
+        border-radius: 18px;
+    }
+
+    #mahamitPartners .partner-subtitle {
+        font-size: 12px;
+        margin-bottom: 18px;
+    }
+
+    #mahamitPartners .partner-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    #mahamitPartners .partner-card {
+        padding: 20px 12px;
+        border-radius: 14px;
+    }
+
+    #mahamitPartners .partner-name {
+        font-size: 19px;
+    }
+
+    #mahamitPartners .partner-role {
+        font-size: 11px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #mahamitPartners .partner-card {
+        transition: none;
+    }
+}
+
         
 
     </style>
@@ -2461,6 +2608,71 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     </div>
 </section>
 <!-- END CHAIR CAMPING SOUVENIR IMAGE -->
+
+
+
+
+<!-- ========================================
+     MAHAMIT SUPPORTING PARTNERS
+======================================== -->
+
+<section id="mahamitPartners">
+
+    <span class="partner-eyebrow">
+        MAHAMIT CONCERT #2
+    </span>
+
+    <h2 class="partner-heading">
+        มิตรผู้ร่วมสนับสนุน
+    </h2>
+
+    <p class="partner-subtitle">
+        ขอขอบคุณพันธมิตรที่ร่วมเป็นส่วนหนึ่ง
+        ในการสร้างความทรงจำครั้งพิเศษ
+    </p>
+
+    <div class="partner-grid">
+
+        <!-- Accommodation Partner -->
+        <div class="partner-card">
+
+            <div class="partner-icon">
+                <i class="fa-solid fa-hotel"></i>
+            </div>
+
+            <h3 class="partner-name">
+                De Kiang Muang
+            </h3>
+
+            <span class="partner-role">
+                Accommodation Partner
+            </span>
+
+        </div>
+
+        <!-- Artist Transportation Partner -->
+        <div class="partner-card">
+
+            <div class="partner-icon">
+                <i class="fa-solid fa-car"></i>
+            </div>
+
+            <h3 class="partner-name">
+                MY WAY CNX CAR RENTAL
+            </h3>
+
+            <span class="partner-role">
+                Artist Transportation Partner
+            </span>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- END MAHAMIT SUPPORTING PARTNERS -->
+
 
 
     
