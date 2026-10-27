@@ -4,11 +4,11 @@
 (function () {
   // โซนและราคา (เรียงจากแพงไปถูก)
   const zones = [
-    { key: "chidwethi", name: "มิตรชิดเวที", price: 2290, seats: 66, color: "#C29B38", textColor: "#3B2F22", note: "เก้าอี้สนาม" },
-    { key: "rujai", name: "มิตรรู้ใจ", price: 2090, seats: 56, color: "#DCCBA5", textColor: "#3B2F22", note: "เก้าอี้สนาม" },
-    { key: "kiangkhang", name: "มิตรเคียงข้าง", price: 1990, seats: 91, color: "#E57336", textColor: "#FFFFFF", note: "เก้าอี้สนาม" },
-    { key: "kopleng", name: "มิตรคอเพลง", price: 1790, seats: 146, color: "#3D7AB8", textColor: "#FFFFFF", note: "เก้าอี้สนาม" },
-    { key: "maithingkan", name: "มิตรไม่ทิ้งกัน", price: 1590, seats: 146, color: "#868990", textColor: "#FFFFFF", note: "เก้าอี้สนาม" },
+    { key: "chidwethi", name: "มิตรชิดเวที", price: 2290, seats: 66, color: "#C29B38", textColor: "#3B2F22", note: "เก้าอี้แคมป์ปิ้ง" },
+    { key: "rujai", name: "มิตรรู้ใจ", price: 2090, seats: 56, color: "#DCCBA5", textColor: "#3B2F22", note: "เก้าอี้แคมป์ปิ้ง" },
+    { key: "kiangkhang", name: "มิตรเคียงข้าง", price: 1990, seats: 91, color: "#E57336", textColor: "#FFFFFF", note: "เก้าอี้แคมป์ปิ้ง" },
+    { key: "kopleng", name: "มิตรคอเพลง", price: 1790, seats: 146, color: "#3D7AB8", textColor: "#FFFFFF", note: "เก้าอี้แคมป์ปิ้ง" },
+    { key: "maithingkan", name: "มิตรไม่ทิ้งกัน", price: 1590, seats: 146, color: "#868990", textColor: "#FFFFFF", note: "เก้าอี้แคมป์ปิ้ง" },
     { key: "samran", name: "มิตรสำราญ", price: 1390, seats: 60, color: "#BC2444", textColor: "#FFFFFF", note: "อัฒจันทร์", tag: "อัฒจันทร์" }
   ];
 
