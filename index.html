@@ -2214,95 +2214,112 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
-/* ===== EARLY100 PROMOTION BADGE ===== */
+
+/* ===== EARLY100: PREMIUM CONCERT PROMOTION ===== */
+
 .early100-wrap {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    max-width: 100%;
+    margin: 0 auto 16px;
     padding: 0 12px;
-    margin: 0 auto 12px;
-    box-sizing: border-box;
 }
 
 .early100-badge {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
+    gap: 7px;
+    padding: 11px 22px;
+    background: linear-gradient(135deg, #FFFDF8 0%, #F9E8DE 100%);
+    border: 2px solid #B4232F;
+    border-radius: 12px;
 
-    max-width: 100%;
-    padding: 8px 18px;
+    box-shadow:
+        0 4px 0 rgba(139, 38, 38, 0.12),
+        0 5px 16px rgba(139, 38, 38, 0.10);
 
-    background: #FFF9F5;
-    border: 1.5px solid #B4232F;
-    border-radius: 10px;
-
-    color: #8B2626;
-    text-align: center;
-    line-height: 1.5;
-    box-sizing: border-box;
-
-    animation: early100Blink 1.8s ease-in-out infinite;
+    animation: early100PremiumPulse 2s ease-in-out infinite;
 }
 
 .early100-label {
-    font-family: 'Prompt', sans-serif;
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 999px;
+
+    background: #8B2626;
+    color: #FFFFFF;
     font-size: 9px;
     font-weight: 700;
-    letter-spacing: 1.8px;
+    letter-spacing: 2px;
 }
 
 .early100-message {
-    font-family: 'Kanit', sans-serif;
-    font-size: clamp(13px, 1.5vw, 16px);
-    font-weight: 500;
-    overflow-wrap: anywhere;
+    font-size: clamp(14px, 1.7vw, 17px);
+    font-weight: 600;
+    line-height: 1.6;
+    color: #54201D;
 }
 
-.early100-message strong {
+/* ทำป้าย EARLY100 ให้โดดเด่น */
+.early100-message strong:first-of-type {
+    display: inline-block;
+    padding: 0 7px;
+    border-radius: 5px;
+    background: #B4232F;
+    color: #FFFFFF;
     font-weight: 800;
-    color: #B4232F;
+    letter-spacing: 0.3px;
 }
 
-/* กระพริบเบา ๆ ทั้งกรอบและข้อความ */
-@keyframes early100Blink {
+/* เน้นจำนวนเงินส่วนลด */
+.early100-message strong:last-of-type {
+    color: #B4232F;
+    font-size: 1.2em;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* เรืองแสงเบา ๆ เป็นจังหวะ */
+@keyframes early100PremiumPulse {
     0%, 100% {
         border-color: #B4232F;
-        box-shadow: 0 0 0 0 rgba(180, 35, 47, 0);
+        box-shadow:
+            0 4px 0 rgba(139, 38, 38, 0.12),
+            0 4px 12px rgba(139, 38, 38, 0.08);
     }
 
     50% {
         border-color: #E5484D;
-        box-shadow: 0 0 8px 1px rgba(180, 35, 47, 0.18);
+        box-shadow:
+            0 4px 0 rgba(139, 38, 38, 0.12),
+            0 5px 20px rgba(180, 35, 47, 0.24);
     }
 }
 
-/* ปรับขนาดให้พอดีกับมือถือ */
+/* มือถือ */
 @media (max-width: 600px) {
     .early100-wrap {
-        padding: 0 8px;
-        margin-bottom: 10px;
+        padding: 0 10px;
+        margin-bottom: 12px;
     }
 
     .early100-badge {
-        padding: 7px 12px;
-        gap: 2px;
-        border-radius: 9px;
+        padding: 9px 12px;
+        gap: 6px;
+        border-radius: 10px;
     }
 
     .early100-label {
         font-size: 8px;
-        letter-spacing: 1.4px;
+        padding: 3px 10px;
+        letter-spacing: 1.5px;
     }
 
     .early100-message {
         font-size: 13px;
-        line-height: 1.5;
+        line-height: 1.7;
+    }
+
+    .early100-message strong:first-of-type {
+        padding: 0 5px;
     }
 }
 
-/* ลดการเคลื่อนไหวสำหรับผู้ที่ตั้งค่าลด Animation */
 @media (prefers-reduced-motion: reduce) {
     .early100-badge {
         animation: none;
