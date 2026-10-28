@@ -4821,10 +4821,17 @@ function enterBooking() {
                 } else if (op.t === 'text') {
                     ctx.font = op.font;
                     ctx.fillStyle = op.color;
-                    ctx.textAlign = op.align;
+                    // จัดกึ่งกลาง/ชิดขวาเอง แล้ววาดชิดซ้ายเสมอ ไม่ใช้ ctx.textAlign
+                    // เพราะ Safari บน iPhone บางเครื่องไม่จัดตำแหน่งข้อความภาษาไทยตาม textAlign
+                    // (ข้อความไปเริ่มที่จุดกึ่งกลาง/ขอบขวาแทน ทีมทดสอบเจอ 28 ต.ค. 2569)
+                    // เบราว์เซอร์ที่จัดถูกอยู่แล้วก็คิดแบบเดียวกันนี้ รูปจึงออกมาเหมือนเดิม
+                    const textW = op.align === 'left' ? 0 : ctx.measureText(op.text).width;
+                    const textX = op.align === 'center' ? op.x - textW / 2
+                        : op.align === 'right' ? op.x - textW : op.x;
+                    ctx.textAlign = 'left';
                     // 'middle' วางกลางความสูงบรรทัด ทุกเบราว์เซอร์ให้ผลตรงกัน
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(op.text, op.x, op.y + op.lh / 2);
+                    ctx.fillText(op.text, textX, op.y + op.lh / 2);
                 } else if (op.t === 'hourglass') {
                     // นาฬิกาทราย (แทนไอคอน Font Awesome ที่ canvas ใช้ไม่ได้)
                     const { x, y } = op;
