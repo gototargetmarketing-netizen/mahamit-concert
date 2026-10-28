@@ -2214,179 +2214,104 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
-/* =========================================
-   MAHAMIT EARLY100 PROMOTION
-   Responsive + Red Flashing Border
-========================================= */
-
-#early100Promo {
-    width: fit-content;
-    max-width: 100%;
-    box-sizing: border-box;
-
-    margin: 0 auto 18px;
-    padding: 12px 24px;
-
-    text-align: center;
-    background: linear-gradient(135deg, #FFF9F0, #F8F0E5);
-
-    border: 2px solid #B91C1C;
-    border-radius: 16px;
-
-    box-shadow:
-        0 0 0 3px rgba(185, 28, 28, 0.10),
-        0 6px 16px rgba(70, 30, 20, 0.10);
-
-    animation: early100Flash 1.4s ease-in-out infinite;
-}
-
-#early100Promo .early100-label {
+/* ===== EARLY100 PROMOTION BADGE ===== */
+.early100-wrap {
     display: flex;
     justify-content: center;
+    width: 100%;
+    max-width: 100%;
+    padding: 0 12px;
+    margin: 0 auto 12px;
+    box-sizing: border-box;
+}
+
+.early100-badge {
+    display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 3px;
+
+    max-width: 100%;
+    padding: 8px 18px;
+
+    background: #FFF9F5;
+    border: 1.5px solid #B4232F;
+    border-radius: 10px;
 
     color: #8B2626;
-    font-family: 'Kanit', sans-serif;
-    font-size: clamp(11px, 1.5vw, 13px);
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    margin-bottom: 3px;
+    text-align: center;
+    line-height: 1.5;
+    box-sizing: border-box;
+
+    animation: early100Blink 1.8s ease-in-out infinite;
 }
 
-#early100Promo .early100-code {
-    color: #8B2626;
-    font-family: 'Kanit', sans-serif;
-    font-size: clamp(21px, 3vw, 29px);
-    font-weight: 800;
-    line-height: 1.4;
-}
-
-#early100Promo .early100-description {
-    color: #33291E;
+.early100-label {
     font-family: 'Prompt', sans-serif;
-    font-size: clamp(13px, 1.8vw, 16px);
-    font-weight: 600;
-    line-height: 1.6;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
 }
 
-@keyframes early100Flash {
+.early100-message {
+    font-family: 'Kanit', sans-serif;
+    font-size: clamp(13px, 1.5vw, 16px);
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+
+.early100-message strong {
+    font-weight: 800;
+    color: #B4232F;
+}
+
+/* กระพริบเบา ๆ ทั้งกรอบและข้อความ */
+@keyframes early100Blink {
     0%, 100% {
-        border-color: #B91C1C;
-        box-shadow:
-            0 0 0 2px rgba(185, 28, 28, 0.10),
-            0 4px 12px rgba(70, 30, 20, 0.08);
+        border-color: #B4232F;
+        box-shadow: 0 0 0 0 rgba(180, 35, 47, 0);
     }
 
     50% {
-        border-color: #F87171;
-        box-shadow:
-            0 0 0 5px rgba(185, 28, 28, 0.14),
-            0 6px 20px rgba(185, 28, 28, 0.20);
+        border-color: #E5484D;
+        box-shadow: 0 0 8px 1px rgba(180, 35, 47, 0.18);
     }
 }
 
-/* Desktop: จัดให้อยู่กึ่งกลางเหนือหัวข้อ */
-@media (min-width: 769px) {
-    #early100Promo {
-        margin-bottom: 20px;
-        padding: 12px 28px;
-    }
-}
-
-/* Mobile: ย่อขนาดและเว้นขอบไม่ให้ล้นจอ */
+/* ปรับขนาดให้พอดีกับมือถือ */
 @media (max-width: 600px) {
-    #early100Promo {
-        width: 100%;
-        max-width: 340px;
-        margin: 0 auto 14px;
-        padding: 10px 12px;
-        border-radius: 13px;
+    .early100-wrap {
+        padding: 0 8px;
+        margin-bottom: 10px;
     }
 
-    #early100Promo .early100-label {
-        letter-spacing: 1px;
+    .early100-badge {
+        padding: 7px 12px;
+        gap: 2px;
+        border-radius: 9px;
+    }
+
+    .early100-label {
+        font-size: 8px;
+        letter-spacing: 1.4px;
+    }
+
+    .early100-message {
+        font-size: 13px;
+        line-height: 1.5;
     }
 }
 
-/* เคารพการตั้งค่าลดการเคลื่อนไหวของอุปกรณ์ */
+/* ลดการเคลื่อนไหวสำหรับผู้ที่ตั้งค่าลด Animation */
 @media (prefers-reduced-motion: reduce) {
-    #early100Promo {
+    .early100-badge {
         animation: none;
     }
 }
 
 
 
-/* =========================================
-   CONCERT HERO: DESKTOP TWO-COLUMN LAYOUT
-   ซ้าย = รายละเอียด / ขวา = โปสเตอร์
-========================================= */
-
-@media screen and (min-width: 1024px) {
-
-    #concertHero > div.max-w-6xl {
-        display: grid !important;
-        grid-template-columns: minmax(0, 1fr) 360px;
-        align-items: center;
-        gap: 36px;
-        max-width: 1400px !important;
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    /* คอลัมน์ซ้าย */
-    #concertHero > div.max-w-6xl > div:first-child {
-        width: 100%;
-        max-width: none !important;
-        min-width: 0;
-        box-sizing: border-box;
-    }
-
-    /* กล่องโปสเตอร์ด้านขวา */
-    #concertHero > div.max-w-6xl > div:last-child {
-        width: 100%;
-        min-width: 0;
-        justify-content: center;
-    }
-
-    #concertHero > div.max-w-6xl > div:last-child > div {
-        width: 100% !important;
-        max-width: 360px !important;
-        box-sizing: border-box;
-        margin: 0 auto;
-    }
-
-    #mainPosterImg {
-        display: block;
-        width: 100%;
-        height: auto;
-        object-fit: contain;
-    }
-}
-
-/* จอขนาดกลางและมือถือ: เรียงลงด้านล่าง */
-@media screen and (max-width: 1023px) {
-    #concertHero > div.max-w-6xl {
-        display: flex !important;
-        flex-direction: column !important;
-        align-items: center;
-    }
-
-    #concertHero > div.max-w-6xl > div:first-child {
-        width: 100%;
-        max-width: 576px;
-    }
-
-    #concertHero > div.max-w-6xl > div:last-child {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-
-
+        
         
 
     </style>
@@ -2448,31 +2373,16 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
-
-
-<div>
-
-    <!-- โปรโมชัน EARLY100 -->
-    <div id="early100Promo">
-
-        <div class="early100-label">
-            <i class="fa-solid fa-ticket"></i>
-            <span>SPECIAL PROMOTION</span>
-            <i class="fa-solid fa-ticket"></i>
-        </div>
-
-        <div class="early100-code">
-            ใส่โค้ด EARLY100
-        </div>
-
-        <div class="early100-description">
-            เพื่อรับส่วนลด 100 บาท
-        </div>
-
+<div class="early100-wrap">
+    <div class="early100-badge">
+        <span class="early100-label">SPECIAL DISCOUNT</span>
+        <span class="early100-message">
+            ใส่โค้ด <strong>EARLY100</strong>
+            เพื่อรับส่วนลด <strong>100 บาท</strong>
+        </span>
     </div>
+</div>
 
-
-    
 
 
     <div>
