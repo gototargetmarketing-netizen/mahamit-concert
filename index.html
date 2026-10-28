@@ -2214,6 +2214,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
+
 /* ===== EARLY100: PREMIUM CONCERT PROMOTION ===== */
 
 .early100-wrap {
@@ -2325,8 +2326,9 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     }
 }
 
-        
 
+
+        
         
 
     </style>
@@ -2388,7 +2390,6 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
 
 
-
 <div class="early100-wrap">
     <div class="early100-badge">
         <span class="early100-label">SPECIAL DISCOUNT</span>
@@ -2399,7 +2400,6 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     </div>
 </div>
 
-    
 
 
     <div>
@@ -2607,7 +2607,7 @@ body:has(#cartSummaryBtn:not(.hidden)) {
     <div class="ticket-price-grid" id="ticketPriceGrid"></div>
 
     <!-- สิทธิ์ที่ได้ทุกโซนเท่ากัน จึงเขียนครั้งเดียวใต้การ์ด แทนการใส่ซ้ำในการ์ดทุกใบ -->
-    <p class="ticket-guide-voucher">รับฟรี Voucher 100 บาท ใช้ได้ทุกร้านในงาน</p>
+    <p class="ticket-guide-voucher">Voucher มูลค่า 100 บาท ใช้ได้ทุกร้านบริเวณงาน</p>
 
 
 <p class="ticket-guide-note">
@@ -2632,7 +2632,10 @@ body:has(#cartSummaryBtn:not(.hidden)) {
 
     
 <!-- ปุ่มเข้าสู่ระบบจอง -->
-<section class="bg-posterCream px-4 py-8 sm:py-12 text-center">
+
+<!-- ปุ่มเข้าสู่ระบบจอง: ปิดไว้ชั่วคราว -->
+<section class="hidden bg-posterCream px-4 py-8 sm:py-12 text-center">
+
 
     <div class="max-w-xl mx-auto">
 
@@ -3627,16 +3630,11 @@ if (showMessage) {
             if (!rule || seatCount === 0 || (rule.minSeats && seatCount < rule.minSeats)) return 0;
             return rule.type === 'percent'
                 ? Math.floor(subtotal * rule.value / 100)
-                : rule.type === 'perseat'
-                    ? Math.min(Math.floor(rule.value) * seatCount, subtotal)
-                    : Math.min(Math.floor(rule.value), subtotal);
+                : Math.min(Math.floor(rule.value), subtotal);
         }
 
-        // perseat บอก "ที่นั่งละ" ให้ชัด ลูกค้าจะได้ไม่เข้าใจว่าลด 100 บาททั้งการจอง
         function discountLabel(rule) {
-            if (rule.type === 'percent') return `ลด ${rule.value}%`;
-            if (rule.type === 'perseat') return `ลดที่นั่งละ ${Number(rule.value).toLocaleString()} บาท`;
-            return `ลด ${Number(rule.value).toLocaleString()} บาท`;
+            return rule.type === 'percent' ? `ลด ${rule.value}%` : `ลด ${Number(rule.value).toLocaleString()} บาท`;
         }
 
         function showDiscountMessage(type, text) {
@@ -4821,17 +4819,10 @@ function enterBooking() {
                 } else if (op.t === 'text') {
                     ctx.font = op.font;
                     ctx.fillStyle = op.color;
-                    // จัดกึ่งกลาง/ชิดขวาเอง แล้ววาดชิดซ้ายเสมอ ไม่ใช้ ctx.textAlign
-                    // เพราะ Safari บน iPhone บางเครื่องไม่จัดตำแหน่งข้อความภาษาไทยตาม textAlign
-                    // (ข้อความไปเริ่มที่จุดกึ่งกลาง/ขอบขวาแทน ทีมทดสอบเจอ 28 ต.ค. 2569)
-                    // เบราว์เซอร์ที่จัดถูกอยู่แล้วก็คิดแบบเดียวกันนี้ รูปจึงออกมาเหมือนเดิม
-                    const textW = op.align === 'left' ? 0 : ctx.measureText(op.text).width;
-                    const textX = op.align === 'center' ? op.x - textW / 2
-                        : op.align === 'right' ? op.x - textW : op.x;
-                    ctx.textAlign = 'left';
+                    ctx.textAlign = op.align;
                     // 'middle' วางกลางความสูงบรรทัด ทุกเบราว์เซอร์ให้ผลตรงกัน
                     ctx.textBaseline = 'middle';
-                    ctx.fillText(op.text, textX, op.y + op.lh / 2);
+                    ctx.fillText(op.text, op.x, op.y + op.lh / 2);
                 } else if (op.t === 'hourglass') {
                     // นาฬิกาทราย (แทนไอคอน Font Awesome ที่ canvas ใช้ไม่ได้)
                     const { x, y } = op;
